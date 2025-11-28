@@ -533,7 +533,7 @@ All notable changes to **Pilot** - a production-ready Shopify Hydrogen theme bui
 - Fix Single product demo by [@paul-phan](https://github.com/paul-phan) in [#79](https://github.com/Weaverse/pilot/pull/79)
 - Experimenting View Transition API by [@paul-phan](https://github.com/paul-phan) in [#81](https://github.com/Weaverse/pilot/pull/81)
 - Replace google font with @fontsource/roboto by [@paul-phan](https://github.com/paul-phan) in [#82](https://github.com/Weaverse/pilot/pull/82)
-- Add package-lock.json file as npm ci will require it for build by [@paul-phan](https://github.com/paul-phan) in [#83](https://github.com/Weaverse/pilot/pull/83)
+- Add package-lock.json file as pnpm ci will require it for build by [@paul-phan](https://github.com/paul-phan) in [#83](https://github.com/Weaverse/pilot/pull/83)
 - Update product page by [@viethung26](https://github.com/viethung26) in [#85](https://github.com/Weaverse/pilot/pull/85)
 - Add more sections/components by [@paul-phan](https://github.com/paul-phan) in [#87](https://github.com/Weaverse/pilot/pull/87)
 - Weaverse SDKs v2.9.0 by [@paul-phan](https://github.com/paul-phan) in [#88](https://github.com/Weaverse/pilot/pull/88)

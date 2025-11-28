@@ -8,6 +8,7 @@ import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { useFetcher } from "react-router";
+import { useTranslation } from "react-i18next";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
@@ -33,6 +34,7 @@ const variants = cva("", {
 
 export function Footer() {
   const { shopName } = useShopMenu();
+  const { t } = useTranslation();
   const {
     footerWidth,
     socialFacebook,
@@ -54,10 +56,10 @@ export function Footer() {
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
 
   // Compute message and error from fetcher data
-  const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
+  const message = fetcher.data?.ok ? t("footer.signUpSuccess") : "";
   const error =
     fetcher.data && !fetcher.data.ok
-      ? fetcher.data.error || "An error occurred while signing up."
+      ? fetcher.data.error || t("footer.signUpError")
       : "";
 
   const SOCIAL_ACCOUNTS = [
@@ -127,13 +129,13 @@ export function Footer() {
                 ))}
               </div>
             </div>
-            <div className="flex flex-col gap-6">
-              <div className="text-base">{addressTitle}</div>
-              <div className="space-y-2">
-                <p>{storeAddress}</p>
-                <p>Email: {storeEmail}</p>
+              <div className="flex flex-col gap-6">
+                <div className="text-base">{addressTitle}</div>
+                <div className="space-y-2">
+                  <p>{storeAddress}</p>
+                  <p>{t("footer.email")}: {storeEmail}</p>
+                </div>
               </div>
-            </div>
             <div className="flex flex-col gap-6">
               <div className="text-base">{newsletterTitle}</div>
               <div className="space-y-2">

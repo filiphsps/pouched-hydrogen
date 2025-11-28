@@ -1,0 +1,106 @@
+{
+    "site": {
+        "title": "Pouched",
+        "description": "Premium Swedish Snus"
+    },
+    "navigation": {
+        "skipToContent": "Skip to content",
+        "mainContent": "Main content"
+    },
+    "header": {
+        "search": "Search",
+        "account": "Account",
+        "cart": "Cart",
+        "menu": "Menu"
+    },
+    "footer": {
+        "email": "Email",
+        "signUpSuccess": "Thank you for signing up! 🎉",
+        "signUpError": "An error occurred while signing up.",
+        "social": {
+            "instagram": "Instagram",
+            "x": "X",
+            "linkedin": "LinkedIn",
+            "facebook": "Facebook"
+        }
+    },
+    "cart": {
+        "title": "Cart",
+        "empty": "Your cart is empty",
+        "subtotal": "Subtotal",
+        "total": "Estimated total",
+        "checkout": "Checkout",
+        "continueShopping": "Continue shopping",
+        "remove": "Remove",
+        "quantity": "Quantity",
+        "addToCart": "Add to cart",
+        "added": "Added to cart",
+        "updating": "Updating...",
+        "viewCart": "View cart",
+        "taxesDiscountsShipping": "Taxes, discounts and shipping calculated at checkout."
+    },
+    "product": {
+        "inStock": "In stock",
+        "outOfStock": "Out of stock",
+        "price": "Price",
+        "compareAtPrice": "Was",
+        "saveAmount": "Save {{amount}}",
+        "selectOptions": "Select options",
+        "vendor": "Vendor",
+        "sku": "SKU",
+        "details": "Details",
+        "shipping": "Shipping",
+        "returns": "Returns"
+    },
+    "search": {
+        "title": "Predictive search",
+        "placeholder": "Search products...",
+        "noResults": "No results found for",
+        "results": "Results",
+        "viewAllResults": "View all results",
+        "products": "Products",
+        "collections": "Collections",
+        "pages": "Pages",
+        "suggestions": "Suggestions"
+    },
+    "account": {
+        "login": "Login",
+        "logout": "Logout",
+        "register": "Register",
+        "myAccount": "My Account",
+        "orders": "Orders",
+        "addresses": "Addresses",
+        "orderHistory": "Order History",
+        "accountDetails": "Account Details"
+    },
+    "forms": {
+        "email": "Email",
+        "password": "Password",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "company": "Company",
+        "address": "Address",
+        "city": "City",
+        "country": "Country",
+        "province": "Province",
+        "zip": "ZIP code",
+        "phone": "Phone",
+        "submit": "Submit",
+        "cancel": "Cancel",
+        "save": "Save",
+        "required": "Required"
+    },
+    "errors": {
+        "pageNotFound": "Page not found",
+        "somethingWentWrong": "Something went wrong",
+        "goHome": "Go to homepage"
+    },
+    "filters": {
+        "filter": "Filter",
+        "sort": "Sort",
+        "price": "Price",
+        "availability": "Availability",
+        "clearAll": "Clear all",
+        "apply": "Apply"
+    }
+}

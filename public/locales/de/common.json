@@ -1,0 +1,106 @@
+{
+    "site": {
+        "title": "Pouched",
+        "description": "Premium Schwedischer Snus"
+    },
+    "navigation": {
+        "skipToContent": "Zum Inhalt springen",
+        "mainContent": "Hauptinhalt"
+    },
+    "header": {
+        "search": "Suche",
+        "account": "Konto",
+        "cart": "Warenkorb",
+        "menu": "Menü"
+    },
+    "footer": {
+        "email": "E-Mail",
+        "signUpSuccess": "Vielen Dank für Ihre Anmeldung! 🎉",
+        "signUpError": "Bei der Anmeldung ist ein Fehler aufgetreten.",
+        "social": {
+            "instagram": "Instagram",
+            "x": "X",
+            "linkedin": "LinkedIn",
+            "facebook": "Facebook"
+        }
+    },
+    "cart": {
+        "title": "Warenkorb",
+        "empty": "Ihr Warenkorb ist leer",
+        "subtotal": "Zwischensumme",
+        "total": "Geschätzte Summe",
+        "checkout": "Zur Kasse",
+        "continueShopping": "Weiter einkaufen",
+        "remove": "Entfernen",
+        "quantity": "Menge",
+        "addToCart": "In den Warenkorb",
+        "added": "Zum Warenkorb hinzugefügt",
+        "updating": "Aktualisierung...",
+        "viewCart": "Warenkorb ansehen",
+        "taxesDiscountsShipping": "Steuern, Rabatte und Versandkosten werden an der Kasse berechnet."
+    },
+    "product": {
+        "inStock": "Auf Lager",
+        "outOfStock": "Ausverkauft",
+        "price": "Preis",
+        "compareAtPrice": "War",
+        "saveAmount": "Sparen Sie {{amount}}",
+        "selectOptions": "Optionen auswählen",
+        "vendor": "Hersteller",
+        "sku": "SKU",
+        "details": "Details",
+        "shipping": "Versand",
+        "returns": "Rückgabe"
+    },
+    "search": {
+        "title": "Prädiktive Suche",
+        "placeholder": "Produkte suchen...",
+        "noResults": "Keine Ergebnisse gefunden für",
+        "results": "Ergebnisse",
+        "viewAllResults": "Alle Ergebnisse anzeigen",
+        "products": "Produkte",
+        "collections": "Kollektionen",
+        "pages": "Seiten",
+        "suggestions": "Vorschläge"
+    },
+    "account": {
+        "login": "Anmelden",
+        "logout": "Abmelden",
+        "register": "Registrieren",
+        "myAccount": "Mein Konto",
+        "orders": "Bestellungen",
+        "addresses": "Adressen",
+        "orderHistory": "Bestellverlauf",
+        "accountDetails": "Kontodetails"
+    },
+    "forms": {
+        "email": "E-Mail",
+        "password": "Passwort",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "company": "Firma",
+        "address": "Adresse",
+        "city": "Stadt",
+        "country": "Land",
+        "province": "Bundesland",
+        "zip": "Postleitzahl",
+        "phone": "Telefon",
+        "submit": "Absenden",
+        "cancel": "Abbrechen",
+        "save": "Speichern",
+        "required": "Erforderlich"
+    },
+    "errors": {
+        "pageNotFound": "Seite nicht gefunden",
+        "somethingWentWrong": "Etwas ist schief gelaufen",
+        "goHome": "Zur Startseite"
+    },
+    "filters": {
+        "filter": "Filter",
+        "sort": "Sortieren",
+        "price": "Preis",
+        "availability": "Verfügbarkeit",
+        "clearAll": "Alle löschen",
+        "apply": "Anwenden"
+    }
+}

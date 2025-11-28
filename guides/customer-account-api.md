@@ -9,7 +9,7 @@ shopify hydrogen dev --codegen --port 3456 --customer-account-push__unstable
 Or quicker way with:
 
 ```bash
-npm run dev:ca
+pnpm run dev:ca
 ```
 
 ### Include public domain in Customer Account API settings

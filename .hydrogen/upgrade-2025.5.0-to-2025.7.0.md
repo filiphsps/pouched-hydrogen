@@ -314,8 +314,8 @@ echo ".react-router/" >> .gitignore
 > Test that your application runs without errors after the migration
 [#3141](https://github.com/Shopify/hydrogen/pull/3141)
 ```diff
-npm run dev
-npm run build
+pnpm run dev
+pnpm run build
 ```
 
 

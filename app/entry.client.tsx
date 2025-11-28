@@ -1,20 +1,40 @@
-import { NonceProvider } from "@shopify/hydrogen";
 import { StrictMode, startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { HydratedRouter } from "react-router/dom";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import i18next from "i18next";
+import { I18nextProvider, initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import { getInitialNamespaces } from "remix-i18next/client";
+import i18n from "./i18n";
 
-if (!window.location.origin.includes("webcache.googleusercontent.com")) {
+async function hydrate() {
+  await i18next
+    .use(initReactI18next)
+    .use(LanguageDetector)
+    .init({
+      ...i18n,
+      ns: getInitialNamespaces(),
+      detection: {
+        order: ["htmlTag"],
+        caches: [],
+      },
+    });
+
   startTransition(() => {
-    const existingNonce =
-      document.querySelector<HTMLScriptElement>("script[nonce]")?.nonce;
-
     hydrateRoot(
       document,
-      <StrictMode>
-        <NonceProvider value={existingNonce}>
+      <I18nextProvider i18n={i18next}>
+        <StrictMode>
           <HydratedRouter />
-        </NonceProvider>
-      </StrictMode>,
+        </StrictMode>
+      </I18nextProvider>,
     );
   });
+}
+
+if (!window.location.origin.includes("webcache.googleusercontent.com")) {
+  hydrate();
 }

@@ -4,7 +4,7 @@ This file provides guidance to AI agents (Claude, GitHub Copilot, Cursor, etc.) 
 
 ## Project Overview
 
-This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page builder for Hydrogen storefronts. The project is built with React 19, TypeScript, React Router 7, and Tailwind CSS v4. It runs on Node.js 20+ and uses Biome for linting/formatting.
+Read `mission.md` for a high-level overview of the project.
 
 ## Quick Start
 
@@ -12,13 +12,13 @@ This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page 
 
 1. **Prerequisites**:
    - Node.js 20.0.0 or higher
-   - npm (comes with Node.js)
+   - pnpm (comes with Node.js)
    - Shopify store credentials (for `.env` configuration)
 
 2. **Installation**:
    ```bash
    # Clone and install dependencies
-   npm install
+   pnpm install
 
    # Copy environment template
    cp .env.example .env
@@ -31,48 +31,48 @@ This is **Pilot**, a Shopify Hydrogen theme powered by Weaverse - a visual page 
 3. **Start Development**:
    ```bash
    # Start dev server (runs on http://localhost:3456)
-   npm run dev
+   pnpm run dev
 
    # In a separate terminal, run type checking
-   npm run typecheck
+   pnpm run typecheck
    ```
 
 4. **Before First Commit**:
    ```bash
    # Always run these before committing
-   npm run biome:fix    # Fix formatting and linting
-   npm run typecheck    # Verify no type errors
-   npm run build        # Ensure production build works
+   pnpm run biome:fix    # Fix formatting and linting
+   pnpm run typecheck    # Verify no type errors
+   pnpm run build        # Ensure production build works
    ```
 
 ### Development Ports
-- **Development server**: `http://localhost:3456` (via `npm run dev`)
-- **Preview server**: `http://localhost:3000` (via `npm run preview`)
+- **Development server**: `http://localhost:3456` (via `pnpm run dev`)
+- **Preview server**: `http://localhost:3000` (via `pnpm run preview`)
 - **E2E tests**: Run against preview server on port 3000
 
 ## Essential Commands
 
 ### Development
 ```bash
-npm run dev        # Start development server on port 3456
-npm run dev:ca     # Start with customer account push (unstable - for testing new Customer Account API features)
-npm run build      # Production build with GraphQL codegen
-npm run preview    # Preview production build
-npm start          # Start production server
-npm run clean      # Clean all build artifacts and dependencies
+pnpm run dev        # Start development server on port 3456
+pnpm run dev:ca     # Start with customer account push (unstable - for testing new Customer Account API features)
+pnpm run build      # Production build with GraphQL codegen
+pnpm run preview    # Preview production build
+pnpm start          # Start production server
+pnpm run clean      # Clean all build artifacts and dependencies
 ```
 
 ### Code Quality (Always run before committing)
 ```bash
-npm run biome      # Check for linting/formatting errors
-npm run biome:fix  # Fix linting/formatting errors
-npm run format     # Format code with Biome
-npm run typecheck  # Run TypeScript type checking
+pnpm run biome      # Check for linting/formatting errors
+pnpm run biome:fix  # Fix linting/formatting errors
+pnpm run format     # Format code with Biome
+pnpm run typecheck  # Run TypeScript type checking
 ```
 
 ### GraphQL
 ```bash
-npm run codegen    # Generate TypeScript types from GraphQL
+pnpm run codegen    # Generate TypeScript types from GraphQL
 ```
 
 ## Architecture Overview
@@ -386,7 +386,7 @@ The project extends from `ultracite` and `@weaverse/biome` configurations with t
 ```bash
 # Error: Property 'xyz' does not exist on type...
 # Solution: Regenerate TypeScript types from GraphQL schemas
-npm run codegen
+pnpm run codegen
 ```
 
 **2. Dev Server Port Already in Use**
@@ -395,7 +395,7 @@ npm run codegen
 # Solution: Kill the process using the port
 lsof -ti:3456 | xargs kill -9
 # Or use a different port
-npm run dev -- --port 3457
+pnpm run dev -- --port 3457
 ```
 
 **3. Weaverse Section Not Appearing in Builder**
@@ -422,9 +422,9 @@ npm run dev -- --port 3457
 # - Unused imports (Biome strict mode)
 # - Incorrect path aliases
 # Solutions:
-npm run codegen        # Regenerate types
-npm run biome:fix      # Fix linting issues
-npm run typecheck      # Find type errors
+pnpm run codegen        # Regenerate types
+pnpm run biome:fix      # Fix linting issues
+pnpm run typecheck      # Find type errors
 ```
 
 **6. Customer Account Routes Failing**
@@ -468,9 +468,9 @@ if (!shopifyData?.product) {
 # Error: Tests timeout or fail to connect
 # Cause: Preview server not running or wrong port
 # Solution: Tests auto-start preview server, but verify:
-npm run build          # Build first
-npm run preview        # Manually test preview server
-npm run e2e            # Run tests (auto-starts preview if needed)
+pnpm run build          # Build first
+pnpm run preview        # Manually test preview server
+pnpm run e2e            # Run tests (auto-starts preview if needed)
 ```
 
 **9. Biome Formatting Conflicts**
@@ -479,7 +479,7 @@ npm run e2e            # Run tests (auto-starts preview if needed)
 # Cause: Editor auto-format conflicts with Biome config
 # Solution: Disable other formatters (Prettier, ESLint) in IDE
 # Use only Biome for this project
-npm run biome:fix      # Let Biome fix everything
+pnpm run biome:fix      # Let Biome fix everything
 ```
 
 **10. Image Loading Issues in Development**
@@ -500,16 +500,16 @@ git status
 node --version
 
 # Check for syntax errors
-npm run biome
+pnpm run biome
 
 # Verify all types are correct
-npm run typecheck
+pnpm run typecheck
 
 # Test production build
-npm run build
+pnpm run build
 
 # Clear all caches and rebuild
-npm run clean && npm install && npm run build
+pnpm run clean && pnpm install && pnpm run build
 ```
 
 ### Getting Help
@@ -521,7 +521,7 @@ npm run clean && npm install && npm run build
 
 ## Common Pitfalls to Avoid
 
-1. **GraphQL Codegen**: Always run `npm run codegen` after modifying GraphQL queries/fragments
+1. **GraphQL Codegen**: Always run `pnpm run codegen` after modifying GraphQL queries/fragments
 2. **Route Registration**: New routes must be added to `/app/routes.ts` (not file-based routing anymore)
 3. **Weaverse Registration**: New sections must be registered in `/app/weaverse/components.ts`
 4. **Route Caching**: Use `routeHeaders` export for consistent cache control
@@ -529,13 +529,13 @@ npm run clean && npm install && npm run build
 6. **Parallel Loading**: Always use `Promise.all()` for multiple data fetches in loaders
 7. **Type Safety**: Avoid `any` type when possible, use `unknown` if escape hatch needed, properly type all Weaverse section props
 8. **Combined Listings**: Use utility functions from `/app/utils/combined-listings.ts` for product filtering and grouping logic
-9. **Package Manager**: Use npm (not pnpm) - the project is configured for npm package management
+9. **Package Manager**: Use pnpm (not pnpm) - the project is configured for pnpm package management
 
 ## Development Setup Requirements
 
 ### Node.js and Dependencies
 - **Node.js**: Version 20.0.0 or higher required
-- **Package Manager**: npm (configured in package.json, don't use pnpm)
+- **Package Manager**: pnpm (configured in package.json, don't use pnpm)
 - **Environment**: Copy `.env.example` to `.env` and configure Shopify store credentials
 
 ### Key Configuration Files

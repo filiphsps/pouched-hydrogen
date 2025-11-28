@@ -17,6 +17,8 @@ import {
   useRouteError,
   useRouteLoaderData,
 } from "react-router";
+import { useChangeLanguage } from "remix-i18next/react";
+import { useTranslation } from "react-i18next";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
@@ -66,10 +68,6 @@ export const meta = ({ data }: MetaArgs<typeof loader>) => {
   return getSeoMeta(data?.seo as SeoConfig);
 };
 
-function App() {
-  return <Outlet />;
-}
-
 export function ErrorBoundary({ error }: { error: Error }) {
   const routeError: { status?: number; data?: any } = useRouteError();
   const isRouteError = isRouteErrorResponse(routeError);
@@ -98,6 +96,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>("root");
   const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
+  useChangeLanguage(locale.language);
+  const { t } = useTranslation();
   const { topbarHeight, topbarText } = useThemeSettings();
   const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
   if (
@@ -106,6 +106,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   ) {
     return children;
   }
+  
   return (
     <html lang={locale.language}>
       <head>
@@ -138,7 +139,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               >
                 <div className="">
                   <a href="#mainContent" className="sr-only">
-                    Skip to content
+                    {t("navigation.skipToContent")}
                   </a>
                 </div>
                 <ScrollingAnnouncement />
@@ -160,6 +161,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Scripts nonce={nonce} />
       </body>
     </html>
+  );
+}
+
+function App() {
+  return (
+    <Layout>
+      <Outlet />
+    </Layout>
   );
 }
 

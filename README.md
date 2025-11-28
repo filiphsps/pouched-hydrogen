@@ -59,7 +59,7 @@ These **Shopify (Plus)** brands built on top of Weaverse/Pilot:
 **Requirements:**
 
 - Node.js version 20.0.0 or higher
-- `npm` or `pnpm` package manager
+- `pnpm` or `pnpm` package manager
 
 **Follow these steps to get started with Pilot and begin crafting your Hydrogen-driven storefront:**
 
@@ -73,20 +73,20 @@ These **Shopify (Plus)** brands built on top of Weaverse/Pilot:
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start development server on port 3456
-npm run dev
+pnpm run dev
 
 # Run code quality checks before committing
-npm run biome:fix
-npm run typecheck
+pnpm run biome:fix
+pnpm run typecheck
 
 # Build for production
-npm run build
+pnpm run build
 
 # Run E2E tests
-npm run e2e
+pnpm run e2e
 ```
 
 ## Features overview

@@ -4,6 +4,7 @@ import { type CartReturn, useAnalytics } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { Suspense, useEffect } from "react";
 import { Await, useLocation, useRouteLoaderData } from "react-router";
+import { useTranslation } from "react-i18next";
 import { CartMain } from "~/components/cart/cart-main";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
@@ -12,6 +13,7 @@ import { useCartDrawerStore } from "./store";
 export function CartDrawer() {
   const rootData = useRouteLoaderData<RootLoader>("root");
   const { publish } = useAnalytics();
+  const { t } = useTranslation();
   const {
     isOpen,
     close: closeCartDrawer,
@@ -80,7 +82,7 @@ export function CartDrawer() {
                   <div className="flex items-center justify-between gap-2 px-4">
                     <Dialog.Title asChild className="text-base">
                       <span className="font-bold">
-                        Cart ({cart?.totalQuantity || 0})
+                        {t("cart.title")} ({cart?.totalQuantity || 0})
                       </span>
                     </Dialog.Title>
                     <Dialog.Close asChild>

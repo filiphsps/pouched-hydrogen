@@ -28,7 +28,7 @@ export default defineConfig({
    tsconfigPaths(),
  ],
 
-#### Step: 2. Update your `package.json` and install the new packages. Make sure to match the Remix version along with other Remix npm packages and ensure the versions are 2.16.1 or above. [#2722](https://github.com/Shopify/hydrogen/pull/2722)
+#### Step: 2. Update your `package.json` and install the new packages. Make sure to match the Remix version along with other Remix pnpm packages and ensure the versions are 2.16.1 or above. [#2722](https://github.com/Shopify/hydrogen/pull/2722)
 
 [docs](https://remix.run/docs/en/main/start/future-flags#v3_routeconfig)
 [#2722](https://github.com/Shopify/hydrogen/pull/2722)

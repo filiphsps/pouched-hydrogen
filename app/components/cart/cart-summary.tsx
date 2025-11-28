@@ -5,6 +5,7 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useState } from "react";
 import { useFetcher } from "react-router";
+import { useTranslation } from "react-i18next";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
@@ -24,6 +25,7 @@ export function CartSummary({
   cart: OptimisticCart<CartApiQueryFragment>;
   layout: CartLayoutType;
 }) {
+  const { t } = useTranslation();
   const {
     enableCartNote,
     cartNoteButtonText,
@@ -170,7 +172,7 @@ export function CartSummary({
             layout === "page" && "text-xl",
           )}
         >
-          <dt>Estimated total:</dt>
+          <dt>{t("cart.total")}:</dt>
           {isCartUpdating ? (
             <Skeleton className="h-4 w-20 rounded" />
           ) : (
@@ -185,16 +187,7 @@ export function CartSummary({
         </div>
       </dl>
       <div className="mb-2 text-right text-body-subtle">
-        Taxes, discounts and{" "}
-        <Link
-          target="_blank"
-          to="/policies/shipping-policy"
-          variant="underline"
-          className="text-current after:bg-current"
-        >
-          shipping
-        </Link>{" "}
-        calculated at checkout.
+        {t("cart.taxesDiscountsShipping")}
       </div>
       {(enableCartNote || enableDiscountCode || enableGiftCard) && (
         <div className="mb-4 flex items-center justify-end gap-2">
@@ -246,7 +239,7 @@ export function CartSummary({
           {/* @todo: <CartShopPayButton cart={cart} /> */}
           {layout === "drawer" && (
             <Link variant="underline" to="/cart" className="mx-auto w-fit">
-              View cart
+              {t("cart.viewCart")}
             </Link>
           )}
         </div>

@@ -10,7 +10,7 @@ The same logic can be applied to any Hydrogen storefront project, adapting the i
 
 # AI model verification steps
 
-- Never edit generated files (ending with .d.ts) directly; instead, run the `npm run codegen` command to update them.
+- Never edit generated files (ending with .d.ts) directly; instead, run the `pnpm run codegen` command to update them.
 - Always follow naming conventions for Weaverse components: use PascalCase for component names.
 - Keep component-specific types in the same file as the component.
 - Ensure all components have proper schema definitions for the Weaverse builder.
@@ -65,7 +65,7 @@ In this recipe, you'll make the following changes:
 ## Requirements
 
 - A Shopify Hydrogen storefront (created with `@shopify/create-hydrogen` or similar).
-- Node.js and npm/yarn/pnpm installed on your development machine.
+- Node.js and pnpm/yarn/pnpm installed on your development machine.
 - A Weaverse account (sign up at [weaverse.io](mdc:workspace/workspace/workspace/workspace/https:/weaverse.io)).
 
 ## Project Structure Overview
@@ -578,10 +578,10 @@ const COLLECTION_QUERY = `#graphql
 
 ### Step 1: Install Weaverse SDK for Hydrogen
 
-Install the Weaverse SDK for Hydrogen using npm, yarn, or pnpm.
+Install the Weaverse SDK for Hydrogen using pnpm, yarn, or pnpm.
 
 ```bash
-npm install @weaverse/hydrogen
+pnpm install @weaverse/hydrogen
 ```
 
 ### Step 2: Create the Weaverse directory structure
