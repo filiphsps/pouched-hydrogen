@@ -16,6 +16,7 @@ import { useShopMenu } from "~/hooks/use-shop-menu";
 import { cn } from "~/utils/cn";
 import { CountrySelector } from "./country-selector";
 import { FooterMenu } from "./menu/footer-menu";
+import React from "react";
 
 const variants = cva("", {
   variants: {
@@ -129,13 +130,15 @@ export function Footer() {
                 ))}
               </div>
             </div>
-              <div className="flex flex-col gap-6">
-                <div className="text-base">{addressTitle}</div>
-                <div className="space-y-2">
-                  <p>{storeAddress}</p>
-                  <p>{t("footer.email")}: {storeEmail}</p>
-                </div>
+            <div className="flex flex-col gap-6">
+              <div className="text-base">{addressTitle}</div>
+              <div className="space-y-2">
+                <p>{storeAddress}</p>
+                <p>
+                  {t("footer.email")}: {storeEmail}
+                </p>
               </div>
+            </div>
             <div className="flex flex-col gap-6">
               <div className="text-base">{newsletterTitle}</div>
               <div className="space-y-2">
@@ -183,7 +186,7 @@ export function Footer() {
           <div className="flex gap-2">
             <CountrySelector />
           </div>
-          <p>{copyright}</p>
+          <p dangerouslySetInnerHTML={{ __html: copyright }} />
         </div>
       </div>
     </footer>

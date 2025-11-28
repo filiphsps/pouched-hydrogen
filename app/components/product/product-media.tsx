@@ -191,7 +191,7 @@ export function ProductMedia(props: ProductMediaProps) {
                     key={id}
                     className={cn(
                       "relative",
-                      "h-auto! cursor-pointer border border-transparent p-1 transition-colors",
+                      "h-auto! cursor-pointer border border-transparent p-1 transition-colors hover:border-line-subtle",
                       "[&.swiper-slide-thumb-active]:border-line",
                     )}
                   >

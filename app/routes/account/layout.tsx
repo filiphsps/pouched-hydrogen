@@ -6,6 +6,7 @@ import { clsx } from "clsx";
 import type { CustomerDetailsQuery } from "customer-account-api.generated";
 import type { LoaderFunctionArgs } from "react-router";
 import { data, Outlet, useLoaderData, useMatches } from "react-router";
+import { useTranslation } from "react-i18next";
 import Link from "~/components/link";
 import { routeHeaders } from "~/utils/cache";
 import { getFeaturedProducts } from "~/utils/featured-products";
@@ -33,7 +34,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
   }
 
   const customer = d?.customer;
-  const heading = customer ? "My Account" : "Account Details";
+  const heading = customer ? "account.myAccount" : "account.accountDetails";
 
   return data(
     {
@@ -48,6 +49,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 export default function AccountLayout() {
   const loaderData = useLoaderData<typeof loader>();
   const matches = useMatches();
+  const { t } = useTranslation();
 
   // routes that export handle { renderInModal: true }
   const renderInModal = matches.find(
@@ -75,14 +77,14 @@ export default function AccountLayout() {
             >
               <div className="relative w-[500px] max-w-[90vw] bg-(--color-background) px-6 py-3">
                 <VisuallyHidden.Root asChild>
-                  <Dialog.Title>Account modal</Dialog.Title>
+                  <Dialog.Title>{t("account.accountModal")}</Dialog.Title>
                 </VisuallyHidden.Root>
                 <Outlet context={loaderData} />
                 <Dialog.Close asChild>
                   <Link
                     to="/account"
                     className="absolute top-5 right-4 p-2"
-                    aria-label="Close account modal"
+                    aria-label={t("account.closeModal")}
                   >
                     <XIcon className="h-4 w-4" />
                   </Link>

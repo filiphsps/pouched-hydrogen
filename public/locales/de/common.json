@@ -64,14 +64,57 @@
         "suggestions": "Vorschläge"
     },
     "account": {
-        "login": "Anmelden",
-        "logout": "Abmelden",
-        "register": "Registrieren",
+        "title": "Konto",
         "myAccount": "Mein Konto",
-        "orders": "Bestellungen",
-        "addresses": "Adressen",
-        "orderHistory": "Bestellverlauf",
-        "accountDetails": "Kontodetails"
+        "accountDetails": "Kontodetails",
+        "accountModal": "Konto-Modal",
+        "closeModal": "Konto-Modal schließen",
+        "signOut": "Abmelden",
+        "welcome": "Willkommen, {{name}}",
+        "personalInfo": "Persönliche Informationen",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "email": "E-Mail-Adresse",
+        "phone": "Telefonnummer",
+        "updateProfile": "Profil aktualisieren",
+        "updating": "Aktualisiere...",
+        "editDetails": "Kontodetails bearbeiten",
+        "na": "N/A",
+        "orders": {
+            "title": "Bestellungen",
+            "detail": "Bestelldetails",
+            "returnToAccount": "Zurück zu Mein Konto",
+            "placedOn": "Bestellt am {{date}}",
+            "shippingAddress": "Lieferadresse",
+            "noShippingAddress": "Keine Lieferadresse definiert",
+            "statusTitle": "Status",
+            "none": "Sie haben noch keine Bestellungen aufgegeben.",
+            "orderNo": "Bestell-Nr.",
+            "orderDate": "Bestelldatum",
+            "fulfillmentStatus": "Erfüllungsstatus",
+            "viewDetails": "Details anzeigen",
+            "imageAlt": "Bestellbild",
+            "status": {
+                "SUCCESS": "Erfolgreich",
+                "PENDING": "Ausstehend",
+                "OPEN": "Offen",
+                "FAILURE": "Fehlgeschlagen",
+                "ERROR": "Fehler",
+                "CANCELLED": "Storniert"
+            }
+        },
+        "addresses": {
+            "title": "Adressbuch",
+            "none": "Sie haben noch keine Adressen gespeichert.",
+            "add": "Adresse hinzufügen",
+            "default": "Standard",
+            "edit": "Bearbeiten",
+            "remove": "Entfernen"
+        },
+        "featuredProducts": {
+            "title": "Empfohlene Produkte",
+            "error": "Es gab ein Problem beim Laden der empfohlenen Produkte."
+        }
     },
     "forms": {
         "email": "E-Mail",

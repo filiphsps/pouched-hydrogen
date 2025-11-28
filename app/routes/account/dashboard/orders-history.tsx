@@ -1,36 +1,30 @@
 import { flattenConnection } from "@shopify/hydrogen";
-import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
+
 import type { OrderCardFragment } from "customer-account-api.generated";
+import { useTranslation } from "react-i18next";
 import { Image } from "~/components/image";
 import Link from "~/components/link";
-
-export const ORDER_STATUS: Record<FulfillmentStatus, string> = {
-  SUCCESS: "Success",
-  PENDING: "Pending",
-  OPEN: "Open",
-  FAILURE: "Failure",
-  ERROR: "Error",
-  CANCELLED: "Cancelled",
-};
 
 type OrderCardsProps = {
   orders: OrderCardFragment[];
 };
 
 export function OrdersHistory({ orders }: OrderCardsProps) {
+  const { t } = useTranslation();
   return (
     <div className="space-y-4">
-      <div className="font-bold">Orders</div>
+      <div className="font-bold">{t("account.orders.title")}</div>
       {orders?.length ? (
         <Orders orders={orders} />
       ) : (
-        <div>You haven&apos;t placed any orders yet.</div>
+        <div>{t("account.orders.none")}</div>
       )}
     </div>
   );
 }
 
 function Orders({ orders }: OrderCardsProps) {
+  const { t } = useTranslation();
   return (
     <ul className="grid grid-flow-row grid-cols-1 gap-5 sm:grid-cols-2">
       {orders.map((order) => {
@@ -58,7 +52,10 @@ function Orders({ orders }: OrderCardsProps) {
                     width={500}
                     height={500}
                     className="h-auto w-36"
-                    alt={lineItems[0].image?.altText ?? "Order image"}
+                    alt={
+                      lineItems[0].image?.altText ??
+                      t("account.orders.imageAlt")
+                    }
                     src={lineItems[0].image.url}
                   />
                 </Link>
@@ -74,11 +71,13 @@ function Orders({ orders }: OrderCardsProps) {
                     : lineItems[0].title}
                 </div>
                 <dl className="mt-2 flex flex-col">
-                  <dt className="sr-only">Order ID</dt>
+                  <dt className="sr-only">{t("account.orders.orderNo")}</dt>
                   <dd>
-                    <p className="text-body-subtle">Order No. {order.number}</p>
+                    <p className="text-body-subtle">
+                      {t("account.orders.orderNo")} {order.number}
+                    </p>
                   </dd>
-                  <dt className="sr-only">Order Date</dt>
+                  <dt className="sr-only">{t("account.orders.orderDate")}</dt>
                   <dd>
                     <p className="text-body-subtle">
                       {new Date(order.processedAt).toDateString()}
@@ -86,10 +85,13 @@ function Orders({ orders }: OrderCardsProps) {
                   </dd>
                   {fulfillmentStatus && (
                     <>
-                      <dt className="sr-only">Fulfillment Status</dt>
+                      <dt className="sr-only">
+                        {t("account.orders.fulfillmentStatus")}
+                      </dt>
                       <dd className="mt-3">
                         <span className="border bg-gray-100 px-2.5 py-1 font-medium text-xs">
-                          {ORDER_STATUS[fulfillmentStatus] || fulfillmentStatus}
+                          {t(`account.orders.status.${fulfillmentStatus}`) ||
+                            fulfillmentStatus}
                         </span>
                       </dd>
                     </>
@@ -100,7 +102,7 @@ function Orders({ orders }: OrderCardsProps) {
                     variant="underline"
                     className="mt-3 w-fit text-body-subtle after:bg-body-subtle"
                   >
-                    View details
+                    {t("account.orders.viewDetails")}
                   </Link>
                 </dl>
               </div>

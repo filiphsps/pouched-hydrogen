@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import Link from "~/components/link";
 import { Section } from "~/components/section";
 
@@ -6,8 +7,9 @@ export function GenericError({
 }: {
   error?: { message: string; stack?: string };
 }) {
-  const heading = "Something’s wrong here.";
-  let description = "We found an error while loading this page.";
+  const { t } = useTranslation();
+  const heading = t("error.generic.heading");
+  let description = t("error.generic.description");
 
   // TODO hide error in prod?
   if (error) {
@@ -39,7 +41,7 @@ export function GenericError({
         />
       )}
       <Link variant="outline" to="/" className="w-fit">
-        Take me to the home page
+        {t("error.generic.homeButton")}
       </Link>
     </Section>
   );

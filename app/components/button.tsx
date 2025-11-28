@@ -1,15 +1,15 @@
 import { CircleNotchIcon } from "@phosphor-icons/react";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import type { HTMLAttributes } from "react";
+import { type HTMLMotionProps, motion } from "framer-motion";
 import { cn } from "~/utils/cn";
 
 export const variants = cva(
   [
     "relative inline-flex items-center justify-center rounded-none",
     "whitespace-nowrap font-normal text-base leading-tight",
-    "focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50!",
-    "transition-colors",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50!",
+    "transition-all duration-200",
   ],
   {
     variants: {
@@ -75,7 +75,7 @@ export interface ButtonStyleProps {
 
 export interface ButtonProps
   extends VariantProps<typeof variants>,
-    Omit<HTMLAttributes<HTMLButtonElement>, "type">,
+    Omit<HTMLMotionProps<"button">, "ref">,
     Partial<ButtonStyleProps> {
   ref?: React.Ref<HTMLButtonElement>;
   type?: "button" | "reset" | "submit";
@@ -132,16 +132,19 @@ export function Button(props: ButtonProps) {
   }
 
   return (
-    <button
+    <motion.button
       ref={ref}
       style={style}
       type={type}
       {...rest}
       className={cn(variants({ variant, className }))}
+      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
     >
       {loading && <Spinner />}
       {content}
-    </button>
+    </motion.button>
   );
 }
 

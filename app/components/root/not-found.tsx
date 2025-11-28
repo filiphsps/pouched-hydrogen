@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
 import { BreadCrumb } from "~/components/breadcrumb";
 import Link from "~/components/link";
@@ -9,28 +10,28 @@ import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { FeaturedProductsData } from "~/utils/featured-products";
 
 export function NotFound({ type = "page" }: { type?: string }) {
+  const { t } = useTranslation();
   return (
     <Section width="fixed" verticalPadding="medium">
       <div className="space-y-4 py-20">
         <BreadCrumb className="justify-center" page="404" />
         <h4 className="mt-4 mb-2.5 text-center font-medium">
-          We’ve lost this {type}
+          {t("error.notFound.heading", { type })}
         </h4>
         <p className="mx-auto pt-1 text-center lg:w-1/2">
-          We couldn’t find the {type} you’re looking for. It may have been
-          removed, had its name changed, or is temporarily unavailable.
+          {t("error.notFound.description", { type })}
         </p>
         <div className="pt-10">
           <div className="text-center font-medium text-xl">
-            What you can do?
+            {t("error.notFound.actionsTitle")}
           </div>
           <div className="flex flex-col items-center justify-center gap-4 pt-4 md:flex-row">
             <Link variant="outline" to="/products">
-              Shop our products
+              {t("error.notFound.shopProducts")}
             </Link>
-            <span>Or</span>
+            <span>{t("error.notFound.or")}</span>
             <Link variant="underline" to="/">
-              Take me to the home page
+              {t("error.notFound.homeButton")}
             </Link>
           </div>
         </div>
@@ -43,6 +44,7 @@ export function NotFound({ type = "page" }: { type?: string }) {
 function FeaturedProducts() {
   const { load, data } = useFetcher<FeaturedProductsData>();
   const api = usePrefixPathWithLocale("/api/featured-products");
+  const { t } = useTranslation();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
   useEffect(() => {
@@ -57,7 +59,7 @@ function FeaturedProducts() {
 
   return (
     <div className="space-y-8 pt-20">
-      <h5>Featured products</h5>
+      <h5>{t("error.notFound.featuredProducts")}</h5>
       <Swimlane>
         {featuredProducts.nodes.map((product) => (
           <ProductCard

@@ -8,6 +8,7 @@ import {
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { isCombinedListing } from "~/utils/combined-listings";
+import { StickyAddToCart } from "./sticky-add-to-cart";
 
 interface ProductInformationData
   extends Omit<ProductMediaProps, "selectedVariant" | "media"> {
@@ -80,6 +81,8 @@ export default function ProductInformation(
             </div>
           </div>
         </div>
+
+        <StickyAddToCart />
       </Section>
     );
   }

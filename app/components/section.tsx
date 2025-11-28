@@ -12,6 +12,7 @@ import { backgroundInputs } from "./background-image";
 import type { OverlayProps } from "./overlay";
 import { overlayInputs } from "./overlay";
 import { OverlayAndBackground } from "./overlay-and-background";
+import { FadeIn } from "~/components/fade-in";
 
 export type BackgroundProps = BackgroundImageProps & {
   backgroundFor: "section" | "content";
@@ -124,7 +125,7 @@ export function Section(props: SectionProps) {
       )}
     >
       {!isBgForContent && <OverlayAndBackground {...props} />}
-      <div
+      <FadeIn
         className={cn(
           variants({ gap, width, verticalPadding, overflow }),
           hasBackground &&
@@ -137,7 +138,7 @@ export function Section(props: SectionProps) {
       >
         {isBgForContent && <OverlayAndBackground {...props} />}
         {children}
-      </div>
+      </FadeIn>
     </Component>
   );
 }

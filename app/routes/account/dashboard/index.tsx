@@ -2,6 +2,7 @@ import { SignOutIcon } from "@phosphor-icons/react";
 import { flattenConnection } from "@shopify/hydrogen";
 import { Suspense } from "react";
 import { Await, Form, useLoaderData, useOutletContext } from "react-router";
+import { useTranslation } from "react-i18next";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
@@ -16,6 +17,7 @@ export default function AccountDashboard() {
   const loaderData = useLoaderData<typeof accountLoader>();
   const outletContext =
     useOutletContext<Awaited<ReturnType<typeof accountLoader>>["data"]>();
+  const { t } = useTranslation();
 
   let { customer, heading, featuredProducts } = loaderData || {};
   if (!customer) {
@@ -38,7 +40,7 @@ export default function AccountDashboard() {
       containerClassName="space-y-10"
     >
       <div className="space-y-4">
-        <h1 className="h4 font-medium">{heading}</h1>
+        <h1 className="h4 font-medium">{t(heading)}</h1>
         <Form method="post" action={signOutUrl}>
           <button
             type="submit"
@@ -46,7 +48,7 @@ export default function AccountDashboard() {
           >
             <SignOutIcon className="h-4 w-4" />
             <span className="underline-offset-4 group-hover:underline">
-              Sign out
+              {t("account.signOut")}
             </span>
           </button>
         </Form>
@@ -58,11 +60,11 @@ export default function AccountDashboard() {
         <Suspense>
           <Await
             resolve={featuredProducts}
-            errorElement="There was a problem loading featured products."
+            errorElement={t("account.featuredProducts.error")}
           >
             {({ featuredProducts: products }) => (
               <div className="space-y-8 pt-20">
-                <h5>Featured products</h5>
+                <h5>{t("account.featuredProducts.title")}</h5>
                 <Swimlane>
                   {products.nodes.map((product) => (
                     <ProductCard

@@ -64,14 +64,60 @@
         "suggestions": "Suggestions"
     },
     "account": {
+        "title": "Account",
         "login": "Login",
         "logout": "Logout",
         "register": "Register",
         "myAccount": "My Account",
-        "orders": "Orders",
-        "addresses": "Addresses",
-        "orderHistory": "Order History",
-        "accountDetails": "Account Details"
+        "accountDetails": "Account Details",
+        "accountModal": "Account modal",
+        "closeModal": "Close account modal",
+        "signOut": "Sign out",
+        "welcome": "Welcome, {{name}}",
+        "personalInfo": "Personal Information",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email address",
+        "phone": "Phone number",
+        "updateProfile": "Update Profile",
+        "updating": "Updating...",
+        "editDetails": "Edit account details",
+        "na": "N/A",
+        "orders": {
+            "title": "Orders",
+            "detail": "Order Detail",
+            "returnToAccount": "Return to My Account",
+            "placedOn": "Placed on {{date}}",
+            "shippingAddress": "Shipping Address",
+            "noShippingAddress": "No shipping address defined",
+            "statusTitle": "Status",
+            "none": "You haven't placed any orders yet.",
+            "orderNo": "Order No.",
+            "orderDate": "Order Date",
+            "fulfillmentStatus": "Fulfillment Status",
+            "viewDetails": "View details",
+            "imageAlt": "Order image",
+            "status": {
+                "SUCCESS": "Success",
+                "PENDING": "Pending",
+                "OPEN": "Open",
+                "FAILURE": "Failure",
+                "ERROR": "Error",
+                "CANCELLED": "Cancelled"
+            }
+        },
+        "addresses": {
+            "title": "Address Book",
+            "none": "You haven't saved any addresses yet.",
+            "add": "Add an Address",
+            "default": "Default",
+            "edit": "Edit",
+            "remove": "Remove"
+        },
+        "featuredProducts": {
+            "title": "Featured products",
+            "error": "There was a problem loading featured products."
+        }
     },
     "forms": {
         "email": "Email",

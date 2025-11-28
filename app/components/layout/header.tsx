@@ -61,7 +61,9 @@ export function Header() {
         "text-(--color-header-text) hover:text-(--color-header-text)",
         "border-line-subtle border-b",
         variants({ padding: headerWidth }),
-        scrolled ? "shadow-header" : "shadow-none",
+        scrolled
+          ? "shadow-header backdrop-blur-md bg-opacity-90"
+          : "shadow-none",
         enableTransparent
           ? [
               "group/header fixed w-screen",

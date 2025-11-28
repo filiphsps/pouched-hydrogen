@@ -10,6 +10,7 @@ import {
   useNavigation,
   useOutletContext,
 } from "react-router";
+import { useTranslation } from "react-i18next";
 import { Button } from "~/components/button";
 import { Section } from "~/components/section";
 
@@ -118,6 +119,7 @@ export default function AccountProfile() {
   const { state } = useNavigation();
   const actionData = useActionData<ActionResponse>();
   const customer = actionData?.customer ?? account?.customer;
+  const { t } = useTranslation();
 
   return (
     <Section
@@ -127,21 +129,21 @@ export default function AccountProfile() {
     >
       <div className="space-y-6">
         <div className="space-y-4">
-          <h1 className="h4 font-medium">Personal Information</h1>
+          <h1 className="h4 font-medium">{t("account.personalInfo")}</h1>
         </div>
         <Form method="PUT" className="space-y-6">
           <fieldset className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="firstName" className="">
-                First name
+                {t("account.firstName")}
               </label>
               <input
                 id="firstName"
                 name="firstName"
                 type="text"
                 autoComplete="given-name"
-                placeholder="First name"
-                aria-label="First name"
+                placeholder={t("account.firstName")}
+                aria-label={t("account.firstName")}
                 defaultValue={customer.firstName ?? ""}
                 minLength={2}
                 className="w-full border border-border bg-background px-3 py-2"
@@ -149,15 +151,15 @@ export default function AccountProfile() {
             </div>
             <div className="space-y-2">
               <label htmlFor="lastName" className="">
-                Last name
+                {t("account.lastName")}
               </label>
               <input
                 id="lastName"
                 name="lastName"
                 type="text"
                 autoComplete="family-name"
-                placeholder="Last name"
-                aria-label="Last name"
+                placeholder={t("account.lastName")}
+                aria-label={t("account.lastName")}
                 defaultValue={customer.lastName ?? ""}
                 minLength={2}
                 className="w-full border border-border bg-background px-3 py-2"
@@ -168,7 +170,9 @@ export default function AccountProfile() {
             <p className="text-red-600 text-sm">{actionData.error}</p>
           )}
           <Button type="submit" disabled={state !== "idle"} variant="primary">
-            {state !== "idle" ? "Updating..." : "Update Profile"}
+            {state !== "idle"
+              ? t("account.updating")
+              : t("account.updateProfile")}
           </Button>
         </Form>
       </div>

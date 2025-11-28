@@ -8,7 +8,7 @@ importers:
 
   .:
     dependencies:
-      '@fontsource-variable/cabin':
+      '@fontsource-variable/inter':
         specifier: ^5.2.8
         version: 5.2.8
       '@graphql-codegen/cli':
@@ -771,8 +771,8 @@ packages:
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
 
-  '@fontsource-variable/cabin@5.2.8':
-    resolution: {integrity: sha512-6zCXSPy1ULBct/we+0oV1l+JoGqljyU4lVmEETb+5qSaNLeisZ3zRmm1+F7o6yXbJOt/K1wMBeVFYWm6GS9aWw==}
+  '@fontsource-variable/inter@5.2.8':
+    resolution: {integrity: sha512-kOfP2D+ykbcX/P3IFnokOhVRNoTozo5/JxhAIVYLpea/UBmCQ/YWPBfWIDuBImXX/15KH+eKh4xpEUyS2sQQGQ==}
 
   '@google/model-viewer@4.1.0':
     resolution: {integrity: sha512-7WB/jS6wfBfRl/tWhsUUvDMKFE1KlKME97coDLlZQfvJD0nCwjhES1lJ+k7wnmf7T3zMvCfn9mIjM/mgZapuig==}
@@ -5158,7 +5158,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
-  '@fontsource-variable/cabin@5.2.8': {}
+  '@fontsource-variable/inter@5.2.8': {}
 
   '@google/model-viewer@4.1.0(three@0.172.0)':
     dependencies:

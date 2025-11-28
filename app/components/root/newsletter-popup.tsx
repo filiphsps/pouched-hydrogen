@@ -3,6 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
@@ -44,12 +45,13 @@ export function NewsletterPopup() {
   const [open, setOpen] = useState(false);
   const fetcher = useFetcher<{ ok: boolean; error: string }>();
   const isDesignMode = useWeaverseStudioCheck();
+  const { t } = useTranslation();
 
   // Compute message and error from fetcher data
-  const message = fetcher.data?.ok ? "Thank you for signing up! 🎉" : "";
+  const message = fetcher.data?.ok ? t("newsletter.popup.success") : "";
   const error =
     fetcher.data && !fetcher.data.ok
-      ? fetcher.data.error || "An error occurred while signing up."
+      ? fetcher.data.error || t("newsletter.popup.error")
       : "";
 
   // Close popup after successful submission
@@ -127,13 +129,13 @@ export function NewsletterPopup() {
               <button
                 type="button"
                 className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
-                aria-label="Close"
+                aria-label={t("newsletter.popup.close")}
               >
                 <XIcon size={16} />
               </button>
             </Dialog.Close>
             <VisuallyHidden.Root asChild>
-              <Dialog.Title>Newsletter Signup</Dialog.Title>
+              <Dialog.Title>{t("newsletter.popup.title")}</Dialog.Title>
             </VisuallyHidden.Root>
 
             <div
@@ -188,7 +190,7 @@ export function NewsletterPopup() {
                     name="email"
                     type="email"
                     required
-                    placeholder="Enter your email"
+                    placeholder={t("newsletter.popup.emailPlaceholder")}
                     className="w-full px-4 py-2.5"
                   />
                   <Button
@@ -220,7 +222,7 @@ export function NewsletterPopup() {
                     }}
                     className="mt-4 text-body-subtle text-sm underline underline-offset-4 hover:text-body"
                   >
-                    Don't show this again
+                    {t("newsletter.popup.dontShowAgain")}
                   </button>
                 )}
               </div>

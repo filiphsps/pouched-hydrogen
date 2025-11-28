@@ -1,6 +1,8 @@
+import { COUNTRIES } from "~/utils/const";
+
 export default {
-  supportedLngs: ["de", "en"],
-  fallbackLng: "de",
+  supportedLngs: Object.values(COUNTRIES).map((c) => c.language.toLowerCase()),
+  fallbackLng: COUNTRIES.default.language.toLowerCase(),
   defaultNS: "common",
   react: { useSuspense: false },
 };

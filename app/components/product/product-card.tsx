@@ -2,6 +2,7 @@ import { Money, mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { useViewTransitionState } from "react-router";
 import type {
@@ -104,45 +105,55 @@ export function ProductCard({
     >
       <div className="group relative">
         {image && (
-          <Link
-            to={`/products/${product.handle}?${params.toString()}`}
-            prefetch="intent"
-            className="group relative block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius) bg-gray-100"
+          <motion.div
+            whileHover={{
+              y: -4,
+              boxShadow:
+                "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="group relative rounded-t-(--pcard-radius)"
           >
-            {/* Loading skeleton overlay */}
-            {isImageLoading && <Spinner className="bg-gray-100" />}
-            <Image
-              className={clsx([
-                "absolute inset-0",
-                pcardShowImageOnHover &&
-                  secondImage &&
-                  "transition-opacity duration-300 group-hover:opacity-50",
-                isTransitioning &&
-                  "[&_img]:[view-transition-name:image-expand]",
-              ])}
-              sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
-              data={image}
-              width={700}
-              alt={image.altText || `Picture of ${product.title}`}
-              loading="lazy"
-              onLoad={() => setIsImageLoading(false)}
-            />
-            {pcardShowImageOnHover && secondImage && (
+            <Link
+              to={`/products/${product.handle}?${params.toString()}`}
+              prefetch="intent"
+              className="block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius) bg-gray-100"
+            >
+              {/* Loading skeleton overlay */}
+              {isImageLoading && <Spinner className="bg-gray-100" />}
               <Image
                 className={clsx([
                   "absolute inset-0",
-                  "opacity-0 transition-opacity duration-300 group-hover:opacity-100",
+                  pcardShowImageOnHover &&
+                    secondImage &&
+                    "transition-opacity duration-300 group-hover:opacity-50",
+                  isTransitioning &&
+                    "[&_img]:[view-transition-name:image-expand]",
                 ])}
-                sizes="auto"
+                sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
+                data={image}
                 width={700}
-                data={secondImage}
-                alt={
-                  secondImage.altText || `Second picture of ${product.title}`
-                }
+                alt={image.altText || `Picture of ${product.title}`}
                 loading="lazy"
+                onLoad={() => setIsImageLoading(false)}
               />
-            )}
-          </Link>
+              {pcardShowImageOnHover && secondImage && (
+                <Image
+                  className={clsx([
+                    "absolute inset-0",
+                    "opacity-0 transition-opacity duration-300 group-hover:opacity-100",
+                  ])}
+                  sizes="auto"
+                  width={700}
+                  data={secondImage}
+                  alt={
+                    secondImage.altText || `Second picture of ${product.title}`
+                  }
+                  loading="lazy"
+                />
+              )}
+            </Link>
+          </motion.div>
         )}
         <div className="absolute top-2.5 right-2.5 flex gap-1">
           {isBundle && pcardShowBundleBadge && <BundleBadge />}

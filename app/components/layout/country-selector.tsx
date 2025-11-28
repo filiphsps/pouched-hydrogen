@@ -51,6 +51,11 @@ export function CountrySelector() {
     fetcher.load("/api/countries");
   }, [inView, fetcher]);
 
+  // Hide the selector if there is one or fewer countries.
+  if (Object.keys(countries).length <= 1) {
+    return null;
+  }
+
   function handleLocaleChange({
     redirectTo,
     buyerIdentity,

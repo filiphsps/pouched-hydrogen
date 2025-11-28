@@ -3,7 +3,7 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --font-cabin: Cabin Variable, ui-sans-serif, system-ui, sans-serif;
+  --font-sans: Inter Variable, ui-sans-serif, system-ui, sans-serif;
   --font-serif: Arial, IBMPlexSerif, Palatino, ui-serif;
 
   --breakpoint-sm: 32em;
@@ -240,7 +240,7 @@
     border-color: rgb(var(--color-border) / 0.15);
   }
   html {
-    @apply font-cabin;
+    @apply font-sans;
     scroll-padding-top: 10rem;
   }
 

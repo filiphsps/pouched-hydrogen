@@ -1,6 +1,7 @@
 // Supports weights 400-700
-import "@fontsource-variable/cabin";
+import "@fontsource-variable/inter";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { AnimatePresence, motion } from "framer-motion";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
 import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
@@ -106,7 +107,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   ) {
     return children;
   }
-  
+
   return (
     <html lang={locale.language}>
       <head>
@@ -165,9 +166,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
+  const location = useLocation();
   return (
     <Layout>
-      <Outlet />
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="h-full"
+        >
+          <Outlet />
+        </motion.div>
+      </AnimatePresence>
     </Layout>
   );
 }

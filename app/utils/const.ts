@@ -7,12 +7,6 @@ export const COUNTRIES: Localizations = {
     country: "DE",
     currency: "EUR",
   },
-  "/en-de": {
-    label: "Germany (EUR €)",
-    language: "EN",
-    country: "DE",
-    currency: "EUR",
-  },
 };
 
 export const DEFAULT_LOCALE: I18nLocale = Object.freeze({
