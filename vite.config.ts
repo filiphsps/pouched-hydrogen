@@ -31,6 +31,7 @@ export default defineConfig({
       ],
     },
     allowedHosts: true,
+    cors: true,
   },
   ssr: {
     noExternal: ['remix-i18next'],
