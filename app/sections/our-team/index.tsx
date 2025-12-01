@@ -1,46 +1,46 @@
 import {
-  type ComponentLoaderArgs,
-  createSchema,
-  type WeaverseMetaObject,
+    type ComponentLoaderArgs,
+    createSchema,
+    type WeaverseMetaObject,
 } from "@weaverse/hydrogen";
 import type { OurTeamQuery } from "storefront-api.generated";
 import { backgroundInputs } from "~/components/background-image";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 
 type OurTeamData = {
-  metaobject: WeaverseMetaObject;
-  membersCount: number;
+    metaobject: WeaverseMetaObject;
+    membersCount: number;
 };
 
 interface OurTeamProps
-  extends SectionProps<Awaited<ReturnType<typeof loader>>>,
-    OurTeamData {
-  ref?: React.Ref<HTMLDivElement>;
+    extends SectionProps<Awaited<ReturnType<typeof loader>>>,
+        OurTeamData {
+    ref?: React.Ref<HTMLDivElement>;
 }
 
 function OurTeam(props: OurTeamProps) {
-  const { loaderData, metaobject, membersCount, children, ref, ...rest } =
-    props;
-  return (
-    <Section ref={ref} {...rest}>
-      {children}
-    </Section>
-  );
+    const { loaderData, metaobject, membersCount, children, ref, ...rest } =
+        props;
+    return (
+        <Section ref={ref} {...rest}>
+            {children}
+        </Section>
+    );
 }
 
 export const loader = async (args: ComponentLoaderArgs<OurTeamData>) => {
-  const { weaverse, data } = args;
-  const { storefront } = weaverse;
-  const { metaobject, membersCount } = data;
-  if (metaobject) {
-    return await storefront.query<OurTeamQuery>(OUR_TEAM_QUERY, {
-      variables: {
-        type: metaobject.handle,
-        first: membersCount,
-      },
-    });
-  }
-  return null;
+    const { weaverse, data } = args;
+    const { storefront } = weaverse;
+    const { metaobject, membersCount } = data;
+    if (metaobject) {
+        return await storefront.query<OurTeamQuery>(OUR_TEAM_QUERY, {
+            variables: {
+                type: metaobject.handle,
+                first: membersCount,
+            },
+        });
+    }
+    return null;
 };
 
 const OUR_TEAM_QUERY = `#graphql
@@ -72,55 +72,57 @@ const OUR_TEAM_QUERY = `#graphql
 `;
 
 export const schema = createSchema({
-  type: "our-team",
-  title: "Our team",
-  childTypes: ["heading", "paragraph", "our-team-members"],
-  settings: [
-    {
-      group: "Data source",
-      inputs: [
+    type: "our-team",
+    title: "Our team",
+    childTypes: ["heading", "paragraph", "our-team-members"],
+    settings: [
         {
-          type: "metaobject",
-          name: "metaobject",
-          label: "Select metaobject definition",
-          helpText:
-            'See how to set up a metaobject definition for this section <a href="https://docs.weaverse.io/themes-templates/pilot-theme-overview#metaobjects" target="_blank">here</a>.',
+            group: "Data source",
+            inputs: [
+                {
+                    type: "metaobject",
+                    name: "metaobject",
+                    label: "Select metaobject definition",
+                    helpText:
+                        'See how to set up a metaobject definition for this section <a href="https://docs.weaverse.io/themes-templates/pilot-theme-overview#metaobjects" target="_blank">here</a>.',
+                },
+                {
+                    label: "Members count",
+                    name: "membersCount",
+                    type: "range",
+                    configs: {
+                        min: 2,
+                        max: 12,
+                        step: 1,
+                    },
+                    defaultValue: 4,
+                },
+            ],
         },
         {
-          label: "Members count",
-          name: "membersCount",
-          type: "range",
-          configs: {
-            min: 2,
-            max: 12,
-            step: 1,
-          },
-          defaultValue: 4,
+            group: "Layout",
+            inputs: layoutInputs.filter((inp) => inp.name !== "borderRadius"),
         },
-      ],
-    },
-    {
-      group: "Layout",
-      inputs: layoutInputs.filter((inp) => inp.name !== "borderRadius"),
-    },
-    {
-      group: "Background",
-      inputs: backgroundInputs.filter((inp) => inp.name === "backgroundColor"),
-    },
-  ],
-  presets: {
-    children: [
-      { type: "heading", content: "Meet our team" },
-      {
-        type: "paragraph",
-        content:
-          "This section get data from storefront metaobjects using Shopify Storefront API powered by Weaverse Metaobject Picker.",
-      },
-      {
-        type: "our-team-members",
-      },
+        {
+            group: "Background",
+            inputs: backgroundInputs.filter(
+                (inp) => inp.name === "backgroundColor",
+            ),
+        },
     ],
-  },
+    presets: {
+        children: [
+            { type: "heading", content: "Meet our team" },
+            {
+                type: "paragraph",
+                content:
+                    "This section get data from storefront metaobjects using Shopify Storefront API powered by Weaverse Metaobject Picker.",
+            },
+            {
+                type: "our-team-members",
+            },
+        ],
+    },
 });
 
 export default OurTeam;

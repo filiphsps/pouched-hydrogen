@@ -13,33 +13,35 @@ import { Section } from "~/components/section";
  those requests back to Shopify.
 */
 export async function loader({
-  request,
-  context: { storefront },
+    request,
+    context: { storefront },
 }: LoaderFunctionArgs) {
-  const { origin } = new URL(request.url);
-  const { shop } = await storefront.query<GetShopPrimaryDomainQuery>(
-    SHOP_PRIMARY_DOMAIN_QUERY,
-    { cache: storefront.CacheLong() },
-  );
-  invariant(shop, "Error redirecting to the order status URL");
-  return redirect(request.url.replace(origin, shop.primaryDomain.url));
+    const { origin } = new URL(request.url);
+    const { shop } = await storefront.query<GetShopPrimaryDomainQuery>(
+        SHOP_PRIMARY_DOMAIN_QUERY,
+        { cache: storefront.CacheLong() },
+    );
+    invariant(shop, "Error redirecting to the order status URL");
+    return redirect(request.url.replace(origin, shop.primaryDomain.url));
 }
 
 export default function () {
-  return null;
+    return null;
 }
 
 export function ErrorBoundary() {
-  return (
-    <Section width="fixed" verticalPadding="medium">
-      <h4 className="mb-8 text-center font-medium text-red-600 lg:mb-20">
-        Error redirecting to the order status URL
-      </h4>
-      <div className="mt-8 flex w-full items-baseline justify-between">
-        <Button onClick={() => window.location.reload()}>Try Again</Button>
-      </div>
-    </Section>
-  );
+    return (
+        <Section width="fixed" verticalPadding="medium">
+            <h4 className="mb-8 text-center font-medium text-red-600 lg:mb-20">
+                Error redirecting to the order status URL
+            </h4>
+            <div className="mt-8 flex w-full items-baseline justify-between">
+                <Button onClick={() => window.location.reload()}>
+                    Try Again
+                </Button>
+            </div>
+        </Section>
+    );
 }
 
 const SHOP_PRIMARY_DOMAIN_QUERY = `#graphql

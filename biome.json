@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
   "extends": ["@weaverse/biome"],
   "linter": {
     "rules": {
@@ -8,13 +8,21 @@
       },
       "style": {
         "useThrowNewError": "warn",
-        "useFilenamingConvention": "off",
+        "useFilenamingConvention": {
+          "level": "info",
+          "options": {
+            "requireAscii": true,
+            "match": "%?(.+?)[.](.+)",
+            "filenameCases": ["kebab-case"]
+          }
+        },
         "useNamingConvention": "off",
         "noParameterAssign": "off",
         "noMagicNumbers": "off",
         "noDescendingSpecificity": "off",
         "useConsistentTypeDefinitions": "off",
-        "noNestedTernary": "off"
+        "noNestedTernary": "off",
+        "useBlockStatements": "off"
       },
       "suspicious": {
         "noExplicitAny": "off",
@@ -25,7 +33,8 @@
       },
       "nursery": {
         "useConsistentArrowReturn": "off",
-        "noUnnecessaryConditions": "off"
+        "noUnnecessaryConditions": "off",
+        "noIncrementDecrement": "off"
       },
       "correctness": {
         "noUnusedVariables": "off",
@@ -62,7 +71,9 @@
     "formatter": {
       "quoteStyle": "double",
       "semicolons": "always",
-      "trailingCommas": "all"
+      "trailingCommas": "all",
+      "indentStyle": "space",
+      "indentWidth": 4
     }
   }
 }

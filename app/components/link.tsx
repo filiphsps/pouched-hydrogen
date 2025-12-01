@@ -1,128 +1,128 @@
 import {
-  createSchema,
-  type HydrogenComponentProps,
-  type InspectorGroup,
-  useThemeSettings,
+    createSchema,
+    type HydrogenComponentProps,
+    type InspectorGroup,
+    useThemeSettings,
 } from "@weaverse/hydrogen";
 import { cva, type VariantProps } from "class-variance-authority";
-import type { HTMLAttributes } from "react";
+import { forwardRef, type HTMLAttributes } from "react";
 import {
-  Link as RemixLink,
-  type LinkProps as RemixLinkProps,
-  useRouteLoaderData,
+    Link as RemixLink,
+    type LinkProps as RemixLinkProps,
+    useRouteLoaderData,
 } from "react-router";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 
 export const variants = cva(
-  [
-    "inline-flex transition-all duration-200 active:scale-95",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-  ],
-  {
-    variants: {
-      variant: {
-        primary: [
-          "border px-4 py-3",
-          "text-(--btn-primary-text)",
-          "bg-(--btn-primary-bg)",
-          "border-(--btn-primary-bg)",
-          "hover:text-(--btn-primary-bg)",
-          "hover:bg-(--btn-primary-text)",
-          "hover:border-(--btn-primary-bg)",
-        ],
-        secondary: [
-          "border px-4 py-3",
-          "text-(--btn-secondary-text)",
-          "bg-(--btn-secondary-bg)",
-          "border-(--btn-secondary-bg)",
-          "hover:bg-(--btn-secondary-text)",
-          "hover:text-(--btn-secondary-bg)",
-          "hover:border-(--btn-secondary-text)",
-        ],
-        outline: [
-          "border px-4 py-3",
-          "text-(--btn-outline-text)",
-          "bg-transparent",
-          "border-(--btn-outline-text)",
-          "hover:bg-(--btn-outline-text)",
-          "hover:text-background",
-          "hover:border-(--btn-outline-text)",
-        ],
-        custom: [
-          "border px-4 py-3",
-          "text-(--btn-text)",
-          "bg-(--btn-bg)",
-          "border-(--btn-border)",
-          "hover:text-(--btn-text-hover)",
-          "hover:bg-(--btn-bg-hover)",
-          "hover:border-(--btn-border-hover)",
-        ],
-        underline: [
-          "relative bg-transparent pb-1 text-body",
-          "after:absolute after:bottom-0.5 after:left-0 after:h-px after:w-full after:bg-body",
-          "after:origin-right after:scale-x-100 after:transition-transform",
-          "hover:after:origin-left hover:after:animate-underline-toggle",
-        ],
-      },
+    [
+        "inline-flex transition-all duration-200 active:scale-95",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+    ],
+    {
+        variants: {
+            variant: {
+                primary: [
+                    "border px-4 py-3",
+                    "text-(--btn-primary-text)",
+                    "bg-(--btn-primary-bg)",
+                    "border-(--btn-primary-bg)",
+                    "hover:text-(--btn-primary-bg)",
+                    "hover:bg-(--btn-primary-text)",
+                    "hover:border-(--btn-primary-bg)",
+                ],
+                secondary: [
+                    "border px-4 py-3",
+                    "text-(--btn-secondary-text)",
+                    "bg-(--btn-secondary-bg)",
+                    "border-(--btn-secondary-bg)",
+                    "hover:bg-(--btn-secondary-text)",
+                    "hover:text-(--btn-secondary-bg)",
+                    "hover:border-(--btn-secondary-text)",
+                ],
+                outline: [
+                    "border px-4 py-3",
+                    "text-(--btn-outline-text)",
+                    "bg-transparent",
+                    "border-(--btn-outline-text)",
+                    "hover:bg-(--btn-outline-text)",
+                    "hover:text-background",
+                    "hover:border-(--btn-outline-text)",
+                ],
+                custom: [
+                    "border px-4 py-3",
+                    "text-(--btn-text)",
+                    "bg-(--btn-bg)",
+                    "border-(--btn-border)",
+                    "hover:text-(--btn-text-hover)",
+                    "hover:bg-(--btn-bg-hover)",
+                    "hover:border-(--btn-border-hover)",
+                ],
+                underline: [
+                    "relative bg-transparent pb-1 text-body",
+                    "after:absolute after:bottom-0.5 after:left-0 after:h-px after:w-full after:bg-body",
+                    "after:origin-right after:scale-x-100 after:transition-transform",
+                    "hover:after:origin-left hover:after:animate-underline-toggle",
+                ],
+            },
+        },
     },
-  },
 );
 
 export interface LinkStyles {
-  backgroundColor: string;
-  textColor: string;
-  borderColor: string;
-  backgroundColorHover: string;
-  textColorHover: string;
-  borderColorHover: string;
+    backgroundColor: string;
+    textColor: string;
+    borderColor: string;
+    backgroundColorHover: string;
+    textColorHover: string;
+    borderColorHover: string;
 }
 
 export interface LinkData
-  extends RemixLinkProps,
-    Partial<LinkStyles>,
-    VariantProps<typeof variants> {
-  text?: string;
+    extends RemixLinkProps,
+        Partial<LinkStyles>,
+        VariantProps<typeof variants> {
+    text?: string;
 }
 
 export interface LinkProps
-  extends HTMLAttributes<HTMLAnchorElement>,
-    Partial<Omit<HydrogenComponentProps, "children">>,
-    LinkData {
-  ref?: React.Ref<HTMLAnchorElement>;
-}
+    extends HTMLAttributes<HTMLAnchorElement>,
+        Partial<Omit<HydrogenComponentProps, "children">>,
+        LinkData {}
 
 function checkExternal(to: LinkProps["to"]) {
-  if (typeof to === "string") {
-    // Check if it's a full URL with protocol
-    return /^https?:\/\//.test(to) || /^mailto:/.test(to) || /^tel:/.test(to);
-  }
-  if (typeof to === "object" && to.pathname) {
-    // For object syntax, only check if pathname looks like an external URL
-    return /^https?:\/\//.test(to.pathname);
-  }
-  return false;
+    if (typeof to === "string") {
+        // Check if it's a full URL with protocol
+        return (
+            /^https?:\/\//.test(to) || /^mailto:/.test(to) || /^tel:/.test(to)
+        );
+    }
+    if (typeof to === "object" && to.pathname) {
+        // For object syntax, only check if pathname looks like an external URL
+        return /^https?:\/\//.test(to.pathname);
+    }
+    return false;
 }
 
 function useHrefWithLocale(href: LinkProps["to"]) {
-  const rootData = useRouteLoaderData<RootLoader>("root");
-  const selectedLocale = rootData?.selectedLocale;
+    const rootData = useRouteLoaderData<RootLoader>("root");
+    const selectedLocale = rootData?.selectedLocale;
 
-  const isExternal = checkExternal(href);
-  if (isExternal) {
-    return href;
-  }
+    const isExternal = checkExternal(href);
+    if (isExternal) {
+        return href;
+    }
 
-  let toWithLocale = href;
-  if (
-    typeof toWithLocale === "string" &&
-    selectedLocale?.pathPrefix &&
-    !toWithLocale.toLowerCase().startsWith(selectedLocale.pathPrefix)
-  ) {
-    toWithLocale = `${selectedLocale.pathPrefix}${href}`;
-  }
+    let toWithLocale = href;
+    if (
+        typeof toWithLocale === "string" &&
+        selectedLocale?.pathPrefix &&
+        !toWithLocale.toLowerCase().startsWith(selectedLocale.pathPrefix)
+    ) {
+        toWithLocale = `${selectedLocale.pathPrefix}${href}`;
+    }
 
-  return toWithLocale;
+    return toWithLocale;
 }
 
 /**
@@ -140,160 +140,165 @@ function useHrefWithLocale(href: LinkProps["to"]) {
  *
  * Ultimately, it is up to you to decide how to implement this behavior.
  */
-export function Link(props: LinkProps) {
-  let {
-    ref,
-    to,
-    text,
-    variant,
-    className,
-    style,
-    textColor,
-    backgroundColor,
-    borderColor,
-    textColorHover,
-    backgroundColorHover,
-    borderColorHover,
-    children,
-    target,
-    ...rest
-  } = props;
-  const { enableViewTransition } = useThemeSettings();
-  const href = useHrefWithLocale(to);
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
+    let {
+        to,
+        text,
+        variant,
+        className,
+        style,
+        textColor,
+        backgroundColor,
+        borderColor,
+        textColorHover,
+        backgroundColorHover,
+        borderColorHover,
+        children,
+        target,
+        ...rest
+    } = props;
+    const { enableViewTransition } = useThemeSettings();
+    const href = useHrefWithLocale(to);
 
-  if (variant === "custom") {
-    style = {
-      ...style,
-      "--btn-text": textColor,
-      "--btn-bg": backgroundColor,
-      "--btn-border": borderColor,
-      "--btn-bg-hover": backgroundColorHover,
-      "--btn-text-hover": textColorHover,
-      "--btn-border-hover": borderColorHover,
-    } as React.CSSProperties;
-  }
+    if (variant === "custom") {
+        style = {
+            ...style,
+            "--btn-text": textColor,
+            "--btn-bg": backgroundColor,
+            "--btn-border": borderColor,
+            "--btn-bg-hover": backgroundColorHover,
+            "--btn-text-hover": textColorHover,
+            "--btn-border-hover": borderColorHover,
+        } as React.CSSProperties;
+    }
 
-  if (!(children || text)) {
-    return null;
-  }
+    if (!(children || text)) {
+        return null;
+    }
 
-  const isExternal = checkExternal(href);
+    const isExternal = checkExternal(href);
 
-  return (
-    <RemixLink
-      ref={ref}
-      viewTransition={enableViewTransition}
-      to={href}
-      style={style}
-      className={cn(variants({ variant }), className)}
-      target={target !== undefined ? target : isExternal ? "_blank" : undefined}
-      rel={
-        rest.rel ||
-        (target === "_blank" || (target === undefined && isExternal)
-          ? "noreferrer noopener"
-          : undefined)
-      }
-      {...rest}
-    >
-      {children || text}
-    </RemixLink>
-  );
-}
+    return (
+        <RemixLink
+            ref={ref}
+            viewTransition={enableViewTransition}
+            to={href}
+            style={style}
+            className={cn(variants({ variant }), className)}
+            target={
+                target !== undefined
+                    ? target
+                    : isExternal
+                      ? "_blank"
+                      : undefined
+            }
+            rel={
+                rest.rel ||
+                (target === "_blank" || (target === undefined && isExternal)
+                    ? "noreferrer noopener"
+                    : undefined)
+            }
+            {...rest}
+        >
+            {children || text}
+        </RemixLink>
+    );
+});
 
 export default Link;
 
 export const linkContentInputs: InspectorGroup["inputs"] = [
-  {
-    type: "text",
-    name: "text",
-    label: "Text content",
-    defaultValue: "Shop now",
-    placeholder: "Shop now",
-  },
-  {
-    type: "url",
-    name: "to",
-    label: "Link to",
-    defaultValue: "/products",
-    placeholder: "/products",
-  },
-  {
-    type: "select",
-    name: "variant",
-    label: "Variant",
-    configs: {
-      options: [
-        { label: "Primary", value: "primary" },
-        { label: "Secondary", value: "secondary" },
-        { label: "Outline", value: "outline-solid" },
-        { label: "Underline", value: "underline" },
-        { label: "Custom styles", value: "custom" },
-      ],
+    {
+        type: "text",
+        name: "text",
+        label: "Text content",
+        defaultValue: "Shop now",
+        placeholder: "Shop now",
     },
-    defaultValue: "primary",
-  },
+    {
+        type: "url",
+        name: "to",
+        label: "Link to",
+        defaultValue: "/products",
+        placeholder: "/products",
+    },
+    {
+        type: "select",
+        name: "variant",
+        label: "Variant",
+        configs: {
+            options: [
+                { label: "Primary", value: "primary" },
+                { label: "Secondary", value: "secondary" },
+                { label: "Outline", value: "outline-solid" },
+                { label: "Underline", value: "underline" },
+                { label: "Custom styles", value: "custom" },
+            ],
+        },
+        defaultValue: "primary",
+    },
 ];
 export const linkStylesInputs: InspectorGroup["inputs"] = [
-  {
-    type: "color",
-    label: "Background color",
-    name: "backgroundColor",
-    defaultValue: "#000",
-    condition: (data: LinkData) => data.variant === "custom",
-  },
-  {
-    type: "color",
-    label: "Text color",
-    name: "textColor",
-    defaultValue: "#fff",
-    condition: (data: LinkData) => data.variant === "custom",
-  },
-  {
-    type: "color",
-    label: "Border color",
-    name: "borderColor",
-    defaultValue: "#00000000",
-    condition: (data: LinkData) => data.variant === "custom",
-  },
-  {
-    type: "color",
-    label: "Background color (hover)",
-    name: "backgroundColorHover",
-    defaultValue: "#00000000",
-    condition: (data: LinkData) => data.variant === "custom",
-  },
-  {
-    type: "color",
-    label: "Text color (hover)",
-    name: "textColorHover",
-    defaultValue: "#000",
-    condition: (data: LinkData) => data.variant === "custom",
-  },
-  {
-    type: "color",
-    label: "Border color (hover)",
-    name: "borderColorHover",
-    defaultValue: "#000",
-    condition: (data: LinkData) => data.variant === "custom",
-  },
+    {
+        type: "color",
+        label: "Background color",
+        name: "backgroundColor",
+        defaultValue: "#000",
+        condition: (data: LinkData) => data.variant === "custom",
+    },
+    {
+        type: "color",
+        label: "Text color",
+        name: "textColor",
+        defaultValue: "#fff",
+        condition: (data: LinkData) => data.variant === "custom",
+    },
+    {
+        type: "color",
+        label: "Border color",
+        name: "borderColor",
+        defaultValue: "#00000000",
+        condition: (data: LinkData) => data.variant === "custom",
+    },
+    {
+        type: "color",
+        label: "Background color (hover)",
+        name: "backgroundColorHover",
+        defaultValue: "#00000000",
+        condition: (data: LinkData) => data.variant === "custom",
+    },
+    {
+        type: "color",
+        label: "Text color (hover)",
+        name: "textColorHover",
+        defaultValue: "#000",
+        condition: (data: LinkData) => data.variant === "custom",
+    },
+    {
+        type: "color",
+        label: "Border color (hover)",
+        name: "borderColorHover",
+        defaultValue: "#000",
+        condition: (data: LinkData) => data.variant === "custom",
+    },
 ];
 
 export const linkInputs: InspectorGroup["inputs"] = [
-  ...linkContentInputs,
-  {
-    type: "heading",
-    label: "Button custom styles",
-  },
-  ...linkStylesInputs,
+    ...linkContentInputs,
+    {
+        type: "heading",
+        label: "Button custom styles",
+    },
+    ...linkStylesInputs,
 ];
 
 export const schema = createSchema({
-  type: "button",
-  title: "Button",
-  settings: [
-    {
-      group: "Button",
-      inputs: linkInputs,
-    },
-  ],
+    type: "button",
+    title: "Button",
+    settings: [
+        {
+            group: "Button",
+            inputs: linkInputs,
+        },
+    ],
 });

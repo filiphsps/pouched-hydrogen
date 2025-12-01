@@ -6,15 +6,8 @@
     ".react-router/types/**/*"
   ],
   "compilerOptions": {
-    "rootDirs": [
-      ".",
-      "./.react-router/types"
-    ],
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ES2022"
-    ],
+    "rootDirs": [".", "./.react-router/types"],
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
@@ -36,15 +29,9 @@
       "vitest/globals"
     ],
     "paths": {
-      "~/*": [
-        "app/*"
-      ],
-      "react": [
-        "node_modules/@types/react"
-      ],
-      "react-dom": [
-        "node_modules/@types/react-dom"
-      ]
+      "~/*": ["app/*"],
+      "react": ["node_modules/@types/react"],
+      "react-dom": ["node_modules/@types/react-dom"]
     },
     "noEmit": true,
     "allowSyntheticDefaultImports": true,

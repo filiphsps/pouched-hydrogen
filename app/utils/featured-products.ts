@@ -5,30 +5,30 @@ import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
 
 export async function getFeaturedProducts(
-  storefront: LoaderFunctionArgs["context"]["storefront"],
+    storefront: LoaderFunctionArgs["context"]["storefront"],
 ) {
-  const featuredProductsData = await storefront.query<FeaturedProductsQuery>(
-    FEATURED_PRODUCTS_QUERY,
-    {
-      variables: {
-        pageBy: 16,
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
-        query: maybeFilterOutCombinedListingsQuery,
-      },
-    },
-  );
+    const featuredProductsData = await storefront.query<FeaturedProductsQuery>(
+        FEATURED_PRODUCTS_QUERY,
+        {
+            variables: {
+                pageBy: 16,
+                country: storefront.i18n.country,
+                language: storefront.i18n.language,
+                query: maybeFilterOutCombinedListingsQuery,
+            },
+        },
+    );
 
-  invariant(
-    featuredProductsData,
-    "No featured products data returned from Shopify API",
-  );
+    invariant(
+        featuredProductsData,
+        "No featured products data returned from Shopify API",
+    );
 
-  return featuredProductsData;
+    return featuredProductsData;
 }
 
 export type FeaturedProductsData = Awaited<
-  ReturnType<typeof getFeaturedProducts>
+    ReturnType<typeof getFeaturedProducts>
 >;
 
 export const FEATURED_PRODUCTS_QUERY = `#graphql

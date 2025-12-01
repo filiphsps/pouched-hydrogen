@@ -1,12 +1,16 @@
 import { getShopAnalytics } from "@shopify/hydrogen";
 import type { AppLoadContext, LoaderFunctionArgs } from "react-router";
 import type {
-  LayoutQuery,
-  MenuFragment,
-  SwatchesQuery,
+    LayoutQuery,
+    MenuFragment,
+    SwatchesQuery,
 } from "storefront-api.generated";
 import invariant from "tiny-invariant";
-import type { EnhancedMenu } from "~/types/menu";
+import type {
+    ChildEnhancedMenuItem,
+    EnhancedMenu,
+    ParentEnhancedMenuItem,
+} from "~/types/menu";
 import { seoPayload } from "./seo";
 
 /**
@@ -14,39 +18,39 @@ import { seoPayload } from "./seo";
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 export async function loadCriticalData({
-  request,
-  context,
+    request,
+    context,
 }: LoaderFunctionArgs) {
-  const [layout, swatchesConfigs, weaverseTheme] = await Promise.all([
-    getLayoutData(context),
-    getSwatchesConfigs(context),
-    // Add other queries here, so that they are loaded in parallel
-    context.weaverse.loadThemeSettings(),
-  ]);
+    const [layout, swatchesConfigs, weaverseTheme] = await Promise.all([
+        getLayoutData(context),
+        getSwatchesConfigs(context),
+        // Add other queries here, so that they are loaded in parallel
+        context.weaverse.loadThemeSettings(),
+    ]);
 
-  const seo = seoPayload.root({ shop: layout.shop, url: request.url });
+    const seo = seoPayload.root({ shop: layout.shop, url: request.url });
 
-  const { storefront, env } = context;
-  return {
-    layout,
-    seo,
-    shop: getShopAnalytics({
-      storefront,
-      publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
-    }),
-    consent: {
-      checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
-      storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
-      withPrivacyBanner: false,
-      // localize the privacy banner
-      country: storefront.i18n.country,
-      language: storefront.i18n.language,
-    },
-    selectedLocale: storefront.i18n,
-    weaverseTheme,
-    googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
-    swatchesConfigs,
-  };
+    const { storefront, env } = context;
+    return {
+        layout,
+        seo,
+        shop: getShopAnalytics({
+            storefront,
+            publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
+        }),
+        consent: {
+            checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
+            storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
+            withPrivacyBanner: false,
+            // localize the privacy banner
+            country: storefront.i18n.country,
+            language: storefront.i18n.language,
+        },
+        selectedLocale: storefront.i18n,
+        weaverseTheme,
+        googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
+        swatchesConfigs,
+    };
 }
 
 /**
@@ -55,28 +59,28 @@ export async function loadCriticalData({
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 export function loadDeferredData({ context }: LoaderFunctionArgs) {
-  const { cart, customerAccount } = context;
+    const { cart, customerAccount } = context;
 
-  return {
-    isLoggedIn: customerAccount.isLoggedIn(),
-    cart: cart.get(),
-  };
+    return {
+        isLoggedIn: customerAccount.isLoggedIn(),
+        cart: cart.get(),
+    };
 }
 
 async function getLayoutData({ storefront, env }: AppLoadContext) {
-  const data = await storefront
-    .query<LayoutQuery>(LAYOUT_QUERY, {
-      variables: {
-        headerMenuHandle: "main-menu",
-        footerMenuHandle: "footer",
-        language: storefront.i18n.language,
-      },
-    })
-    .catch(console.error);
+    const data = await storefront
+        .query<LayoutQuery>(LAYOUT_QUERY, {
+            variables: {
+                headerMenuHandle: "main-menu",
+                footerMenuHandle: "footer",
+                language: storefront.i18n.language,
+            },
+        })
+        .catch(console.error);
 
-  invariant(data, "No data returned from Shopify API");
+    invariant(data, "No data returned from Shopify API");
 
-  /*
+    /*
       Modify specific links/routes (optional)
       @see: https://shopify.dev/api/storefront/unstable/enums/MenuItemType
       e.g here we map:
@@ -84,61 +88,63 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
         - /blog/news/blog-post -> /news/blog-post
         - /collections/all -> /products
     */
-  const customPrefixes = { CATALOG: "products" };
+    const customPrefixes = { CATALOG: "products" };
 
-  const headerMenu = data?.headerMenu
-    ? parseMenu(
-        data.headerMenu,
-        data.shop.primaryDomain.url,
-        env,
-        customPrefixes,
-      )
-    : undefined;
+    const headerMenu = data?.headerMenu
+        ? parseMenu(
+              data.headerMenu,
+              data.shop.primaryDomain.url,
+              env,
+              customPrefixes,
+          )
+        : undefined;
 
-  const footerMenu = data?.footerMenu
-    ? parseMenu(
-        data.footerMenu,
-        data.shop.primaryDomain.url,
-        env,
-        customPrefixes,
-      )
-    : undefined;
+    const footerMenu = data?.footerMenu
+        ? parseMenu(
+              data.footerMenu,
+              data.shop.primaryDomain.url,
+              env,
+              customPrefixes,
+          )
+        : undefined;
 
-  return { shop: data.shop, headerMenu, footerMenu };
+    return { shop: data.shop, headerMenu, footerMenu };
 }
 
 type Swatch = {
-  id: string;
-  name: string;
-  value: string;
+    id: string;
+    name: string;
+    value: string;
 };
 
 async function getSwatchesConfigs(context: AppLoadContext) {
-  const { METAOBJECT_COLORS_TYPE: type } = context.env;
-  if (!type) {
-    return { colors: [], images: [] };
-  }
-  const { metaobjects } = await context.storefront.query<SwatchesQuery>(
-    SWATCHES_QUERY,
-    { variables: { type } },
-  );
-  const colors: Swatch[] = [];
-  const images: Swatch[] = [];
-  for (const { id, fields } of metaobjects.nodes) {
-    const { value: color } = fields.find(({ key }) => key === "color") || {};
-    const { reference: imageRef } =
-      fields.find(({ key }) => key === "image") || {};
-    const { value: name } = fields.find(({ key }) => key === "label") || {};
-    if (imageRef) {
-      const url = imageRef?.image?.url;
-      if (url) {
-        images.push({ id, name, value: url });
-      }
-    } else if (color) {
-      colors.push({ id, name, value: color });
+    const { METAOBJECT_COLORS_TYPE: type } = context.env;
+    if (!type) {
+        return { colors: [], images: [] };
     }
-  }
-  return { colors, images };
+    const { metaobjects } = await context.storefront.query<SwatchesQuery>(
+        SWATCHES_QUERY,
+        { variables: { type } },
+    );
+    const colors: Swatch[] = [];
+    const images: Swatch[] = [];
+    for (const { id, fields } of metaobjects.nodes) {
+        const { value: color } =
+            fields.find(({ key }) => key === "color") || {};
+        const { reference: imageRef } =
+            fields.find(({ key }) => key === "image") || {};
+        const { value: name } = fields.find(({ key }) => key === "label") || {};
+
+        if (imageRef) {
+            const url = imageRef?.image?.url;
+            if (url) {
+                images.push({ id, name: name ?? "", value: url });
+            }
+        } else if (color) {
+            colors.push({ id, name: name ?? "", value: color });
+        }
+    }
+    return { colors, images };
 }
 
 /*
@@ -147,136 +153,145 @@ async function getSwatchesConfigs(context: AppLoadContext) {
   It optionally overwrites url paths based on item.type
 */
 function parseMenu(
-  menu: MenuFragment,
-  primaryDomain: string,
-  env: Env,
-  customPrefixes = {},
+    menu: MenuFragment,
+    primaryDomain: string,
+    env: Env,
+    customPrefixes = {},
 ): EnhancedMenu | null {
-  if (!menu?.items) {
-    console.warn("Invalid menu passed to parseMenu");
-    return null;
-  }
-  const parser = parseItem(primaryDomain, env, customPrefixes);
-  const parsedMenu = {
-    ...menu,
-    items: menu.items.map(parser).filter(Boolean),
-  } as EnhancedMenu;
+    if (!menu?.items) {
+        console.warn("Invalid menu passed to parseMenu");
+        return null;
+    }
+    const parser = parseItem(primaryDomain, env, customPrefixes);
+    const parsedMenu = {
+        ...menu,
+        items: menu.items.map(parser).filter(Boolean),
+    } as EnhancedMenu;
 
-  return parsedMenu;
+    return parsedMenu;
 }
 
-/*
-  Parse each menu link and adding, isExternal, to and target
-*/
+/**
+ * Parse each menu link and add isExternal, to and target properties
+ */
 function parseItem(primaryDomain: string, env: Env, customPrefixes = {}) {
-  return (
-    item:
-      | MenuFragment["items"][number]
-      | MenuFragment["items"][number]["items"][number],
-  ):
-    | EnhancedMenu["items"][0]
-    | EnhancedMenu["items"][number]["items"][0]
-    | null => {
-    if (!(item?.url && item?.type)) {
-      console.warn("Invalid menu item.  Must include a url and type.");
-      return null;
-    }
+    type MenuItem =
+        | MenuFragment["items"][number]
+        | MenuFragment["items"][number]["items"][number]
+        | MenuFragment["items"][number]["items"][number]["items"][number];
 
-    // extract path from url because we don't need the origin on internal to attributes
-    const { host, pathname } = new URL(item.url);
-    const isInternalLink =
-      host === new URL(primaryDomain).host || host === env.PUBLIC_STORE_DOMAIN;
-    const parsedItem = isInternalLink
-      ? // internal links
-        {
-          ...item,
-          isExternal: false,
-          target: "_self",
-          to: resolveToFromType({ type: item.type, customPrefixes, pathname }),
+    return (
+        item: MenuItem,
+    ): ParentEnhancedMenuItem | ChildEnhancedMenuItem | null => {
+        if (!(item?.url && item?.type)) {
+            console.warn("Invalid menu item.  Must include a url and type.");
+            return null;
         }
-      : // external links
-        {
-          ...item,
-          isExternal: true,
-          target: "_blank",
-          to: item.url,
-        };
 
-    if ("items" in item) {
-      return {
-        ...parsedItem,
-        items: item.items
-          .map(parseItem(primaryDomain, env, customPrefixes))
-          .filter(Boolean),
-      } as EnhancedMenu["items"][number];
-    }
-    return parsedItem as EnhancedMenu["items"][number]["items"][number];
-  };
+        // extract path from url because we don't need the origin on internal to attributes
+        const { host, pathname } = new URL(item.url);
+        const isInternalLink =
+            host === new URL(primaryDomain).host ||
+            host === env.PUBLIC_STORE_DOMAIN;
+        const parsedItem = isInternalLink
+            ? // internal links
+              {
+                  ...item,
+                  isExternal: false,
+                  target: "_self",
+                  to: resolveToFromType({
+                      type: item.type,
+                      customPrefixes,
+                      pathname,
+                  }),
+              }
+            : // external links
+              {
+                  ...item,
+                  isExternal: true,
+                  target: "_blank",
+                  to: item.url,
+              };
+
+        if ("items" in item && item.items && item.items.length > 0) {
+            return {
+                ...parsedItem,
+                items: item.items
+                    .map(
+                        parseItem(primaryDomain, env, customPrefixes) as (
+                            childItem: MenuItem,
+                        ) => ChildEnhancedMenuItem | null,
+                    )
+                    .filter(Boolean),
+            } as ParentEnhancedMenuItem;
+        }
+        return parsedItem as ChildEnhancedMenuItem;
+    };
 }
 
 function resolveToFromType(
-  {
-    customPrefixes,
-    pathname,
-    type,
-  }: {
-    customPrefixes: Record<string, string>;
-    pathname?: string;
-    type?: string;
-  } = {
-    customPrefixes: {},
-  },
+    {
+        customPrefixes,
+        pathname,
+        type,
+    }: {
+        customPrefixes: Record<string, string>;
+        pathname?: string;
+        type?: string;
+    } = {
+        customPrefixes: {},
+    },
 ) {
-  if (!(pathname && type)) {
-    return "";
-  }
+    if (!(pathname && type)) {
+        return "";
+    }
 
-  /*
+    /*
     MenuItemType enum
     @see: https://shopify.dev/api/storefront/unstable/enums/MenuItemType
   */
-  const defaultPrefixes = {
-    BLOG: "blogs",
-    COLLECTION: "collections",
-    COLLECTIONS: "collections", // Collections All (not documented)
-    FRONTPAGE: "frontpage",
-    HTTP: "",
-    PAGE: "pages",
-    CATALOG: "collections/all", // Products All
-    PRODUCT: "products",
-    SEARCH: "search",
-    SHOP_POLICY: "policies",
-  };
+    const defaultPrefixes = {
+        BLOG: "blogs",
+        COLLECTION: "collections",
+        COLLECTIONS: "collections", // Collections All (not documented)
+        FRONTPAGE: "frontpage",
+        HTTP: "",
+        PAGE: "pages",
+        CATALOG: "collections/all", // Products All
+        PRODUCT: "products",
+        SEARCH: "search",
+        SHOP_POLICY: "policies",
+    };
 
-  const pathParts = pathname.split("/");
-  const handle = pathParts.pop() || "";
-  const routePrefix: Record<string, string> = {
-    ...defaultPrefixes,
-    ...customPrefixes,
-  };
+    const pathParts = pathname.split("/");
+    const handle = pathParts.pop() || "";
+    const routePrefix: Record<string, string> = {
+        ...defaultPrefixes,
+        ...customPrefixes,
+    };
 
-  switch (type) {
-    // special cases
-    case "FRONTPAGE":
-      return "/";
-    case "ARTICLE": {
-      const blogHandle = pathParts.pop();
-      return routePrefix.BLOG
-        ? `/${routePrefix.BLOG}/${blogHandle}/${handle}/`
-        : `/${blogHandle}/${handle}/`;
+    switch (type) {
+        // special cases
+        case "FRONTPAGE":
+            return "/";
+        case "ARTICLE": {
+            const blogHandle = pathParts.pop();
+            return routePrefix.BLOG
+                ? `/${routePrefix.BLOG}/${blogHandle}/${handle}/`
+                : `/${blogHandle}/${handle}/`;
+        }
+        case "COLLECTIONS":
+            return `/${routePrefix.COLLECTIONS}`;
+        case "SEARCH":
+            return `/${routePrefix.SEARCH}`;
+        case "CATALOG":
+            return `/${routePrefix.CATALOG}`;
+        // common cases: BLOG, PAGE, COLLECTION, PRODUCT, SHOP_POLICY, HTTP
+        default:
+            return routePrefix[type]
+                ? `/${routePrefix[type]}/${handle}`
+                : `/${handle}`;
     }
-    case "COLLECTIONS":
-      return `/${routePrefix.COLLECTIONS}`;
-    case "SEARCH":
-      return `/${routePrefix.SEARCH}`;
-    case "CATALOG":
-      return `/${routePrefix.CATALOG}`;
-    // common cases: BLOG, PAGE, COLLECTION, PRODUCT, SHOP_POLICY, HTTP
-    default:
-      return routePrefix[type]
-        ? `/${routePrefix[type]}/${handle}`
-        : `/${handle}`;
-  }
 }
 
 const LAYOUT_QUERY = `#graphql

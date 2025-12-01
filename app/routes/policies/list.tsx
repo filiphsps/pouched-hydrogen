@@ -14,64 +14,65 @@ import { routeHeaders } from "~/utils/cache";
 export const headers = routeHeaders;
 
 type NonNullableFields<T> = {
-  [P in keyof T]: NonNullable<T[P]>;
+    [P in keyof T]: NonNullable<T[P]>;
 };
 
 export async function loader({
-  request,
-  context: { storefront },
+    request,
+    context: { storefront },
 }: LoaderFunctionArgs) {
-  const data = await storefront.query<PoliciesIndexQuery>(POLICIES_QUERY);
+    const data = await storefront.query<PoliciesIndexQuery>(POLICIES_QUERY);
 
-  invariant(data, "No data returned from Shopify API");
+    invariant(data, "No data returned from Shopify API");
 
-  const policies = Object.values(
-    data.shop as NonNullableFields<typeof data.shop>,
-  ).filter(Boolean);
+    const policies = Object.values(
+        data.shop as NonNullableFields<typeof data.shop>,
+    ).filter(Boolean);
 
-  if (policies.length === 0) {
-    throw new Response("Not found", { status: 404 });
-  }
+    if (policies.length === 0) {
+        throw new Response("Not found", { status: 404 });
+    }
 
-  const seo = seoPayload.policies({ policies, url: request.url });
+    const seo = seoPayload.policies({ policies, url: request.url });
 
-  return {
-    policies,
-    seo,
-  };
+    return {
+        policies,
+        seo,
+    };
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data.seo as SeoConfig);
+    if (!data) return;
+    return getSeoMeta(data.seo as SeoConfig);
 };
 
 export default function Policies() {
-  const { policies } = useLoaderData<typeof loader>();
+    const { policies } = useLoaderData<typeof loader>();
 
-  return (
-    <Section width="fixed" verticalPadding="medium">
-      <BreadCrumb page="Policies" className="mb-4" />
-      <h4 className="mb-8 font-medium lg:mb-20">Policies</h4>
-      <div className="flex flex-col gap-3">
-        {policies.map((policy) => {
-          if (policy) {
-            return (
-              <Link
-                key={policy.id}
-                variant="underline"
-                className="w-fit gap-2"
-                to={`/policies/${policy.handle}`}
-              >
-                <FileTextIcon className="h-5 w-5" />
-                <span>{policy.title}</span>
-              </Link>
-            );
-          }
-          return null;
-        })}
-      </div>
-    </Section>
-  );
+    return (
+        <Section width="fixed" verticalPadding="medium">
+            <BreadCrumb page="Policies" className="mb-4" />
+            <h4 className="mb-8 font-medium lg:mb-20">Policies</h4>
+            <div className="flex flex-col gap-3">
+                {policies.map((policy) => {
+                    if (policy) {
+                        return (
+                            <Link
+                                key={policy.id}
+                                variant="underline"
+                                className="w-fit gap-2"
+                                to={`/policies/${policy.handle}`}
+                            >
+                                <FileTextIcon className="h-5 w-5" />
+                                <span>{policy.title}</span>
+                            </Link>
+                        );
+                    }
+                    return null;
+                })}
+            </div>
+        </Section>
+    );
 }
 
 const POLICIES_QUERY = `#graphql

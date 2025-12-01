@@ -17,57 +17,58 @@ import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
  * @see https://shopify.dev/api/storefront/current/queries/products
  */
 export async function loader({
-  request,
-  context: { storefront },
+    request,
+    context: { storefront },
 }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const searchParams = new URLSearchParams(url.search);
-  const query = searchParams.get("query") ?? "";
-  const sortKey =
-    (searchParams.get("sortKey") as null | ProductSortKeys) ?? "BEST_SELLING";
-  let reverse = false;
+    const url = new URL(request.url);
+    const searchParams = new URLSearchParams(url.search);
+    const query = searchParams.get("query") ?? "";
+    const sortKey =
+        (searchParams.get("sortKey") as null | ProductSortKeys) ??
+        "BEST_SELLING";
+    let reverse = false;
 
-  try {
-    const _reverse = searchParams.get("reverse");
-    if (_reverse === "true") {
-      reverse = true;
+    try {
+        const _reverse = searchParams.get("reverse");
+        if (_reverse === "true") {
+            reverse = true;
+        }
+    } catch (_) {
+        // noop
     }
-  } catch (_) {
-    // noop
-  }
 
-  let count = 4;
-  try {
-    const _count = searchParams.get("count");
-    if (typeof _count === "string") {
-      count = Number.parseInt(_count, 10);
+    let count = 4;
+    try {
+        const _count = searchParams.get("count");
+        if (typeof _count === "string") {
+            count = Number.parseInt(_count, 10);
+        }
+    } catch (_) {
+        // noop
     }
-  } catch (_) {
-    // noop
-  }
 
-  const combinedQuery = [maybeFilterOutCombinedListingsQuery, query]
-    .filter(Boolean)
-    .join(" ");
+    const combinedQuery = [maybeFilterOutCombinedListingsQuery, query]
+        .filter(Boolean)
+        .join(" ");
 
-  const { products } = await storefront.query<ApiAllProductsQuery>(
-    API_ALL_PRODUCTS_QUERY,
-    {
-      variables: {
-        count,
-        query: combinedQuery,
-        reverse,
-        sortKey,
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
-      },
-      cache: storefront.CacheLong(),
-    },
-  );
+    const { products } = await storefront.query<ApiAllProductsQuery>(
+        API_ALL_PRODUCTS_QUERY,
+        {
+            variables: {
+                count,
+                query: combinedQuery,
+                reverse,
+                sortKey,
+                country: storefront.i18n.country,
+                language: storefront.i18n.language,
+            },
+            cache: storefront.CacheLong(),
+        },
+    );
 
-  invariant(products, "No data returned from top products query");
+    invariant(products, "No data returned from top products query");
 
-  return data({ products: flattenConnection(products) });
+    return data({ products: flattenConnection(products) });
 }
 
 const API_ALL_PRODUCTS_QUERY = `#graphql

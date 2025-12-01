@@ -2,25 +2,25 @@ import { parseGid } from "@shopify/hydrogen";
 import type { LoaderFunctionArgs } from "react-router";
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const { shop } = await context.storefront.query(ROBOTS_QUERY);
-  const shopId = parseGid(shop.id).id;
-  const body = robotsTxtData({ url: url.origin, shopId });
+    const url = new URL(request.url);
+    const { shop } = await context.storefront.query(ROBOTS_QUERY);
+    const shopId = parseGid(shop.id).id;
+    const body = robotsTxtData({ url: url.origin, shopId });
 
-  return new Response(body, {
-    status: 200,
-    headers: {
-      "Content-Type": "text/plain",
+    return new Response(body, {
+        status: 200,
+        headers: {
+            "Content-Type": "text/plain",
 
-      "Cache-Control": `max-age=${60 * 60 * 24}`,
-    },
-  });
+            "Cache-Control": `max-age=${60 * 60 * 24}`,
+        },
+    });
 }
 
 function robotsTxtData({ url, shopId }: { shopId?: string; url?: string }) {
-  const sitemapUrl = url ? `${url}/sitemap.xml` : undefined;
+    const sitemapUrl = url ? `${url}/sitemap.xml` : undefined;
 
-  return `
+    return `
 User-agent: *
 ${generalDisallowRules({ sitemapUrl, shopId })}
 
@@ -60,13 +60,13 @@ Crawl-delay: 1
  * Online Store has as defaults for their robots.txt
  */
 function generalDisallowRules({
-  shopId,
-  sitemapUrl,
+    shopId,
+    sitemapUrl,
 }: {
-  shopId?: string;
-  sitemapUrl?: string;
+    shopId?: string;
+    sitemapUrl?: string;
 }) {
-  return `Disallow: /admin
+    return `Disallow: /admin
 Disallow: /cart
 Disallow: /orders
 Disallow: /checkouts/

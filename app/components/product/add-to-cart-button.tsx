@@ -1,18 +1,18 @@
 import type {
-  OptimisticCartLineInput,
-  ShopifyAddToCartPayload,
-  ShopifyPageViewPayload,
+    OptimisticCartLineInput,
+    ShopifyAddToCartPayload,
+    ShopifyPageViewPayload,
 } from "@shopify/hydrogen";
 import {
-  AnalyticsEventName,
-  CartForm,
-  getClientBrowserParameters,
-  sendShopifyAnalytics,
+    AnalyticsEventName,
+    CartForm,
+    getClientBrowserParameters,
+    sendShopifyAnalytics,
 } from "@shopify/hydrogen";
 import { useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import type { FetcherWithComponents } from "react-router";
 import { useMatches } from "react-router";
-import { useTranslation } from "react-i18next";
 import { Button } from "~/components/button";
 import { useCartDrawerStore } from "~/components/cart/store";
 import { Spinner } from "~/components/spinner";
@@ -20,160 +20,167 @@ import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
 export function AddToCartButton({
-  children,
-  lines,
-  className = "",
-  width = "full",
-  disabled,
-  analytics,
-  ...props
+    children,
+    lines,
+    className = "",
+    width = "full",
+    disabled,
+    analytics,
+    ...props
 }: {
-  children: React.ReactNode;
-  lines: OptimisticCartLineInput[];
-  className?: string;
-  width?: "auto" | "full";
-  disabled?: boolean;
-  analytics?: unknown;
-  [key: string]: any;
+    children: React.ReactNode;
+    lines: OptimisticCartLineInput[];
+    className?: string;
+    width?: "auto" | "full";
+    disabled?: boolean;
+    analytics?: unknown;
+    [key: string]: any;
 }) {
-  return (
-    <CartForm
-      route="/cart"
-      inputs={{ lines }}
-      action={CartForm.ACTIONS.LinesAdd}
-    >
-      {(fetcher: FetcherWithComponents<any>) => (
-        <AddToCartButtonContent
-          fetcher={fetcher}
-          disabled={disabled}
-          className={className}
-          analytics={analytics}
-          {...props}
+    return (
+        <CartForm
+            route="/cart"
+            inputs={{ lines }}
+            action={CartForm.ACTIONS.LinesAdd}
         >
-          {children}
-        </AddToCartButtonContent>
-      )}
-    </CartForm>
-  );
+            {(fetcher: FetcherWithComponents<any>) => (
+                <AddToCartButtonContent
+                    fetcher={fetcher}
+                    disabled={disabled}
+                    className={className}
+                    analytics={analytics}
+                    {...props}
+                >
+                    {children}
+                </AddToCartButtonContent>
+            )}
+        </CartForm>
+    );
 }
 
 function AddToCartButtonContent({
-  fetcher,
-  children,
-  disabled,
-  className,
-  analytics,
-  ...props
+    fetcher,
+    children,
+    disabled,
+    className,
+    analytics,
+    ...props
 }: {
-  fetcher: FetcherWithComponents<any>;
-  children: React.ReactNode;
-  disabled?: boolean;
-  className?: string;
-  analytics?: unknown;
-  [key: string]: any;
+    fetcher: FetcherWithComponents<any>;
+    children: React.ReactNode;
+    disabled?: boolean;
+    className?: string;
+    analytics?: unknown;
+    [key: string]: any;
 }) {
-  const { t } = useTranslation();
-  const { open: openCartDrawer } = useCartDrawerStore();
-  const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
-  const isLoading = fetcher.state !== "idle";
+    const { t } = useTranslation();
+    const { open: openCartDrawer } = useCartDrawerStore();
+    const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
+    const isLoading = fetcher.state !== "idle";
 
-  useEffect(() => {
-    if (prevStateRef.current !== "idle" && fetcher.state === "idle") {
-      openCartDrawer();
-    }
-    prevStateRef.current = fetcher.state;
-  }, [fetcher.state, openCartDrawer]);
+    useEffect(() => {
+        if (prevStateRef.current !== "idle" && fetcher.state === "idle") {
+            openCartDrawer();
+        }
+        prevStateRef.current = fetcher.state;
+    }, [fetcher.state, openCartDrawer]);
 
-  return (
-    <AddToCartAnalytics fetcher={fetcher}>
-      <input type="hidden" name="analytics" value={JSON.stringify(analytics)} />
-      <Button
-        type="submit"
-        className={cn(
-          "relative hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
-          className,
-        )}
-        disabled={disabled ?? isLoading}
-        {...props}
-      >
-        <span className={cn(isLoading && "invisible")}>
-          {children || t("cart.addToCart")}
-        </span>
-        {isLoading && <Spinner className="z-0" size={20} duration={400} />}
-      </Button>
-    </AddToCartAnalytics>
-  );
+    return (
+        <AddToCartAnalytics fetcher={fetcher}>
+            <input
+                type="hidden"
+                name="analytics"
+                value={JSON.stringify(analytics)}
+            />
+            <Button
+                type="submit"
+                className={cn(
+                    "relative hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
+                    className,
+                )}
+                disabled={disabled ?? isLoading}
+                {...props}
+            >
+                <span className={cn(isLoading && "invisible")}>
+                    {children || t("cart.addToCart")}
+                </span>
+                {isLoading && (
+                    <Spinner className="z-0" size={20} duration={400} />
+                )}
+            </Button>
+        </AddToCartAnalytics>
+    );
 }
 
 function usePageAnalytics({ hasUserConsent }: { hasUserConsent: boolean }) {
-  const matches = useMatches();
+    const matches = useMatches();
 
-  return useMemo(() => {
-    const data: Record<string, unknown> = {};
-    for (const match of matches) {
-      const eventData = match?.data as Record<string, unknown>;
-      if (eventData) {
-        if (eventData.analytics) {
-          Object.assign(data, eventData.analytics);
+    return useMemo(() => {
+        const data: Record<string, unknown> = {};
+        for (const match of matches) {
+            const eventData = match?.data as Record<string, unknown>;
+            if (eventData) {
+                if (eventData.analytics) {
+                    Object.assign(data, eventData.analytics);
+                }
+                const selectedLocale =
+                    (eventData.selectedLocale as typeof DEFAULT_LOCALE) ||
+                    DEFAULT_LOCALE;
+                Object.assign(data, {
+                    currency: selectedLocale.currency,
+                    acceptedLanguage: selectedLocale.language,
+                });
+            }
         }
-        const selectedLocale =
-          (eventData.selectedLocale as typeof DEFAULT_LOCALE) || DEFAULT_LOCALE;
-        Object.assign(data, {
-          currency: selectedLocale.currency,
-          acceptedLanguage: selectedLocale.language,
-        });
-      }
-    }
 
-    return {
-      ...data,
-      hasUserConsent,
-    } as unknown as ShopifyPageViewPayload;
-  }, [matches, hasUserConsent]);
+        return {
+            ...data,
+            hasUserConsent,
+        } as unknown as ShopifyPageViewPayload;
+    }, [matches, hasUserConsent]);
 }
 
 function AddToCartAnalytics({
-  fetcher,
-  children,
+    fetcher,
+    children,
 }: {
-  fetcher: FetcherWithComponents<any>;
-  children: React.ReactNode;
+    fetcher: FetcherWithComponents<any>;
+    children: React.ReactNode;
 }) {
-  const fetcherData = fetcher.data;
-  const formData = fetcher.formData;
-  const pageAnalytics = usePageAnalytics({ hasUserConsent: true });
+    const fetcherData = fetcher.data;
+    const formData = fetcher.formData;
+    const pageAnalytics = usePageAnalytics({ hasUserConsent: true });
 
-  useEffect(() => {
-    if (formData) {
-      const cartData: Record<string, unknown> = {};
-      const cartInputs = CartForm.getFormInput(formData);
+    useEffect(() => {
+        if (formData) {
+            const cartData: Record<string, unknown> = {};
+            const cartInputs = CartForm.getFormInput(formData);
 
-      try {
-        if (cartInputs.inputs.analytics) {
-          const dataInForm: unknown = JSON.parse(
-            String(cartInputs.inputs.analytics),
-          );
-          Object.assign(cartData, dataInForm);
+            try {
+                if (cartInputs.inputs.analytics) {
+                    const dataInForm: unknown = JSON.parse(
+                        String(cartInputs.inputs.analytics),
+                    );
+                    Object.assign(cartData, dataInForm);
+                }
+            } catch {
+                // do nothing
+            }
+
+            if (Object.keys(cartData).length && fetcherData) {
+                const addToCartPayload: ShopifyAddToCartPayload = {
+                    ...getClientBrowserParameters(),
+                    ...pageAnalytics,
+                    ...cartData,
+                    cartId: fetcherData.cart.id,
+                };
+
+                sendShopifyAnalytics({
+                    eventName: AnalyticsEventName.ADD_TO_CART,
+                    payload: addToCartPayload,
+                });
+            }
         }
-      } catch {
-        // do nothing
-      }
+    }, [fetcherData, formData, pageAnalytics]);
 
-      if (Object.keys(cartData).length && fetcherData) {
-        const addToCartPayload: ShopifyAddToCartPayload = {
-          ...getClientBrowserParameters(),
-          ...pageAnalytics,
-          ...cartData,
-          cartId: fetcherData.cart.id,
-        };
-
-        sendShopifyAnalytics({
-          eventName: AnalyticsEventName.ADD_TO_CART,
-          payload: addToCartPayload,
-        });
-      }
-    }
-  }, [fetcherData, formData, pageAnalytics]);
-
-  return <>{children}</>;
+    return <>{children}</>;
 }

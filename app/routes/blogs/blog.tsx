@@ -12,52 +12,52 @@ import { WeaverseContent } from "~/weaverse";
 export const headers = routeHeaders;
 
 export const loader = async (args: LoaderFunctionArgs) => {
-  const { params, request, context } = args;
-  const storefront = context.storefront;
-  const { language, country } = storefront.i18n;
-  const blogHandle = params?.blogHandle;
+    const { params, request, context } = args;
+    const storefront = context.storefront;
+    const { language, country } = storefront.i18n;
+    const blogHandle = params?.blogHandle;
 
-  invariant(blogHandle, "Missing blog handle");
+    invariant(blogHandle, "Missing blog handle");
 
-  // Load blog data and weaverseData in parallel
-  const [{ blog }, weaverseData] = await Promise.all([
-    storefront.query<BlogQuery>(BLOGS_QUERY, {
-      variables: { blogHandle, pageBy: 16, language },
-    }),
-    context.weaverse.loadPage({ type: "BLOG", handle: blogHandle }),
-  ]);
+    // Load blog data and weaverseData in parallel
+    const [{ blog }, weaverseData] = await Promise.all([
+        storefront.query<BlogQuery>(BLOGS_QUERY, {
+            variables: { blogHandle, pageBy: 16, language },
+        }),
+        context.weaverse.loadPage({ type: "BLOG", handle: blogHandle }),
+    ]);
 
-  if (!blog?.articles) {
-    throw new Response("Not found", { status: 404 });
-  }
-  redirectIfHandleIsLocalized(request, {
-    handle: blogHandle,
-    data: blog,
-  });
+    if (!blog?.articles) {
+        throw new Response("Not found", { status: 404 });
+    }
+    redirectIfHandleIsLocalized(request, {
+        handle: blogHandle,
+        data: blog,
+    });
 
-  const articles = flattenConnection(blog.articles).map((article) => {
-    const { publishedAt } = article;
-    return {
-      ...article,
-      publishedAt: new Intl.DateTimeFormat(`${language}-${country}`, {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }).format(new Date(publishedAt)),
-    };
-  });
+    const articles = flattenConnection(blog.articles).map((article) => {
+        const { publishedAt } = article;
+        return {
+            ...article,
+            publishedAt: new Intl.DateTimeFormat(`${language}-${country}`, {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            }).format(new Date(publishedAt)),
+        };
+    });
 
-  const seo = seoPayload.blog({ blog, url: request.url });
+    const seo = seoPayload.blog({ blog, url: request.url });
 
-  return data({ blog, articles, seo, weaverseData });
+    return data({ blog, articles, seo, weaverseData });
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data: loaderData }) => {
-  return getSeoMeta(loaderData?.seo as SeoConfig);
+    return getSeoMeta(loaderData?.seo as SeoConfig);
 };
 
 export default function Blogs() {
-  return <WeaverseContent />;
+    return <WeaverseContent />;
 }
 
 const BLOGS_QUERY = `#graphql

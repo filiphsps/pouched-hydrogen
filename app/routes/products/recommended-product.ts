@@ -6,35 +6,35 @@ import type { I18nLocale } from "~/types/others";
 import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
 
 export async function getRecommendedProducts(
-  storefront: Storefront<I18nLocale>,
-  productId: string,
+    storefront: Storefront<I18nLocale>,
+    productId: string,
 ) {
-  const products = await storefront.query<ProductRecommendationsQuery>(
-    RECOMMENDED_PRODUCTS_QUERY,
-    {
-      variables: {
-        productId,
-        count: 12,
-        query: maybeFilterOutCombinedListingsQuery,
-      },
-    },
-  );
+    const products = await storefront.query<ProductRecommendationsQuery>(
+        RECOMMENDED_PRODUCTS_QUERY,
+        {
+            variables: {
+                productId,
+                count: 12,
+                query: maybeFilterOutCombinedListingsQuery,
+            },
+        },
+    );
 
-  invariant(products, "No data returned from Shopify API");
+    invariant(products, "No data returned from Shopify API");
 
-  const mergedProducts = (products.recommended ?? [])
-    .concat(products.additional.nodes)
-    .filter((prod, idx, arr) => {
-      return arr.findIndex(({ id }) => id === prod.id) === idx;
-    });
+    const mergedProducts = (products.recommended ?? [])
+        .concat(products.additional.nodes)
+        .filter((prod, idx, arr) => {
+            return arr.findIndex(({ id }) => id === prod.id) === idx;
+        });
 
-  const originalProduct = mergedProducts.findIndex(
-    (item) => item.id === productId,
-  );
+    const originalProduct = mergedProducts.findIndex(
+        (item) => item.id === productId,
+    );
 
-  mergedProducts.splice(originalProduct, 1);
+    mergedProducts.splice(originalProduct, 1);
 
-  return { nodes: mergedProducts };
+    return { nodes: mergedProducts };
 }
 
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql

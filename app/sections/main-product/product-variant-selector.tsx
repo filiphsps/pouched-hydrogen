@@ -1,57 +1,73 @@
-import {
-  getAdjacentAndFirstAvailableVariants,
-  getProductOptions,
-  useOptimisticVariant,
-} from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { useLoaderData } from "react-router";
+import { forwardRef } from "react";
+import { useLoaderData, useNavigate, useSearchParams } from "react-router";
+import { VariantSelector } from "~/components/product/variant-selector";
 import type { loader as productRouteLoader } from "~/routes/products/product";
-import { isCombinedListing } from "~/utils/combined-listings";
-import { ProductVariants } from "./variants";
 
 interface ProductVariantSelectorProps extends HydrogenComponentProps {
-  ref: React.Ref<HTMLDivElement>;
+    showVariantImage: boolean;
 }
 
-export default function ProductVariantSelector(
-  props: ProductVariantSelectorProps,
-) {
-  const { ref, ...rest } = props;
-  const { product } = useLoaderData<typeof productRouteLoader>();
+const ProductVariantSelectorComponent = forwardRef<
+    HTMLDivElement,
+    ProductVariantSelectorProps
+>((props, ref) => {
+    const { showVariantImage, ...rest } = props;
+    const { product } = useLoaderData<typeof productRouteLoader>();
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
-  const selectedVariant = useOptimisticVariant(
-    product?.selectedOrFirstAvailableVariant,
-    getAdjacentAndFirstAvailableVariants(product),
-  );
+    if (!product) {
+        return null;
+    }
 
-  const productOptions = getProductOptions({
-    ...product,
-    selectedOrFirstAvailableVariant: selectedVariant,
-  });
+    const selectedVariant = product.selectedOrFirstAvailableVariant;
 
-  const combinedListing = isCombinedListing(product);
+    const setSelectedVariant = (variant: any) => {
+        if (!variant) return;
 
-  if (!product) {
-    return null;
-  }
+        const newParams = new URLSearchParams(searchParams);
+        for (const option of variant.selectedOptions) {
+            newParams.set(option.name, option.value);
+        }
 
-  return (
-    <div ref={ref} {...rest}>
-      <ProductVariants
-        productOptions={productOptions}
-        selectedVariant={selectedVariant}
-        combinedListing={combinedListing}
-      />
-    </div>
-  );
-}
+        navigate(`?${newParams.toString()}`, {
+            preventScrollReset: true,
+            replace: true,
+        });
+    };
+
+    return (
+        <div ref={ref} {...rest}>
+            <VariantSelector
+                product={product}
+                selectedVariant={selectedVariant}
+                setSelectedVariant={setSelectedVariant}
+            />
+        </div>
+    );
+});
+
+export default ProductVariantSelectorComponent;
 
 export const schema = createSchema({
-  type: "mp--variant-selector",
-  title: "Variant selector",
-  limit: 1,
-  enabledOn: {
-    pages: ["PRODUCT"],
-  },
-  settings: [],
+    type: "mp--variant-selector",
+    title: "Variant selector",
+    limit: 1,
+    enabledOn: {
+        pages: ["PRODUCT"],
+    },
+    settings: [
+        {
+            group: "General",
+            inputs: [
+                {
+                    type: "switch",
+                    label: "Show variant image",
+                    name: "showVariantImage",
+                    defaultValue: true,
+                },
+            ],
+        },
+    ],
 });

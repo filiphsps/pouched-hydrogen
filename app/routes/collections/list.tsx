@@ -10,43 +10,43 @@ import { WeaverseContent } from "~/weaverse";
 export const headers = routeHeaders;
 
 export const loader = async (args: RouteLoaderArgs) => {
-  const {
-    request,
-    context: { weaverse },
-  } = args;
-  const storefront = weaverse.storefront;
-  // Load collections data and weaverseData in parallel
-  const [{ collections }, weaverseData] = await Promise.all([
-    storefront.query<CollectionsQuery>(COLLECTIONS_QUERY, {
-      variables: {
-        ...getPaginationVariables(request, { pageBy: 16 }),
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
-      },
-    }),
-    weaverse.loadPage({
-      type: "COLLECTION_LIST",
-    }),
-  ]);
+    const {
+        request,
+        context: { weaverse },
+    } = args;
+    const storefront = weaverse.storefront;
+    // Load collections data and weaverseData in parallel
+    const [{ collections }, weaverseData] = await Promise.all([
+        storefront.query<CollectionsQuery>(COLLECTIONS_QUERY, {
+            variables: {
+                ...getPaginationVariables(request, { pageBy: 16 }),
+                country: storefront.i18n.country,
+                language: storefront.i18n.language,
+            },
+        }),
+        weaverse.loadPage({
+            type: "COLLECTION_LIST",
+        }),
+    ]);
 
-  const seo = seoPayload.listCollections({
-    collections,
-    url: request.url,
-  });
+    const seo = seoPayload.listCollections({
+        collections,
+        url: request.url,
+    });
 
-  return {
-    collections,
-    seo,
-    weaverseData,
-  };
+    return {
+        collections,
+        seo,
+        weaverseData,
+    };
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data?.seo as SeoConfig);
+    return getSeoMeta(data?.seo as SeoConfig);
 };
 
 export default function Collections() {
-  return <WeaverseContent />;
+    return <WeaverseContent />;
 }
 
 const COLLECTIONS_QUERY = `#graphql

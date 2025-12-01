@@ -5,51 +5,51 @@ import namesPlugin from "colord/plugins/names";
 extend([namesPlugin]);
 
 export function GlobalStyle() {
-  const settings = useThemeSettings();
-  if (settings) {
-    const {
-      colorBackground,
-      colorText,
-      colorTextSubtle,
-      colorTextInverse,
-      colorLine,
-      colorLineSubtle,
-      topbarTextColor,
-      topbarBgColor,
-      headerBgColor,
-      headerText,
-      transparentHeaderText,
-      footerBgColor,
-      footerText,
-      buttonPrimaryBg,
-      buttonPrimaryColor,
-      buttonSecondaryBg,
-      buttonSecondaryColor,
-      buttonOutlineTextAndBorder,
-      comparePriceTextColor,
-      discountBadge,
-      newBadge,
-      bestSellerBadge,
-      bundleBadgeColor,
-      soldOutBadgeColor,
-      productReviewsColor,
-      bodyBaseSize,
-      bodyBaseSpacing,
-      bodyBaseLineHeight,
-      h1BaseSize,
-      headingBaseSpacing,
-      headingBaseLineHeight,
-      navHeightDesktop,
-      navHeightTablet,
-      pageWidth,
-    } = settings;
+    const settings = useThemeSettings();
+    if (settings) {
+        const {
+            colorBackground,
+            colorText,
+            colorTextSubtle,
+            colorTextInverse,
+            colorLine,
+            colorLineSubtle,
+            topbarTextColor,
+            topbarBgColor,
+            headerBgColor,
+            headerText,
+            transparentHeaderText,
+            footerBgColor,
+            footerText,
+            buttonPrimaryBg,
+            buttonPrimaryColor,
+            buttonSecondaryBg,
+            buttonSecondaryColor,
+            buttonOutlineTextAndBorder,
+            comparePriceTextColor,
+            discountBadge,
+            newBadge,
+            bestSellerBadge,
+            bundleBadgeColor,
+            soldOutBadgeColor,
+            productReviewsColor,
+            bodyBaseSize,
+            bodyBaseSpacing,
+            bodyBaseLineHeight,
+            h1BaseSize,
+            headingBaseSpacing,
+            headingBaseLineHeight,
+            navHeightDesktop,
+            navHeightTablet,
+            pageWidth,
+        } = settings;
 
-    return (
-      <style
-        key="global-theme-style"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: `
+        return (
+            <style
+                key="global-theme-style"
+                suppressHydrationWarning
+                dangerouslySetInnerHTML={{
+                    __html: `
             :root {
               /* Layout */
               --height-nav: ${settings.navHeightMobile}rem;
@@ -124,9 +124,9 @@ export function GlobalStyle() {
               }
             }
           `,
-        }}
-      />
-    );
-  }
-  return null;
+                }}
+            />
+        );
+    }
+    return null;
 }

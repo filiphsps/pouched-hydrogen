@@ -10,65 +10,65 @@ import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { FeaturedProductsData } from "~/utils/featured-products";
 
 export function NotFound({ type = "page" }: { type?: string }) {
-  const { t } = useTranslation();
-  return (
-    <Section width="fixed" verticalPadding="medium">
-      <div className="space-y-4 py-20">
-        <BreadCrumb className="justify-center" page="404" />
-        <h4 className="mt-4 mb-2.5 text-center font-medium">
-          {t("error.notFound.heading", { type })}
-        </h4>
-        <p className="mx-auto pt-1 text-center lg:w-1/2">
-          {t("error.notFound.description", { type })}
-        </p>
-        <div className="pt-10">
-          <div className="text-center font-medium text-xl">
-            {t("error.notFound.actionsTitle")}
-          </div>
-          <div className="flex flex-col items-center justify-center gap-4 pt-4 md:flex-row">
-            <Link variant="outline" to="/products">
-              {t("error.notFound.shopProducts")}
-            </Link>
-            <span>{t("error.notFound.or")}</span>
-            <Link variant="underline" to="/">
-              {t("error.notFound.homeButton")}
-            </Link>
-          </div>
-        </div>
-      </div>
-      <FeaturedProducts />
-    </Section>
-  );
+    const { t } = useTranslation();
+    return (
+        <Section width="fixed" verticalPadding="medium">
+            <div className="space-y-4 py-20">
+                <BreadCrumb className="justify-center" page="404" />
+                <h4 className="mt-4 mb-2.5 text-center font-medium">
+                    {t("error.notFound.heading", { type })}
+                </h4>
+                <p className="mx-auto pt-1 text-center lg:w-1/2">
+                    {t("error.notFound.description", { type })}
+                </p>
+                <div className="pt-10">
+                    <div className="text-center font-medium text-xl">
+                        {t("error.notFound.actionsTitle")}
+                    </div>
+                    <div className="flex flex-col items-center justify-center gap-4 pt-4 md:flex-row">
+                        <Link variant="outline" to="/products">
+                            {t("error.notFound.shopProducts")}
+                        </Link>
+                        <span>{t("error.notFound.or")}</span>
+                        <Link variant="underline" to="/">
+                            {t("error.notFound.homeButton")}
+                        </Link>
+                    </div>
+                </div>
+            </div>
+            <FeaturedProducts />
+        </Section>
+    );
 }
 
 function FeaturedProducts() {
-  const { load, data } = useFetcher<FeaturedProductsData>();
-  const api = usePrefixPathWithLocale("/api/featured-products");
-  const { t } = useTranslation();
+    const { load, data } = useFetcher<FeaturedProductsData>();
+    const api = usePrefixPathWithLocale("/api/featured-products");
+    const { t } = useTranslation();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
-  useEffect(() => {
-    load(api);
-  }, [api]);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
+    useEffect(() => {
+        load(api);
+    }, [api]);
 
-  if (!data) {
-    return null;
-  }
+    if (!data) {
+        return null;
+    }
 
-  const { featuredProducts } = data;
+    const { featuredProducts } = data;
 
-  return (
-    <div className="space-y-8 pt-20">
-      <h5>{t("error.notFound.featuredProducts")}</h5>
-      <Swimlane>
-        {featuredProducts.nodes.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            className="w-80 snap-start"
-          />
-        ))}
-      </Swimlane>
-    </div>
-  );
+    return (
+        <div className="space-y-8 pt-20">
+            <h5>{t("error.notFound.featuredProducts")}</h5>
+            <Swimlane>
+                {featuredProducts.nodes.map((product) => (
+                    <ProductCard
+                        key={product.id}
+                        product={product}
+                        className="w-80 snap-start"
+                    />
+                ))}
+            </Swimlane>
+        </div>
+    );
 }

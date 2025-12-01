@@ -2,7 +2,7 @@ import {reactRouter} from '@react-router/dev/vite';
 import {hydrogen} from '@shopify/hydrogen/vite';
 import {oxygen} from '@shopify/mini-oxygen/vite';
 import tailwindcss from '@tailwindcss/vite';
-import {defineConfig} from 'vite';
+import {defineConfig, searchForWorkspaceRoot} from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
@@ -10,7 +10,7 @@ export default defineConfig({
     hydrogen(),
     oxygen(),
     reactRouter(),
-    tsconfigPaths(),
+    tsconfigPaths() as any,
     tailwindcss(),
   ],
   build: {
@@ -19,6 +19,10 @@ export default defineConfig({
     assetsInlineLimit: 0,
   },
   server: {
+    fs: {
+      strict: false,
+      allow: ['~/', '..'],
+    },
     warmup: {
       clientFiles: [
         './app/routes/**/*',
@@ -33,7 +37,8 @@ export default defineConfig({
     optimizeDeps: {
       include: [
         "react-i18next",
-        "react-share"
+        "react-share",
+        "@fontsource-variable/inter",
       ],
     },
   },

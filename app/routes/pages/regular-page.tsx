@@ -12,41 +12,41 @@ import { WeaverseContent } from "~/weaverse";
 export const headers = routeHeaders;
 
 export async function loader({ request, params, context }: RouteLoaderArgs) {
-  invariant(params.pageHandle, "Missing page handle");
-  const { storefront } = context.weaverse;
+    invariant(params.pageHandle, "Missing page handle");
+    const { storefront } = context.weaverse;
 
-  // Load page data and weaverseData in parallel
-  const [{ page }, weaverseData] = await Promise.all([
-    storefront.query<PageDetailsQuery>(PAGE_QUERY, {
-      variables: {
+    // Load page data and weaverseData in parallel
+    const [{ page }, weaverseData] = await Promise.all([
+        storefront.query<PageDetailsQuery>(PAGE_QUERY, {
+            variables: {
+                handle: params.pageHandle,
+                language: storefront.i18n.language,
+            },
+        }),
+        context.weaverse.loadPage({
+            type: "PAGE",
+            handle: params.pageHandle,
+        }),
+    ]);
+
+    if (!page) {
+        throw new Response(null, { status: 404 });
+    }
+    redirectIfHandleIsLocalized(request, {
         handle: params.pageHandle,
-        language: storefront.i18n.language,
-      },
-    }),
-    context.weaverse.loadPage({
-      type: "PAGE",
-      handle: params.pageHandle,
-    }),
-  ]);
+        data: page,
+    });
 
-  if (!page) {
-    throw new Response(null, { status: 404 });
-  }
-  redirectIfHandleIsLocalized(request, {
-    handle: params.pageHandle,
-    data: page,
-  });
-
-  const seo = seoPayload.page({ page, url: request.url });
-  return { page, seo, weaverseData };
+    const seo = seoPayload.page({ page, url: request.url });
+    return { page, seo, weaverseData };
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return getSeoMeta(data?.seo as SeoConfig);
+    return getSeoMeta(data?.seo as SeoConfig);
 };
 
 export default function Page() {
-  return <WeaverseContent />;
+    return <WeaverseContent />;
 }
 
 const PAGE_QUERY = `#graphql
