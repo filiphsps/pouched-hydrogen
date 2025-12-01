@@ -8,14 +8,14 @@ describe("image utility", () => {
             expect(getImageLoadingPriority(3)).toBe("eager");
         });
 
-        it("returns undefined for later images", () => {
-            expect(getImageLoadingPriority(4)).toBe(undefined);
-            expect(getImageLoadingPriority(10)).toBe(undefined);
+        it("returns 'lazy' for later images", () => {
+            expect(getImageLoadingPriority(4)).toBe("lazy");
+            expect(getImageLoadingPriority(10)).toBe("lazy");
         });
 
         it("respects custom maxEagerLoadCount", () => {
             expect(getImageLoadingPriority(1, 2)).toBe("eager");
-            expect(getImageLoadingPriority(2, 2)).toBe(undefined);
+            expect(getImageLoadingPriority(2, 2)).toBe("lazy");
         });
     });
 

@@ -11,6 +11,7 @@ import type {
     EnhancedMenu,
     ParentEnhancedMenuItem,
 } from "~/types/menu";
+import type { I18nLocale } from "~/types/others";
 import { seoPayload } from "./seo";
 
 /**
@@ -46,7 +47,7 @@ export async function loadCriticalData({
             country: storefront.i18n.country,
             language: storefront.i18n.language,
         },
-        selectedLocale: storefront.i18n,
+        selectedLocale: storefront.i18n as I18nLocale,
         weaverseTheme,
         googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
         swatchesConfigs,

@@ -59,9 +59,7 @@ export function Header() {
                 "text-(--color-header-text) hover:text-(--color-header-text)",
                 "border-line-subtle border-b",
                 variants({ padding: headerWidth }),
-                scrolled
-                    ? "shadow-header backdrop-blur-md bg-opacity-90"
-                    : "shadow-none",
+                scrolled ? "shadow-header" : "shadow-none",
                 "sticky top-0",
                 [
                     "[&_.cart-count]:text-(--color-header-bg)",

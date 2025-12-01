@@ -50,7 +50,9 @@
         "sku": "SKU",
         "details": "Details",
         "shipping": "Shipping",
-        "returns": "Returns"
+        "returns": "Returns",
+        "new": "New",
+        "add": "Add"
     },
     "search": {
         "title": "Predictive search",
@@ -137,6 +139,11 @@
         "required": "Required"
     },
     "error": {
+        "generic": {
+            "heading": "Something went wrong",
+            "description": "We are sorry, but an unexpected error occurred.",
+            "homeButton": "Return to home"
+        },
         "notFound": {
             "heading": "We can't find the {{type}} you are looking for",
             "description": "We checked the URL, but we couldn't find the {{type}} you are looking for.",

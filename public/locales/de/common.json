@@ -50,7 +50,9 @@
         "sku": "SKU",
         "details": "Details",
         "shipping": "Versand",
-        "returns": "Rückgabe"
+        "returns": "Rückgabe",
+        "new": "Neu",
+        "add": "Korb"
     },
     "search": {
         "title": "Prädiktive Suche",
@@ -134,6 +136,11 @@
         "required": "Erforderlich"
     },
     "error": {
+        "generic": {
+            "heading": "Etwas ist schief gelaufen",
+            "description": "Es tut uns leid, aber ein unerwarteter Fehler ist aufgetreten.",
+            "homeButton": "Zurück zur Startseite"
+        },
         "notFound": {
             "heading": "Wir können die {{type}} nicht finden, nach der Sie suchen",
             "description": "Wir haben die URL überprüft, aber wir konnten die {{type}} nicht finden, nach der Sie suchen.",

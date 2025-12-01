@@ -1,5 +1,6 @@
 @import "swiper/css/bundle" layer(base);
-@import "tailwindcss" source("../../app");
+@import "tailwindcss";
+@source "../../app";
 @plugin "@tailwindcss/typography";
 
 @theme {
@@ -13,6 +14,8 @@
   --breakpoint-2xl: 96em;
 
   --shadow-header: 0 2px 5px #0000000f;
+
+  --color-gray-150: oklch(94.75% 0.0045 264.5365);
 }
 
 @theme inline {

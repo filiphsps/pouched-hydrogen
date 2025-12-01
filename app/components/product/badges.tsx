@@ -3,6 +3,7 @@ import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { colord } from "colord";
+import { useTranslation } from "react-i18next";
 import type {
     ProductQuery,
     ProductVariantFragment,
@@ -27,14 +28,17 @@ function Badge({
     return (
         <span
             style={{
-                backgroundColor,
+                "--bg-color": backgroundColor,
                 color: colord(backgroundColor).isDark()
                     ? colorTextInverse
                     : colorText,
                 borderRadius: `${badgeBorderRadius}px`,
                 textTransform: badgeTextTransform,
             }}
-            className={cn("px-1.5 py-1 text-sm uppercase", className)}
+            className={cn(
+                "pointer-events-none select-none bg-(--bg-color) px-2 py-1.5 text-xs uppercase transition-colors duration-300",
+                className,
+            )}
         >
             {text}
         </span>
@@ -48,12 +52,14 @@ export function NewBadge({
     publishedAt: string;
     className?: string;
 }) {
-    const { newBadgeText, newBadgeColor, newBadgeDaysOld } = useThemeSettings();
+    const { t } = useTranslation();
+    const { newBadgeDaysOld, colorBackground } = useThemeSettings();
+
     if (isNewArrival(publishedAt, newBadgeDaysOld)) {
         return (
             <Badge
-                text={newBadgeText}
-                backgroundColor={newBadgeColor}
+                text={t("product.new")}
+                backgroundColor={colorBackground}
                 className={clsx("new-badge", className)}
             />
         );

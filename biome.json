@@ -34,7 +34,8 @@
       "nursery": {
         "useConsistentArrowReturn": "off",
         "noUnnecessaryConditions": "off",
-        "noIncrementDecrement": "off"
+        "noIncrementDecrement": "off",
+        "useSortedClasses": "error"
       },
       "correctness": {
         "noUnusedVariables": "off",

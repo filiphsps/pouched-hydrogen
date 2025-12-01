@@ -12,3 +12,17 @@ export function hasOnlyDefaultVariant(
     }
     return false;
 }
+
+export function removeVendorFromTitle(
+    title: string,
+    vendor: string,
+    enabled: boolean = true,
+) {
+    if (!enabled) return title;
+
+    if (!title || !vendor) return title;
+    if (title.startsWith(vendor)) {
+        return title.slice(vendor.length).trim();
+    }
+    return title;
+}

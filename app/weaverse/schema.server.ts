@@ -313,12 +313,6 @@ export const themeSchema: HydrogenThemeSchema = {
                 },
                 {
                     type: "color",
-                    label: "New",
-                    name: "newBadgeColor",
-                    defaultValue: "#388E3C",
-                },
-                {
-                    type: "color",
                     label: "Best seller / Hot",
                     name: "bestSellerBadgeColor",
                     defaultValue: "#1A1A1A",
@@ -463,7 +457,7 @@ export const themeSchema: HydrogenThemeSchema = {
                     name: "badgeBorderRadius",
                     configs: {
                         min: 0,
-                        max: 10,
+                        max: 128,
                         step: 2,
                         unit: "px",
                     },
@@ -489,13 +483,6 @@ export const themeSchema: HydrogenThemeSchema = {
                     name: "bestSellerBadgeText",
                     defaultValue: "Best Seller",
                     placeholder: "Best Seller",
-                },
-                {
-                    type: "text",
-                    label: "New text",
-                    name: "newBadgeText",
-                    defaultValue: "New",
-                    placeholder: "New",
                 },
                 {
                     type: "range",
@@ -541,12 +528,6 @@ export const themeSchema: HydrogenThemeSchema = {
         {
             group: "Product cards",
             inputs: [
-                {
-                    type: "color",
-                    name: "pcardBackgroundColor",
-                    label: "Background color",
-                    defaultValue: "",
-                },
                 {
                     type: "range",
                     name: "pcardBorderRadius",
@@ -633,6 +614,12 @@ export const themeSchema: HydrogenThemeSchema = {
                     type: "switch",
                     label: "Show vendor",
                     name: "pcardShowVendor",
+                    defaultValue: true,
+                },
+                {
+                    type: "switch",
+                    label: "Remove vendor from title",
+                    name: "pcardRemoveVendorFromTitle",
                     defaultValue: true,
                 },
                 {

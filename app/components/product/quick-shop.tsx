@@ -9,6 +9,7 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { ShopPayButton } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
 import type {
     ProductQuery,
@@ -147,6 +148,8 @@ export function QuickShopTrigger({
     const [open, setOpen] = useState(false);
     const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();
 
+    const { t } = useTranslation();
+
     // biome-ignore lint/correctness/useExhaustiveDependencies: open and state are intentionally excluded
     useEffect(() => {
         if (open && !data) {
@@ -161,19 +164,20 @@ export function QuickShopTrigger({
                     animate={false}
                     variant="secondary"
                     className={clsx(
-                        "group/quick-shop absolute bottom-4 h-10.5 p-3 leading-4",
+                        "group/quick-shop absolute inset-y-0 right-0 h-10.5 p-3 leading-4",
                         buttonType === "icon"
-                            ? "right-4 rounded-full shadow-xl"
-                            : "inset-x-4 shadow-xs",
+                            ? "rounded-full shadow-xl"
+                            : "shadow-xs",
                         showOnHover &&
                             "opacity-0 transition-opacity group-hover:opacity-100",
                     )}
+                    title={t("cart.addToCart")}
                 >
                     {buttonType === "icon" ? (
                         <>
                             <HandbagSimpleIcon size={16} className="h-4 w-4" />
-                            <span className="w-0 overflow-hidden pl-0 text-base transition-all group-hover/quick-shop:w-9.5 group-hover/quick-shop:pl-2">
-                                Add
+                            <span className="w-0 overflow-hidden pl-0 text-right text-base transition-all group-hover/quick-shop:w-11 group-hover/quick-shop:pl-2">
+                                {t("product.add")}
                             </span>
                         </>
                     ) : (

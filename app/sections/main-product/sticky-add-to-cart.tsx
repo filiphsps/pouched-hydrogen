@@ -1,5 +1,4 @@
 import { Money, useOptimisticVariant } from "@shopify/hydrogen";
-import { useThemeSettings } from "@weaverse/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
@@ -12,7 +11,6 @@ export function StickyAddToCart() {
     const { product } = useLoaderData<typeof productRouteLoader>();
     const { quantity } = useProductQtyStore();
     const [isVisible, setIsVisible] = useState(false);
-    const { pcardBackgroundColor } = useThemeSettings();
 
     const selectedVariant = useOptimisticVariant(
         product.selectedOrFirstAvailableVariant,
