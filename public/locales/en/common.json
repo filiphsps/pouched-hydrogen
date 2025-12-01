@@ -136,6 +136,17 @@
         "save": "Save",
         "required": "Required"
     },
+    "error": {
+        "notFound": {
+            "heading": "We can't find the {{type}} you are looking for",
+            "description": "We checked the URL, but we couldn't find the {{type}} you are looking for.",
+            "actionsTitle": "Try one of the following:",
+            "shopProducts": "Shop products",
+            "or": "or",
+            "homeButton": "Return to home",
+            "featuredProducts": "Featured Products"
+        }
+    },
     "errors": {
         "pageNotFound": "Page not found",
         "somethingWentWrong": "Something went wrong",

@@ -133,6 +133,17 @@
         "save": "Speichern",
         "required": "Erforderlich"
     },
+    "error": {
+        "notFound": {
+            "heading": "Wir können die {{type}} nicht finden, nach der Sie suchen",
+            "description": "Wir haben die URL überprüft, aber wir konnten die {{type}} nicht finden, nach der Sie suchen.",
+            "actionsTitle": "Versuchen Sie eine der folgenden Optionen:",
+            "shopProducts": "Produkte einkaufen",
+            "or": "oder",
+            "homeButton": "Zurück zur Startseite",
+            "featuredProducts": "Empfohlene Produkte"
+        }
+    },
     "errors": {
         "pageNotFound": "Seite nicht gefunden",
         "somethingWentWrong": "Etwas ist schief gelaufen",
