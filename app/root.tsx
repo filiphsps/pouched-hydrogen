@@ -108,8 +108,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
     const location = useLocation();
     const nonce = useNonce();
     const data = useRouteLoaderData<RootLoader>("root");
+
     const locale = data?.selectedLocale ?? DEFAULT_LOCALE;
-    useChangeLanguage(locale.language);
+    useChangeLanguage(locale.language.toLowerCase());
+
     const { t } = useTranslation();
     const { topbarHeight, topbarText } = useThemeSettings();
     const shouldShowNewsletterPopup = useShouldRenderNewsletterPopup();
@@ -122,7 +124,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <html lang={locale.language}>
+        <html lang={locale.language.toLowerCase()}>
             <head>
                 <meta charSet="utf-8" />
                 <meta
@@ -154,12 +156,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
                                 className="flex min-h-screen flex-col"
                                 key={`${locale.language}-${locale.country}`}
                             >
-                                <div className="">
-                                    <a href="#mainContent" className="sr-only">
-                                        {t("navigation.skipToContent")}
-                                    </a>
-                                </div>
-
                                 {/* Global scrolling announcement bar */}
                                 <ScrollingAnnouncement />
                                 {/* Global header - appears on all pages */}
@@ -191,20 +187,18 @@ function App() {
     const location = useLocation();
 
     return (
-        <Layout>
-            <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                    key={location.pathname}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="h-full"
-                >
-                    <Outlet />
-                </motion.div>
-            </AnimatePresence>
-        </Layout>
+        <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="h-full"
+            >
+                <Outlet />
+            </motion.div>
+        </AnimatePresence>
     );
 }
 

@@ -31,12 +31,17 @@ export async function createHydrogenRouterContext(
         throw new Error("SESSION_SECRET environment variable is not set");
     }
 
+    if (!env?.WEAVERSE_PROJECT_ID) {
+        throw new Error("WEAVERSE_PROJECT_ID environment variable is not set");
+    }
+
     const waitUntil = executionContext.waitUntil.bind(executionContext);
     const [cache, session] = await Promise.all([
         caches.open("hydrogen"),
         AppSession.init(request, [env.SESSION_SECRET]),
     ]);
 
+    const i18n = getLocaleFromRequest(request);
     const hydrogenContext = createHydrogenContext(
         {
             env,
@@ -44,7 +49,7 @@ export async function createHydrogenRouterContext(
             cache,
             waitUntil,
             session,
-            i18n: getLocaleFromRequest(request),
+            i18n,
             cart: { queryFragment: CART_QUERY_FRAGMENT },
         },
         additionalContext,
@@ -52,6 +57,7 @@ export async function createHydrogenRouterContext(
 
     const weaverse = new WeaverseClient({
         ...hydrogenContext,
+        env,
         request,
         cache,
         themeSchema,

@@ -5,6 +5,7 @@ import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import type { ShopQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
 import { routeHeaders } from "~/utils/cache";
+import { getWeaverseLocale } from "~/utils/locale";
 import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
@@ -25,7 +26,10 @@ export async function loader(args: LoaderFunctionArgs) {
 
     // Load async data in parallel for better performance
     const [weaverseData, { shop }] = await Promise.all([
-        context.weaverse.loadPage({ type }),
+        context.weaverse.loadPage({
+            type,
+            locale: getWeaverseLocale(context.storefront.i18n),
+        }),
         context.storefront.query<ShopQuery>(SHOP_QUERY),
     ]);
 

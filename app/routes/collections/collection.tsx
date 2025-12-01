@@ -14,6 +14,7 @@ import { seoPayload } from "~/.server/seo";
 import type { SortParam } from "~/types/others";
 import { routeHeaders } from "~/utils/cache";
 import { FILTER_URL_PREFIX } from "~/utils/const";
+import { getWeaverseLocale } from "~/utils/locale";
 import { WeaverseContent } from "~/weaverse";
 import { COLLECTION_QUERY } from "./collection-query";
 import { getSortValuesFromParam, parseAsCurrency } from "./utils";
@@ -78,6 +79,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         context.weaverse.loadPage({
             type: "COLLECTION",
             handle: collectionHandle,
+            locale: getWeaverseLocale(storefront.i18n),
         }),
     ]);
 

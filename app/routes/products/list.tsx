@@ -6,6 +6,7 @@ import { seoPayload } from "~/.server/seo";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { routeHeaders } from "~/utils/cache";
 import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
+import { getWeaverseLocale } from "~/utils/locale";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
@@ -24,7 +25,10 @@ export async function loader({
                 query: maybeFilterOutCombinedListingsQuery,
             },
         }),
-        weaverse.loadPage({ type: "ALL_PRODUCTS" }),
+        weaverse.loadPage({
+            type: "ALL_PRODUCTS",
+            locale: getWeaverseLocale(storefront.i18n),
+        }),
     ]);
 
     invariant(data, "No data returned from Shopify API");

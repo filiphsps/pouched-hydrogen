@@ -7,6 +7,7 @@ import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
 import { routeHeaders } from "~/utils/cache";
+import { getWeaverseLocale } from "~/utils/locale";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
@@ -24,7 +25,11 @@ export const loader = async (args: LoaderFunctionArgs) => {
         storefront.query<BlogQuery>(BLOGS_QUERY, {
             variables: { blogHandle, pageBy: 16, language },
         }),
-        context.weaverse.loadPage({ type: "BLOG", handle: blogHandle }),
+        context.weaverse.loadPage({
+            type: "BLOG",
+            handle: blogHandle,
+            locale: getWeaverseLocale(storefront.i18n),
+        }),
     ]);
 
     if (!blog?.articles) {

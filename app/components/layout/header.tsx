@@ -43,14 +43,12 @@ function useIsHomeCheck() {
 }
 
 export function Header() {
-    const { enableTransparentHeader, headerWidth } = useThemeSettings();
+    const { headerWidth } = useThemeSettings();
     const isHome = useIsHomeCheck();
     const { y } = useWindowScroll();
     const routeError = useRouteError();
 
     const scrolled = y >= 50;
-    const enableTransparent = enableTransparentHeader && isHome && !routeError;
-    const isTransparent = enableTransparent && !scrolled;
 
     return (
         <header
@@ -64,29 +62,13 @@ export function Header() {
                 scrolled
                     ? "shadow-header backdrop-blur-md bg-opacity-90"
                     : "shadow-none",
-                enableTransparent
-                    ? [
-                          "group/header fixed w-screen",
-                          "top-(--topbar-height,var(--initial-topbar-height))",
-                      ]
-                    : "sticky top-0",
-                isTransparent
-                    ? [
-                          "border-transparent bg-transparent",
-                          "text-(--color-transparent-header-text)",
-                          "[&_.cart-count]:text-(--color-header-text)",
-                          "[&_.cart-count]:bg-(--color-transparent-header-text)",
-                          "hover:[&_.cart-count]:bg-(--color-header-text)",
-                          "hover:[&_.cart-count]:text-(--color-transparent-header-text)",
-                          "[&_.main-logo]:opacity-0 hover:[&_.main-logo]:opacity-100",
-                          "[&_.transparent-logo]:opacity-100 hover:[&_.transparent-logo]:opacity-0",
-                      ]
-                    : [
-                          "[&_.cart-count]:text-(--color-header-bg)",
-                          "[&_.cart-count]:bg-(--color-header-text)",
-                          "[&_.main-logo]:opacity-100",
-                          "[&_.transparent-logo]:opacity-0",
-                      ],
+                "sticky top-0",
+                [
+                    "[&_.cart-count]:text-(--color-header-bg)",
+                    "[&_.cart-count]:bg-(--color-header-text)",
+                    "[&_.main-logo]:opacity-100",
+                    "[&_.transparent-logo]:opacity-0",
+                ],
             )}
         >
             <div

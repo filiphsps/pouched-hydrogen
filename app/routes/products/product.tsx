@@ -22,6 +22,7 @@ import {
     COMBINED_LISTINGS_CONFIGS,
     isCombinedListing,
 } from "~/utils/combined-listings";
+import { getWeaverseLocale } from "~/utils/locale";
 import { generateProductSchema } from "~/utils/structured-data";
 import { WeaverseContent } from "~/weaverse";
 import { getRecommendedProducts } from "./recommended-product";
@@ -44,7 +45,11 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
                 language: storefront.i18n.language,
             },
         }),
-        weaverse.loadPage({ type: "PRODUCT", handle }),
+        weaverse.loadPage({
+            type: "PRODUCT",
+            handle,
+            locale: getWeaverseLocale(storefront.i18n),
+        }),
         // Add other queries here, so that they are loaded in parallel
     ]);
 

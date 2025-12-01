@@ -200,7 +200,7 @@ export function Footer() {
                     <div className="flex gap-2">
                         <CountrySelector />
                     </div>
-                    <p dangerouslySetInnerHTML={{ __html: copyright }} />
+                    <div dangerouslySetInnerHTML={{ __html: copyright }} />
                 </div>
             </div>
         </footer>

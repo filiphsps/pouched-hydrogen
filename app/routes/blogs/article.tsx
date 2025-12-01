@@ -7,6 +7,7 @@ import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
 import { routeHeaders } from "~/utils/cache";
+import { getWeaverseLocale } from "~/utils/locale";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
@@ -33,6 +34,7 @@ export async function loader(args: RouteLoaderArgs) {
         context.weaverse.loadPage({
             type: "ARTICLE",
             handle: articleHandle,
+            locale: getWeaverseLocale(storefront.i18n),
         }),
     ]);
 

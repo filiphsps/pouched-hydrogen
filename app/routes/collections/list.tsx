@@ -5,6 +5,7 @@ import type { MetaFunction } from "react-router";
 import type { CollectionsQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
 import { routeHeaders } from "~/utils/cache";
+import { getWeaverseLocale } from "~/utils/locale";
 import { WeaverseContent } from "~/weaverse";
 
 export const headers = routeHeaders;
@@ -26,6 +27,7 @@ export const loader = async (args: RouteLoaderArgs) => {
         }),
         weaverse.loadPage({
             type: "COLLECTION_LIST",
+            locale: getWeaverseLocale(storefront.i18n),
         }),
     ]);
 

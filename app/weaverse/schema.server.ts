@@ -147,13 +147,6 @@ export const themeSchema: HydrogenThemeSchema = {
                     defaultValue: "fixed",
                 },
                 {
-                    type: "switch",
-                    label: "Enable transparent header",
-                    name: "enableTransparentHeader",
-                    defaultValue: false,
-                    helpText: "Header is transparent in home page only.",
-                },
-                {
                     type: "image",
                     name: "logoData",
                     label: "Logo",
@@ -164,20 +157,6 @@ export const themeSchema: HydrogenThemeSchema = {
                         width: 320,
                         height: 116,
                     },
-                },
-                {
-                    type: "image",
-                    name: "transparentLogoData",
-                    label: "Logo on transparent header",
-                    defaultValue: {
-                        id: "gid://shopify/MediaImage/34144817938616",
-                        altText: "Logo",
-                        url: "https://cdn.shopify.com/s/files/1/0838/0052/3057/files/transparent_Pilot_logo.png?v=1718763594",
-                        width: 320,
-                        height: 116,
-                    },
-                    condition: (theme: Record<string, any>) =>
-                        theme.enableTransparentHeader === true,
                 },
                 {
                     type: "range",
@@ -267,12 +246,6 @@ export const themeSchema: HydrogenThemeSchema = {
                     label: "Header text",
                     name: "headerText",
                     defaultValue: "#1A1A1A",
-                },
-                {
-                    type: "color",
-                    label: "Transparent header text",
-                    name: "transparentHeaderText",
-                    defaultValue: "#FFFFFF",
                 },
                 {
                     type: "heading",

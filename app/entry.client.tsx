@@ -2,7 +2,6 @@ import { StrictMode, startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { HydratedRouter } from "react-router/dom";
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";

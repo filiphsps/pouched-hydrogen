@@ -3,7 +3,6 @@ import {
     type HydrogenRouterContextProvider,
 } from "@shopify/hydrogen";
 import { createInstance } from "i18next";
-import HttpBackend from "i18next-http-backend";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
 import { I18nextProvider, initReactI18next } from "react-i18next";
@@ -31,20 +30,14 @@ export default async function handleRequest(
     });
 
     const instance = createInstance();
-    const lng = await i18next.getLocale(request);
+    const lng = context.storefront.i18n.language.toLowerCase();
     const ns = i18next.getRouteNamespaces(reactRouterContext);
 
-    await instance
-        .use(initReactI18next)
-        .use(HttpBackend)
-        .init({
-            ...i18n,
-            lng,
-            ns,
-            backend: {
-                loadPath: "/locales/{{lng}}/{{ns}}.json",
-            },
-        });
+    await instance.use(initReactI18next).init({
+        ...i18n,
+        lng,
+        ns,
+    });
 
     const body = await renderToReadableStream(
         <I18nextProvider i18n={instance}>
