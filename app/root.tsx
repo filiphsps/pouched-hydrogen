@@ -187,7 +187,7 @@ function App() {
     const location = useLocation();
 
     return (
-        <AnimatePresence mode="wait" initial={false}>
+        <AnimatePresence mode="popLayout" initial={false}>
             <motion.div
                 key={location.pathname}
                 initial={{ opacity: 0, y: 20 }}

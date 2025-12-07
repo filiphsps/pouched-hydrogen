@@ -3,23 +3,31 @@ import {
     WeaverseHydrogenRoot,
     type WeaverseLoaderData,
 } from "@weaverse/hydrogen";
-import { useEffect } from "react";
+import { usePresence } from "framer-motion";
+import { useEffect, useLayoutEffect } from "react";
 
 import { useLoaderData } from "react-router";
 import { GenericError } from "~/components/root/generic-error";
 import { components } from "./components";
 
+const useIsomorphicLayoutEffect =
+    typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export function WeaverseContent() {
     const data = useLoaderData<any>();
     const weaverse = useWeaverse();
 
-    useEffect(() => {
-        if (data?.weaverseData) {
-            setTimeout(() => {
-                (weaverse as any)?.setData?.(data.weaverseData);
-            }, 0);
+    const [isPresent] = usePresence();
+
+    useIsomorphicLayoutEffect(() => {
+        if (data?.weaverseData && isPresent) {
+            (weaverse as any)?.setData?.(data.weaverseData);
         }
-    }, [data, weaverse]);
+    }, [data, weaverse, isPresent]);
+
+    if (!isPresent) {
+        return null;
+    }
 
     return (
         <WeaverseHydrogenRoot
