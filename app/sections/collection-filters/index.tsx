@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { BreadCrumb } from "~/components/breadcrumb";
+import { Filters, type FiltersProps } from "~/components/filters/filters";
+import { ProductsPagination } from "~/components/filters/products-pagination";
+import { ToolsBar } from "~/components/filters/tools-bar";
 import { Image } from "~/components/image";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
-import { Filters } from "./filters";
-import { ProductsPagination } from "./products-pagination";
-import { ToolsBar } from "./tools-bar";
 
 export interface CollectionFiltersData {
     showBreadcrumb: boolean;
@@ -59,9 +59,10 @@ export default function CollectionFilters(props: CollectionFiltersProps) {
         ...rest
     } = props;
 
-    const { collection, collections } = useLoaderData<
+    const { collection, collections, appliedFilters } = useLoaderData<
         CollectionQuery & {
             collections: Array<{ handle: string; title: string }>;
+            appliedFilters: any[];
         }
     >();
 
@@ -81,6 +82,17 @@ export default function CollectionFilters(props: CollectionFiltersProps) {
         const banner = collection.metafield
             ? collection.metafield.reference?.image
             : collection.image;
+
+        const filtersProps: FiltersProps = {
+            filters: collection.products.filters || [],
+            appliedFilters,
+            expandFilters,
+            showFiltersCount,
+            enableSwatches,
+            displayAsButtonFor,
+            collectionId: collection.id,
+        };
+
         return (
             <Section ref={ref} {...rest} overflow="unset">
                 <div className="py-10">
@@ -126,14 +138,21 @@ export default function CollectionFilters(props: CollectionFiltersProps) {
                             setGridSizeMobile(v);
                         }
                     }}
-                    {...props}
+                    enableSort={enableSort}
+                    enableFilter={enableFilter}
+                    filtersPosition={filtersPosition}
+                    showProductsCount={showProductsCount}
+                    expandFilters={expandFilters}
+                    showFiltersCount={showFiltersCount}
+                    productsCount={collection.products.nodes.length}
+                    filtersProps={filtersProps}
                 />
                 <div className="flex gap-5 pt-6 pb-8 lg:pt-12 lg:pb-20">
                     {enableFilter && filtersPosition === "sidebar" && (
                         <div className="hidden w-72 shrink-0 lg:block">
                             <div className="sticky top-[calc(var(--height-nav)+40px)] space-y-4">
                                 <div className="font-bold">Filters</div>
-                                <Filters />
+                                <Filters {...filtersProps} />
                             </div>
                         </div>
                     )}
@@ -142,6 +161,8 @@ export default function CollectionFilters(props: CollectionFiltersProps) {
                         gridSizeMobile={gridSizeMobile}
                         loadPrevText={loadPrevText}
                         loadMoreText={loadMoreText}
+                        products={collection.products}
+                        appliedFilters={appliedFilters}
                     />
                 </div>
             </Section>

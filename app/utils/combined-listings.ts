@@ -5,7 +5,7 @@ export const COMBINED_LISTINGS_CONFIGS = {
     // The tag that indicates a combined listing
     combinedListingTag: "combined",
     // If true, combined listings will not be shown in the product list
-    hideCombinedListingsFromProductList: true,
+    hideCombinedListingsFromProductList: false,
 };
 
 export const maybeFilterOutCombinedListingsQuery =

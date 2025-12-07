@@ -1,11 +1,26 @@
 import {
+    useWeaverse,
     WeaverseHydrogenRoot,
     type WeaverseLoaderData,
 } from "@weaverse/hydrogen";
+import { useEffect } from "react";
+
+import { useLoaderData } from "react-router";
 import { GenericError } from "~/components/root/generic-error";
 import { components } from "./components";
 
 export function WeaverseContent() {
+    const data = useLoaderData<any>();
+    const weaverse = useWeaverse();
+
+    useEffect(() => {
+        if (data?.weaverseData) {
+            setTimeout(() => {
+                (weaverse as any)?.setData?.(data.weaverseData);
+            }, 0);
+        }
+    }, [data, weaverse]);
+
     return (
         <WeaverseHydrogenRoot
             components={components}

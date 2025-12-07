@@ -73,6 +73,7 @@ export async function loader({ params, request, context }: LoaderFunctionArgs) {
         seo: seoPayload.product({ product, url: request.url }),
         recommended,
         selectedOptions,
+        url: request.url,
     };
 }
 
@@ -83,7 +84,7 @@ export const meta = ({ matches }: MetaArgs<typeof loader>) => {
 };
 
 export default function Product() {
-    const { product, storeDomain } = useLoaderData<typeof loader>();
+    const { product, storeDomain, url } = useLoaderData<typeof loader>();
     const combinedListing = isCombinedListing(product);
 
     // Optimistically selects a variant with given available variant information
@@ -136,11 +137,7 @@ export default function Product() {
         }
     }, [selectedVariant?.selectedOptions, combinedListing]);
 
-    const productSchema = generateProductSchema(
-        product,
-        selectedVariant,
-        typeof window !== "undefined" ? window.location.href : storeDomain,
-    );
+    const productSchema = generateProductSchema(product, selectedVariant, url);
 
     return (
         <>

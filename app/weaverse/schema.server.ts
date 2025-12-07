@@ -1100,5 +1100,18 @@ export const themeSchema: HydrogenThemeSchema = {
                 },
             ],
         },
+        {
+            group: "Product Filters",
+            inputs: [
+                {
+                    type: "textarea",
+                    name: "filterMetafields",
+                    label: "Filter Metafields",
+                    defaultValue: "",
+                    helpText:
+                        "List of metafields to be used for filtering. Format: namespace.key (one per line)",
+                },
+            ],
+        },
     ],
 };
