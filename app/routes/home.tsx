@@ -21,9 +21,6 @@ export async function loader(args: LoaderFunctionArgs) {
         type = "CUSTOM";
     }
 
-    // Calculate seo payload synchronously
-    const seo = seoPayload.home();
-
     // Load async data in parallel for better performance
     const [weaverseData, { shop }] = await Promise.all([
         context.weaverse.loadPage({
@@ -32,6 +29,9 @@ export async function loader(args: LoaderFunctionArgs) {
         }),
         context.storefront.query<ShopQuery>(SHOP_QUERY),
     ]);
+
+    // Calculate seo payload synchronously
+    const seo = seoPayload.home({ shop });
 
     // Check weaverseData after parallel loading
     validateWeaverseData(weaverseData);
@@ -58,6 +58,7 @@ const SHOP_QUERY = `#graphql
   query shop($country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
     shop {
+      id
       name
       description
     }

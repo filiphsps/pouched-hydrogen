@@ -1,7 +1,7 @@
 import { SlidersIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
-import clsx from "clsx";
 import { Button } from "~/components/button";
+import { ClientOnly } from "~/components/client-only";
 import { Filters, type FiltersProps } from "~/components/filters/filters";
 import { ScrollArea } from "~/components/scroll-area";
 import {
@@ -35,7 +35,7 @@ export function ToolsBar({
     filtersProps,
 }: ToolsBarProps) {
     return (
-        <div className="border-line-subtle border-y py-4">
+        <div className="py-4">
             <div className="flex w-full items-center justify-between gap-4 md:gap-8">
                 <LayoutSwitcher
                     gridSizeDesktop={gridSizeDesktop}
@@ -50,7 +50,11 @@ export function ToolsBar({
                 {(enableSort ||
                     (enableFilter && filtersPosition === "drawer")) && (
                     <div className="flex gap-2">
-                        {enableSort && <Sort />}
+                        {enableSort && (
+                            <ClientOnly>
+                                <Sort />
+                            </ClientOnly>
+                        )}
                         {enableFilter && (
                             <FiltersDrawer
                                 filtersPosition={filtersPosition}
@@ -88,7 +92,7 @@ function FiltersDrawer({
             </Dialog.Trigger>
             <Dialog.Portal>
                 <Dialog.Overlay
-                    className={clsx(
+                    className={cn(
                         "fixed inset-0 z-10 bg-black/50",
                         "data-[state=open]:animate-[fade-in_150ms_ease-out]",
                         "data-[state=closed]:animate-[fade-out_150ms_ease-in]",
@@ -96,7 +100,7 @@ function FiltersDrawer({
                 />
                 <Dialog.Content
                     onCloseAutoFocus={(e) => e.preventDefault()}
-                    className={clsx(
+                    className={cn(
                         "fixed inset-y-0 left-0 z-10 w-full bg-background py-4 md:w-[360px]",
                         "data-[state=open]:animate-[enter-from-left_200ms_ease-out]",
                         "data-[state=closed]:animate-[exit-to-left_200ms_ease-in]",

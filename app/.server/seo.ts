@@ -22,7 +22,7 @@ function root({
 }): SeoConfig {
     return {
         title: shop?.name,
-        titleTemplate: "%s | Weaverse Hydrogen Demo Store",
+        titleTemplate: `%s | ${shop.name}`,
         description: truncate(shop?.description ?? ""),
         handle: "@weaverse",
         url,
@@ -51,11 +51,10 @@ function root({
     };
 }
 
-function home(): SeoConfig {
+function home({ shop }: { shop: { name: string } }): SeoConfig {
     return {
         title: "Home",
-        titleTemplate: "%s | Weaverse Hydrogen Demo Store",
-        description: "The best Shopify Hydrogen Theme Customizer",
+        titleTemplate: `%s | ${shop.name}`,
         robots: {
             noIndex: false,
             noFollow: false,

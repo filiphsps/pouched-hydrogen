@@ -100,7 +100,7 @@ export default function AllProducts(props: AllProductsProps) {
     };
 
     return (
-        <Section ref={ref} {...rest} overflow="unset">
+        <Section ref={ref} {...rest} overflow="unset" className="h-auto">
             {props.showBreadcrumb && (
                 <BreadCrumb page={heading} className="mb-4 justify-center" />
             )}
@@ -282,7 +282,7 @@ export const schema = createSchema({
                     type: "switch",
                     name: "showProductsCount",
                     label: "Show products count",
-                    defaultValue: true,
+                    defaultValue: false,
                 },
                 {
                     type: "heading",

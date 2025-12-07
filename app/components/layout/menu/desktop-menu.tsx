@@ -45,10 +45,8 @@ export function DesktopMenu() {
                         return (
                             <NavigationMenu.Item key={id} value={id}>
                                 <NavigationMenu.Trigger
-                                    className={clsx([
-                                        "flex h-full cursor-pointer items-center gap-1.5 px-3 py-2",
-                                        'data-[state="open"]:[&>svg]:rotate-180',
-                                        "uppercase focus:outline-hidden",
+                                    className={cn([
+                                        'flex h-full cursor-pointer items-center gap-1.5 px-3 py-2 uppercase focus:outline-hidden data-[state="open"]:[&>svg]:rotate-180',
                                     ])}
                                 >
                                     {hasSubmenu ? (
@@ -70,8 +68,7 @@ export function DesktopMenu() {
                                 {level > 1 && (
                                     <NavigationMenu.Content
                                         className={cn([
-                                            "absolute top-0 left-0 w-full",
-                                            "px-3 py-8 md:px-4 lg:px-6",
+                                            "absolute top-0 left-0 w-full px-3 py-8 md:px-4 lg:px-6",
                                         ])}
                                     >
                                         <MegaMenu items={childItems} />

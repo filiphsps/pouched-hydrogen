@@ -22,6 +22,7 @@ import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { Skeleton } from "~/components/skeleton";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
+import { cn } from "~/utils/cn";
 import { ProductBadges } from "./badges";
 import { VariantPrices } from "./variant-prices";
 import { VariantSelector } from "./variant-selector";
@@ -189,7 +190,7 @@ export function QuickShopTrigger({
                 <Dialog.Overlay className="fixed inset-0 z-10 bg-gray-900/50 data-[state=open]:animate-fade-in" />
                 <Dialog.Content
                     onCloseAutoFocus={(e) => e.preventDefault()}
-                    className={clsx(
+                    className={cn(
                         "quick-shop-dialog-content",
                         "fixed inset-0 z-10 flex items-center overflow-x-hidden px-4",
                         "backdrop-blur-xs",
@@ -218,9 +219,8 @@ export function QuickShopTrigger({
                     </Dialog.Close>
                     <div
                         style={{ maxHeight: "90vh" }}
-                        className={clsx(
-                            "relative mx-auto h-auto w-full max-w-(--breakpoint-xl) overflow-hidden",
-                            "animate-slide-up bg-white shadow-sm",
+                        className={cn(
+                            "relative mx-auto h-auto w-full max-w-(--breakpoint-xl) animate-slide-up overflow-hidden rounded-xl bg-white shadow-sm",
                             panelType === "drawer" &&
                                 "mr-0 ml-auto min-h-screen max-w-md p-4",
                         )}

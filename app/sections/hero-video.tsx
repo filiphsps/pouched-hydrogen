@@ -184,7 +184,11 @@ export default function HeroVideo(props: HeroVideoProps) {
                     overlayOpacity={overlayOpacity}
                     className="z-0"
                 />
-                <div ref={scope} className={clsx(variants({ gap }))}>
+                <div
+                    ref={scope}
+                    className={clsx(variants({ gap }))}
+                    suppressHydrationWarning
+                >
                     {children}
                 </div>
             </div>

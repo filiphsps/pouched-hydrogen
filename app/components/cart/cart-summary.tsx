@@ -2,7 +2,6 @@ import { GiftIcon, TagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
@@ -12,6 +11,7 @@ import { Link } from "~/components/link";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
 import type { CartLayoutType } from "~/types/others";
+import { cn } from "~/utils/cn";
 import {
     DiscountDialog,
     GiftCardDialog,
@@ -59,7 +59,7 @@ export function CartSummary({
         gcRemoveFetcher.state !== "idle";
     return (
         <div
-            className={clsx(
+            className={cn(
                 layout === "drawer" && "grid border-line-subtle border-t pt-4",
                 layout === "page" &&
                     "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
@@ -194,7 +194,7 @@ export function CartSummary({
             )}
             <dl className="mb-4 grid">
                 <div
-                    className={clsx(
+                    className={cn(
                         "flex items-center justify-between font-medium",
                         layout === "page" && "text-xl",
                     )}

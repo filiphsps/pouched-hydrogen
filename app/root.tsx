@@ -187,14 +187,13 @@ function App() {
     const location = useLocation();
 
     return (
-        <AnimatePresence mode="popLayout" initial={false}>
+        <AnimatePresence mode="popLayout" initial={true}>
             <motion.div
                 key={location.pathname}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                exit={{ opacity: 0, y: -20, pointerEvents: "none" }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="h-full"
             >
                 <Outlet />
             </motion.div>

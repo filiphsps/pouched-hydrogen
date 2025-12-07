@@ -2,11 +2,12 @@ import { CircleNotchIcon } from "@phosphor-icons/react";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { type HTMLMotionProps, motion } from "framer-motion";
+import { forwardRef } from "react";
 import { cn } from "~/utils/cn";
 
 export const variants = cva(
     [
-        "relative inline-flex items-center justify-center rounded-none",
+        "relative inline-flex items-center justify-center",
         "whitespace-nowrap font-normal text-base leading-tight",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50!",
         "transition-all duration-200",
@@ -77,7 +78,6 @@ export interface ButtonProps
     extends VariantProps<typeof variants>,
         Omit<HTMLMotionProps<"button">, "ref">,
         Partial<ButtonStyleProps> {
-    ref?: React.Ref<HTMLButtonElement>;
     type?: "button" | "reset" | "submit";
     className?: string;
     disabled?: boolean;
@@ -86,64 +86,66 @@ export interface ButtonProps
     animate?: boolean;
 }
 
-export function Button(props: ButtonProps) {
-    let {
-        ref,
-        type = "button",
-        variant,
-        loading,
-        className,
-        textColor,
-        backgroundColor,
-        borderColor,
-        textColorHover,
-        backgroundColorHover,
-        borderColorHover,
-        style = {},
-        animate = true,
-        children,
-        ...rest
-    } = props;
-    if (variant === "custom") {
-        style = {
-            ...style,
-            "--btn-text": textColor,
-            "--btn-bg": backgroundColor,
-            "--btn-border": borderColor,
-            "--btn-text-hover": textColorHover,
-            "--btn-bg-hover": backgroundColorHover,
-            "--btn-border-hover": borderColorHover,
-        } as React.CSSProperties;
-    }
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+    (props, ref) => {
+        let {
+            type = "button",
+            variant,
+            loading,
+            className,
+            textColor,
+            backgroundColor,
+            borderColor,
+            textColorHover,
+            backgroundColorHover,
+            borderColorHover,
+            style = {},
+            animate = true,
+            children,
+            ...rest
+        } = props;
+        if (variant === "custom") {
+            style = {
+                ...style,
+                "--btn-text": textColor,
+                "--btn-bg": backgroundColor,
+                "--btn-border": borderColor,
+                "--btn-text-hover": textColorHover,
+                "--btn-bg-hover": backgroundColorHover,
+                "--btn-border-hover": borderColorHover,
+            } as React.CSSProperties;
+        }
 
-    if (!children) {
-        return null;
-    }
+        if (!children) {
+            return null;
+        }
 
-    let content: React.ReactNode;
-    if (typeof children === "string") {
-        content = <span>{children}</span>;
-    } else {
-        content = children;
-    }
+        let content: React.ReactNode;
+        if (typeof children === "string") {
+            content = <span>{children}</span>;
+        } else {
+            content = children;
+        }
 
-    return (
-        <motion.button
-            ref={ref}
-            style={style}
-            type={type}
-            {...rest}
-            data-motion={animate ? "fade-up" : undefined}
-            className={cn(variants({ variant, className }))}
-            whileTap={{ scale: 0.98 }}
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-        >
-            {loading && <Spinner />}
-            {content}
-        </motion.button>
-    );
-}
+        return (
+            <motion.button
+                ref={ref}
+                style={style}
+                type={type}
+                {...rest}
+                data-motion={animate ? "fade-up" : undefined}
+                className={cn("rounded-lg", variants({ variant, className }))}
+                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+                {loading && <Spinner />}
+                {content}
+            </motion.button>
+        );
+    },
+);
+Button.displayName = "Button";
 
 function Spinner() {
     return (
