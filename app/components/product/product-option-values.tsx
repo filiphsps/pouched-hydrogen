@@ -107,7 +107,7 @@ export function ProductOptionValues({
                                 ),
                             )}
                         </Select.Viewport>
-                        <Select.ScrollDownButton className="flex cursor-pointer items-center justify-center rounded-lg hover:bg-info-100 dark:hover:bg-info-700">
+                        <Select.ScrollDownButton className="flex cursor-pointer items-center justify-center rounded-xl hover:bg-info-100 dark:hover:bg-info-700">
                             <CaretDownIcon size={16} />
                         </Select.ScrollDownButton>
                     </Select.Content>

@@ -117,9 +117,7 @@ export function FilterItem({
                 checked={checked}
                 disabled={option.count === 0}
                 className={cn(
-                    "h-5 w-5 shrink-0",
-                    "border border-line focus-visible:outline-hidden",
-                    "disabled:cursor-not-allowed disabled:opacity-50",
+                    "h-5 w-5 shrink-0 border border-line focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
                 )}
             >
                 <Checkbox.Indicator className="flex items-center justify-center text-current">

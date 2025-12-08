@@ -79,7 +79,7 @@ const variants = cva("heading", {
         size: "default",
         weight: "400",
         letterSpacing: "normal",
-        alignment: "center",
+        alignment: "left",
     },
 });
 

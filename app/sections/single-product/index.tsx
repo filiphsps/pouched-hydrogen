@@ -15,6 +15,7 @@ import type {
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import Link from "~/components/link";
+import Paragraph from "~/components/paragraph";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductBadges, SoldOutBadge } from "~/components/product/badges";
 import { BundledVariants } from "~/components/product/bundled-variants";
@@ -141,8 +142,9 @@ export default function SingleProduct(props: SingleProductProps) {
                         selectedVariant={selectedVariant}
                         showThumbnails={showThumbnails}
                     />
+
                     <div
-                        className="flex flex-col justify-start space-y-5"
+                        className="flex flex-col justify-start space-y-5 rounded-2xl bg-background"
                         data-motion="slide-in"
                     >
                         <div className="space-y-4">
@@ -163,12 +165,9 @@ export default function SingleProduct(props: SingleProductProps) {
                                 ratingText="{{rating}} ({{total_reviews}} reviews)"
                                 errorText=""
                             />
-                            <p
+                            <Paragraph
                                 className="fade-up line-clamp-5 leading-relaxed"
-                                suppressHydrationWarning
-                                dangerouslySetInnerHTML={{
-                                    __html: product?.summary,
-                                }}
+                                content={product?.descriptionHtml}
                             />
                             {isBundle && (
                                 <div className="space-y-3">
@@ -219,7 +218,7 @@ export default function SingleProduct(props: SingleProductProps) {
                                     },
                                 ]}
                                 storeDomain={storeDomain}
-                                className="-mt-2"
+                                className="-mt-2 overflow-hidden rounded-xl"
                             />
                         )}
                         <Link

@@ -81,6 +81,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
                         },
                     ]}
                     storeDomain={storeDomain}
+                    className="overflow-hidden rounded-xl"
                 />
             )}
         </div>

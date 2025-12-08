@@ -37,6 +37,7 @@ export default function ProductQuantitySelector(
                 value={quantity}
                 onChange={setQuantity}
                 label={labelText}
+                className="w-full"
             />
         </div>
     );

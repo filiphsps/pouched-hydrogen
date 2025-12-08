@@ -136,7 +136,7 @@ export const Button = ({
             type={type}
             {...rest}
             data-motion={animate ? "fade-up" : undefined}
-            className={cn("rounded-lg", variants({ variant, className }))}
+            className={cn("rounded-xl", variants({ variant, className }))}
             whileTap={{ scale: 0.98 }}
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}

@@ -3,31 +3,31 @@ import { useLoaderData } from "react-router";
 import Paragraph from "~/components/paragraph";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
-interface ProductSummaryProps extends HydrogenComponentProps {
+interface ProductDescriptionProps extends HydrogenComponentProps {
     ref: React.Ref<HTMLDivElement>;
 }
 
-export default function ProductSummary(props: ProductSummaryProps) {
+export default function ProductDescription(props: ProductDescriptionProps) {
     const { ref, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
-    if (!product?.summary) {
+    if (!product?.descriptionHtml && !product?.description) {
         return null;
     }
 
     return (
         <div ref={ref} {...rest} className="empty:hidden">
             <Paragraph
-                className="line-clamp-5 leading-relaxed"
-                content={product.summary}
+                className="leading-relaxed"
+                content={product.descriptionHtml || product.description}
             />
         </div>
     );
 }
 
 export const schema = createSchema({
-    type: "mp--summary",
-    title: "Summary",
+    type: "mp--description",
+    title: "Description",
     limit: 1,
     enabledOn: {
         pages: ["PRODUCT"],

@@ -218,7 +218,7 @@ export default function Video(props: VideoProps) {
           {description}
         </p>
         <iframe
-          className="mx-auto mt-8 h-64 w-full max-w-2xl rounded-lg lg:mt-12 sm:h-96"
+          className="mx-auto mt-8 h-64 w-full max-w-2xl rounded-xl lg:mt-12 sm:h-96"
           src={videoUrl}
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

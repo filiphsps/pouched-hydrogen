@@ -6,10 +6,17 @@ import {
     useOptimisticData,
 } from "@shopify/hydrogen";
 import type { CartLineUpdateInput } from "@shopify/hydrogen/storefront-api-types";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import type { CartLineOptimisticData } from "./cart-line-item";
 
+/**
+ * Component for adjusting cart line item quantity
+ * @param {Object} props - Component props
+ * @param {OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0]} props.line - Cart line item
+ * @returns {JSX.Element | null} Cart line quantity adjust component
+ */
 export function CartLineQuantityAdjust({
     line,
 }: {
@@ -19,6 +26,9 @@ export function CartLineQuantityAdjust({
     const optimisticId = line?.id;
     const optimisticData =
         useOptimisticData<CartLineOptimisticData>(optimisticId);
+
+    // Initialize state before early return
+    const [inputValue, setInputValue] = useState(String(line?.quantity ?? 0));
 
     if (!line || typeof line?.quantity === "undefined") {
         return null;
@@ -30,12 +40,68 @@ export function CartLineQuantityAdjust({
     const prevQuantity = Number(Math.max(0, optimisticQuantity - 1).toFixed(0));
     const nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
 
+    /**
+     * Handle input blur event to submit quantity changes
+     * Removes line item if quantity is 0
+     */
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const newQuantity = Number.parseInt(inputValue, 10);
+
+        // Validate and ensure non-negative integer
+        if (Number.isNaN(newQuantity) || newQuantity < 0) {
+            setInputValue(String(optimisticQuantity));
+            return;
+        }
+
+        // Only submit if quantity has changed
+        if (newQuantity !== optimisticQuantity) {
+            // Submit the form
+            const form = e.currentTarget.form;
+            if (form) {
+                form.requestSubmit();
+            }
+        }
+    };
+
+    /**
+     * Handle input change event
+     */
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+
+    /**
+     * Handle key down events (Enter to submit, Escape to reset)
+     */
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            e.currentTarget.blur();
+        } else if (e.key === "Escape") {
+            setInputValue(String(optimisticQuantity));
+            e.currentTarget.blur();
+        }
+    };
+
+    // Update input value when optimistic quantity changes
+    if (
+        String(optimisticQuantity) !== inputValue &&
+        !document.activeElement?.id.includes(`quantity-${lineId}`)
+    ) {
+        setInputValue(String(optimisticQuantity));
+    }
+
+    const currentQuantity = Number.parseInt(inputValue, 10);
+    const validQuantity =
+        Number.isNaN(currentQuantity) || currentQuantity < 0
+            ? 0
+            : currentQuantity;
+
     return (
         <>
             <label htmlFor={`quantity-${lineId}`} className="sr-only">
                 {t("cart.quantityLabel", { quantity: optimisticQuantity })}
             </label>
-            <div className="flex min-w-30 items-center justify-evenly border border-line-subtle">
+            <div className="flex min-w-30 items-center justify-evenly rounded-xl border border-line-subtle">
                 <UpdateCartButton
                     lines={[{ id: lineId, quantity: prevQuantity }]}
                 >
@@ -55,12 +121,55 @@ export function CartLineQuantityAdjust({
                     </button>
                 </UpdateCartButton>
 
-                <div
-                    className="min-w-8 px-2 text-center"
-                    data-test="item-quantity"
-                >
-                    {optimisticQuantity}
-                </div>
+                {validQuantity === 0 ? (
+                    <CartForm
+                        route="/cart"
+                        action={CartForm.ACTIONS.LinesRemove}
+                        inputs={{ lineIds: [lineId] }}
+                    >
+                        <input
+                            id={`quantity-${lineId}`}
+                            type="number"
+                            min="0"
+                            className="min-w-8 border-0 px-2 text-center focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-inset"
+                            data-test="item-quantity"
+                            value={inputValue}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            onKeyDown={handleKeyDown}
+                            disabled={isOptimistic}
+                        />
+                        <OptimisticInput
+                            id={optimisticId}
+                            data={{ quantity: validQuantity }}
+                        />
+                    </CartForm>
+                ) : (
+                    <CartForm
+                        route="/cart"
+                        action={CartForm.ACTIONS.LinesUpdate}
+                        inputs={{
+                            lines: [{ id: lineId, quantity: validQuantity }],
+                        }}
+                    >
+                        <input
+                            id={`quantity-${lineId}`}
+                            type="number"
+                            min="0"
+                            className="min-w-8 border-0 px-2 text-center focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-inset"
+                            data-test="item-quantity"
+                            value={inputValue}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            onKeyDown={handleKeyDown}
+                            disabled={isOptimistic}
+                        />
+                        <OptimisticInput
+                            id={optimisticId}
+                            data={{ quantity: validQuantity }}
+                        />
+                    </CartForm>
+                )}
 
                 <UpdateCartButton
                     lines={[{ id: lineId, quantity: nextQuantity }]}

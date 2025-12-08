@@ -116,7 +116,7 @@ export function QuickShop({
                                 },
                             ]}
                             storeDomain={storeDomain}
-                            className="-mt-2"
+                            className="-mt-2 overflow-hidden rounded-xl"
                         />
                     )}
                     <Link
@@ -220,7 +220,7 @@ export function QuickShopTrigger({
                     <div
                         style={{ maxHeight: "90vh" }}
                         className={cn(
-                            "relative mx-auto h-auto w-full max-w-(--breakpoint-xl) animate-slide-up overflow-hidden rounded-xl bg-white shadow-sm",
+                            "relative mx-auto h-auto w-full max-w-(--breakpoint-xl) animate-slide-up overflow-hidden rounded-2xl bg-white shadow-sm",
                             panelType === "drawer" &&
                                 "mr-0 ml-auto min-h-screen max-w-md p-4",
                         )}

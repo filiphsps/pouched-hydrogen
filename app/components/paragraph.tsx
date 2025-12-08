@@ -45,6 +45,14 @@ const variants = cva("paragraph", {
     },
 });
 
+/**
+ * Paragraph component for rendering rich text content.
+ * Automatically switches from <p> to <div> when content contains block-level elements
+ * to avoid invalid HTML nesting that causes hydration mismatches.
+ *
+ * @param {ParagraphProps} props - Component props
+ * @returns {JSX.Element} Rendered paragraph or div element
+ */
 function Paragraph(props: ParagraphProps) {
     const {
         ref,
@@ -58,25 +66,31 @@ function Paragraph(props: ParagraphProps) {
         ...rest
     } = props;
 
-    // If rendering as a paragraph, strip outer <p> tags from content to prevent invalid nesting (p within p)
-    let renderedContent = content;
-    if (Tag === "p" && content.trim().match(/^<p[^>]*>.*<\/p>$/is)) {
-        renderedContent = content
-            .replace(/^<p[^>]*>/i, "")
-            .replace(/<\/p>$/i, "");
+    // Handle empty/undefined content
+    if (!content) {
+        return null;
     }
 
+    // Regex to detect block-level HTML elements that cannot be nested inside <p>
+    const hasBlockContent =
+        /<(div|p|ul|ol|li|blockquote|h[1-6]|table|form|pre|section|article|header|footer|nav|aside|main|figure|figcaption|address|hr|br\s*\/?>)/i.test(
+            content,
+        );
+
+    // If Tag is <p> but content has block elements, use <div> instead to avoid hydration errors
+    const FinalTag = Tag === "p" && hasBlockContent ? "div" : Tag;
+
     return (
-        <Tag
-            ref={ref}
+        <FinalTag
+            ref={ref as React.Ref<HTMLDivElement>}
             data-motion="fade-up"
             {...rest}
             style={{ color }}
             className={clsx(
                 variants({ textSize, width, alignment, className }),
             )}
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{ __html: renderedContent }}
+            suppressHydrationWarning={true}
+            dangerouslySetInnerHTML={{ __html: content }}
         />
     );
 }
