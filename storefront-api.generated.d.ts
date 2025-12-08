@@ -473,6 +473,11 @@ export type ProductCardFragment = Pick<
       Pick<StorefrontAPI.Metafield, 'key' | 'namespace' | 'value'>
     >
   >;
+  customMetafields?: Array<
+    StorefrontAPI.Maybe<
+      Pick<StorefrontAPI.Metafield, 'key' | 'namespace' | 'value'>
+    >
+  >;
   priceRange: {
     maxVariantPrice: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;
     minVariantPrice: Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>;

@@ -37,6 +37,7 @@ async function hydrate() {
     });
 }
 
+// Prevent hydration on Googlebot
 if (!window.location.origin.includes("webcache.googleusercontent.com")) {
     hydrate();
 }

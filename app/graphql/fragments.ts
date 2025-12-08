@@ -106,6 +106,21 @@ export const PRODUCT_CARD_FRAGMENT = `#graphql
       namespace
       value
     }
+    # Product card custom fields - query common metafield keys
+    customMetafields: metafields(identifiers: [
+      { namespace: "custom", key: "subtitle" }
+      { namespace: "custom", key: "nicotine" }
+      { namespace: "custom", key: "nicotine_pouch" }
+      { namespace: "custom", key: "strength" }
+      { namespace: "custom", key: "format" }
+      { namespace: "custom", key: "flavor" }
+      { namespace: "custom", key: "attribute_1" }
+      { namespace: "custom", key: "attribute_2" }
+    ]) {
+      key
+      namespace
+      value
+    }
     priceRange {
       maxVariantPrice {
         amount

@@ -18,6 +18,7 @@ import { cn } from "~/utils/cn";
 import { isCombinedListing } from "~/utils/combined-listings";
 import { calculateAspectRatio } from "~/utils/image";
 import { removeVendorFromTitle } from "~/utils/product";
+import { AttributePills } from "./attribute-pills";
 import {
     BestSellerBadge,
     BundleBadge,
@@ -28,14 +29,27 @@ import {
 import { ProductCardOptions } from "./product-card-options";
 import { QuickShopTrigger } from "./quick-shop";
 import { VariantPrices } from "./variant-prices";
+import { WishlistButton } from "./wishlist-button";
 
-export function ProductCard({
-    product,
-    className,
-}: {
+/**
+ * Props for the ProductCard component.
+ */
+interface ProductCardProps {
+    /** The product data from the GraphQL fragment. */
     product: ProductCardFragment;
+    /** Additional CSS class names for styling. */
     className?: string;
-}) {
+}
+
+/**
+ * A product card component that displays product information in a card layout.
+ * Features include: sale badge, wishlist button, product image with hover effect,
+ * NEW badge, attribute pills, title, subtitle, price, and quick shop functionality.
+ *
+ * @param props - The component props
+ * @returns A product card element
+ */
+export function ProductCard({ product, className }: ProductCardProps) {
     const {
         pcardBorderRadius,
         pcardShowImageOnHover,
@@ -57,6 +71,9 @@ export function ProductCard({
         pcardShowBestSellerBadge,
         pcardShowNewBadge,
         pcardShowOutOfStockBadge,
+        pcardShowWishlist,
+        pcardShowSubtitle,
+        pcardShowAttributePills,
     } = useThemeSettings();
 
     const [selectedVariant, setSelectedVariant] =
@@ -98,7 +115,7 @@ export function ProductCard({
     return (
         <div
             className={cn(
-                "group/card group flex flex-col gap-2 overflow-hidden rounded-(--pcard-radius) bg-gray-150",
+                "group/card group flex flex-col overflow-hidden rounded-(--pcard-radius) bg-gray-150",
                 className,
             )}
             style={
@@ -111,9 +128,49 @@ export function ProductCard({
                 } as React.CSSProperties
             }
         >
+            {/* Image section with overlaid badges */}
             <div className="group relative overflow-hidden p-2">
                 {image && (
                     <div className="group relative rounded-(--pcard-radius) rounded-t-(--pcard-radius) bg-transparent transition-colors duration-300 group-hover/card:bg-background">
+                        {/* Sale badge - top left */}
+                        <div className="absolute top-3 left-3 z-10 flex gap-1">
+                            {isBundle && pcardShowBundleBadge && (
+                                <BundleBadge />
+                            )}
+                            {pcardShowSaleBadge && (
+                                <SaleBadge
+                                    price={minVariantPrice as MoneyV2}
+                                    compareAtPrice={maxVariantPrice as MoneyV2}
+                                />
+                            )}
+                            {pcardShowBestSellerBadge &&
+                                isBestSellerProduct && <BestSellerBadge />}
+                        </div>
+
+                        {/* Wishlist button - top right */}
+                        {pcardShowWishlist && (
+                            <div className="absolute top-3 right-3 z-10">
+                                <WishlistButton productId={product.id} />
+                            </div>
+                        )}
+
+                        {/* NEW badge - bottom left of image */}
+                        {pcardShowNewBadge && (
+                            <div className="absolute bottom-3 left-3 z-10">
+                                <NewBadge
+                                    publishedAt={product.publishedAt}
+                                    className="group-hover/card:bg-gray-150"
+                                />
+                            </div>
+                        )}
+
+                        {/* Out of stock badge - bottom left of image */}
+                        {pcardShowOutOfStockBadge && (
+                            <div className="absolute bottom-3 left-3 z-10">
+                                <SoldOutBadge />
+                            </div>
+                        )}
+
                         <Link
                             to={`/products/${product.handle}?${params.toString()}`}
                             prefetch="intent"
@@ -161,31 +218,12 @@ export function ProductCard({
                         </Link>
                     </div>
                 )}
-
-                <div className="absolute bottom-4 left-4 flex gap-1">
-                    {isBundle && pcardShowBundleBadge && <BundleBadge />}
-                    {pcardShowSaleBadge && (
-                        <SaleBadge
-                            price={minVariantPrice as MoneyV2}
-                            compareAtPrice={maxVariantPrice as MoneyV2}
-                        />
-                    )}
-                    {pcardShowBestSellerBadge && isBestSellerProduct && (
-                        <BestSellerBadge />
-                    )}
-                    {pcardShowNewBadge && (
-                        <NewBadge
-                            publishedAt={product.publishedAt}
-                            className="group-hover/card:bg-gray-150"
-                        />
-                    )}
-                    {pcardShowOutOfStockBadge && <SoldOutBadge />}
-                </div>
             </div>
 
+            {/* Content section */}
             <div
                 className={cn(
-                    "group/details p-4 text-sm",
+                    "group/details flex flex-col gap-2 p-4 pt-0 text-sm",
                     isVertical && [
                         pcardAlignment === "left" && "text-left",
                         pcardAlignment === "center" && "text-center",
@@ -193,6 +231,7 @@ export function ProductCard({
                     ],
                 )}
             >
+                {/* Reviews */}
                 {pcardShowReviews && (
                     <JudgemeStarsRating
                         productHandle={product.handle}
@@ -201,6 +240,12 @@ export function ProductCard({
                     />
                 )}
 
+                {/* Attribute pills */}
+                {pcardShowAttributePills && (
+                    <AttributePills product={product} className="mb-1" />
+                )}
+
+                {/* Title and price section */}
                 <div
                     className={cn(
                         "relative flex",
@@ -215,9 +260,10 @@ export function ProductCard({
                                       pcardAlignment === "right" && "items-end",
                                   ],
                               ]
-                            : "justify-between gap-4",
+                            : "flex-col gap-1",
                     )}
                 >
+                    {/* Product title */}
                     <Link
                         to={`/products/${product.handle}?${params.toString()}`}
                         prefetch="intent"
@@ -238,41 +284,61 @@ export function ProductCard({
                         </RevealUnderline>
                     </Link>
 
-                    {pcardShowLowestPrice || isCombinedListing(product) ? (
-                        <div className="flex gap-1">
-                            <span>From</span>
-                            <Money
-                                withoutTrailingZeros
-                                data={minVariantPrice}
-                            />
-                            {isCombinedListing(product) && (
-                                <>
-                                    <span>–</span>
-                                    <Money
-                                        withoutTrailingZeros
-                                        data={maxVariantPrice}
-                                    />
-                                </>
-                            )}
-                        </div>
-                    ) : (
-                        <VariantPrices
-                            variant={selectedVariant || firstVariant}
-                            showCompareAtPrice={pcardShowSalePrice}
-                        />
-                    )}
+                    {/* Subtitle */}
+                    {pcardShowSubtitle &&
+                        (() => {
+                            const subtitleMetafield =
+                                product.customMetafields?.find(
+                                    (mf) =>
+                                        mf?.key === "subtitle" &&
+                                        mf?.namespace === "custom",
+                                );
+                            return subtitleMetafield?.value ? (
+                                <p className="text-body-subtle text-xs">
+                                    {subtitleMetafield.value}
+                                </p>
+                            ) : null;
+                        })()}
 
-                    {pcardEnableQuickShop && (
-                        <QuickShopTrigger
-                            productHandle={product.handle}
-                            showOnHover={pcardShowQuickShopOnHover}
-                            buttonType={pcardQuickShopButtonType}
-                            buttonText={pcardQuickShopButtonText}
-                            panelType={pcardQuickShopPanelType}
-                        />
-                    )}
+                    {/* Price and quick shop row */}
+                    <div className="flex items-center justify-between">
+                        {pcardShowLowestPrice || isCombinedListing(product) ? (
+                            <div className="flex gap-1">
+                                <span>From</span>
+                                <Money
+                                    withoutTrailingZeros
+                                    data={minVariantPrice}
+                                />
+                                {isCombinedListing(product) && (
+                                    <>
+                                        <span>–</span>
+                                        <Money
+                                            withoutTrailingZeros
+                                            data={maxVariantPrice}
+                                        />
+                                    </>
+                                )}
+                            </div>
+                        ) : (
+                            <VariantPrices
+                                variant={selectedVariant || firstVariant}
+                                showCompareAtPrice={pcardShowSalePrice}
+                            />
+                        )}
+
+                        {pcardEnableQuickShop && (
+                            <QuickShopTrigger
+                                productHandle={product.handle}
+                                showOnHover={pcardShowQuickShopOnHover}
+                                buttonType={pcardQuickShopButtonType}
+                                buttonText={pcardQuickShopButtonText}
+                                panelType={pcardQuickShopPanelType}
+                            />
+                        )}
+                    </div>
                 </div>
 
+                {/* Product options */}
                 <ProductCardOptions
                     product={product}
                     selectedVariant={selectedVariant}

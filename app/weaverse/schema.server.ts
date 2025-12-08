@@ -762,6 +762,65 @@ export const themeSchema: HydrogenThemeSchema = {
                     name: "pcardShowOutOfStockBadge",
                     defaultValue: false,
                 },
+                {
+                    type: "heading",
+                    label: "Wishlist",
+                },
+                {
+                    type: "switch",
+                    label: "Show wishlist button",
+                    name: "pcardShowWishlist",
+                    defaultValue: true,
+                },
+                {
+                    type: "heading",
+                    label: "Subtitle",
+                },
+                {
+                    type: "switch",
+                    label: "Show subtitle",
+                    name: "pcardShowSubtitle",
+                    defaultValue: true,
+                },
+                {
+                    type: "text",
+                    label: "Subtitle metafield key",
+                    name: "pcardSubtitleMetafieldKey",
+                    defaultValue: "custom.subtitle",
+                    placeholder: "custom.subtitle",
+                    helpText:
+                        "Metafield key for product subtitle (e.g., 'custom.subtitle')",
+                    condition: (theme: Record<string, any>) =>
+                        theme.pcardShowSubtitle === true,
+                },
+                {
+                    type: "heading",
+                    label: "Attribute pills",
+                },
+                {
+                    type: "switch",
+                    label: "Show attribute pills",
+                    name: "pcardShowAttributePills",
+                    defaultValue: true,
+                },
+                {
+                    type: "text",
+                    label: "First attribute metafield key",
+                    name: "pcardAttribute1MetafieldKey",
+                    defaultValue: "custom.nicotine",
+                    placeholder: "custom.nicotine",
+                    condition: (theme: Record<string, any>) =>
+                        theme.pcardShowAttributePills === true,
+                },
+                {
+                    type: "text",
+                    label: "Second attribute metafield key",
+                    name: "pcardAttribute2MetafieldKey",
+                    defaultValue: "custom.nicotine_pouch",
+                    placeholder: "custom.nicotine_pouch",
+                    condition: (theme: Record<string, any>) =>
+                        theme.pcardShowAttributePills === true,
+                },
             ],
         },
         {

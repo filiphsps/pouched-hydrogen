@@ -181,6 +181,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
                                     backgroundColorHover={backgroundColorHover}
                                     textColorHover={textColorHover}
                                     borderColorHover={borderColorHover}
+                                    className="rounded-xl"
                                 >
                                     {buttonText}
                                 </Link>

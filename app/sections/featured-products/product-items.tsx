@@ -39,7 +39,7 @@ function ProductItems(props: ProductItemsProps) {
                     <ProductCard
                         key={product.id}
                         product={product}
-                        className="w-80 snap-start"
+                        className="w-60 snap-start"
                     />
                 ))}
             </Swimlane>
