@@ -4,10 +4,10 @@ import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-t
 import clsx from "clsx";
 import type { OrderFragment, OrderQuery } from "customer-account-api.generated";
 import { useTranslation } from "react-i18next";
-import type { LoaderFunctionArgs, MetaFunction } from "react-router";
-import { redirect, useLoaderData } from "react-router";
+import { type MetaFunction, redirect, useLoaderData } from "react-router";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
+import type { Route } from "./+types/order";
 import { OrderLineItem } from "./order-line-item";
 import { CUSTOMER_ORDER_QUERY } from "./order-query";
 import { OrderSummary } from "./order-summary";
@@ -16,7 +16,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return [{ title: `Order ${data?.order?.name}` }];
 };
 
-export async function loader({ request, context, params }: LoaderFunctionArgs) {
+export async function loader({ request, context, params }: Route.LoaderArgs) {
     if (!params.id) {
         return redirect(
             params?.locale ? `${params.locale}/account` : "/account",

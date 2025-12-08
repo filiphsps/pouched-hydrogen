@@ -7,7 +7,7 @@ import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 import { AnimatePresence, motion } from "framer-motion";
 import type { CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
-import type { LinksFunction, LoaderFunctionArgs, MetaArgs } from "react-router";
+import type { AppLoadContext, LinksFunction, MetaArgs } from "react-router";
 import {
     isRouteErrorResponse,
     Links,
@@ -21,6 +21,7 @@ import {
 } from "react-router";
 import { useChangeLanguage } from "remix-i18next/react";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
+import type { Route } from "./+types/root";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
@@ -52,12 +53,16 @@ export const links: LinksFunction = () => {
     ];
 };
 
-export async function loader(args: LoaderFunctionArgs) {
+export async function loader(args: Route.LoaderArgs) {
+    const context = args.context as AppLoadContext;
     // Start fetching non-critical data without blocking time to first byte
-    const deferredData = loadDeferredData(args);
+    const deferredData = loadDeferredData({ context });
 
     // Await the critical data required to render initial state of the page
-    const criticalData = await loadCriticalData(args);
+    const criticalData = await loadCriticalData({
+        request: args.request,
+        context,
+    });
 
     return {
         ...deferredData,

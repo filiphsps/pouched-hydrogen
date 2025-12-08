@@ -1,5 +1,5 @@
 import { getShopAnalytics } from "@shopify/hydrogen";
-import type { AppLoadContext, LoaderFunctionArgs } from "react-router";
+import type { AppLoadContext } from "react-router";
 import type {
     LayoutQuery,
     MenuFragment,
@@ -21,7 +21,10 @@ import { seoPayload } from "./seo";
 export async function loadCriticalData({
     request,
     context,
-}: LoaderFunctionArgs) {
+}: {
+    request: Request;
+    context: AppLoadContext;
+}) {
     const [layout, swatchesConfigs, weaverseTheme] = await Promise.all([
         getLayoutData(context),
         getSwatchesConfigs(context),
@@ -59,7 +62,7 @@ export async function loadCriticalData({
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
-export function loadDeferredData({ context }: LoaderFunctionArgs) {
+export function loadDeferredData({ context }: { context: AppLoadContext }) {
     const { cart, customerAccount } = context;
 
     return {

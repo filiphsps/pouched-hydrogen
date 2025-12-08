@@ -3,9 +3,10 @@ import type {
     ProductFilter,
     SearchSortKeys,
 } from "@shopify/hydrogen/storefront-api-types";
-import type { LoaderFunctionArgs, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { seoPayload } from "~/.server/seo";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+import { getContext } from "~/types/context";
 import type { SortParam } from "~/types/others";
 import { routeHeaders } from "~/utils/cache";
 import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
@@ -13,13 +14,13 @@ import { FILTER_URL_PREFIX } from "~/utils/const";
 import { getWeaverseLocale } from "~/utils/locale";
 import { WeaverseContent } from "~/weaverse";
 import { parseAsCurrency } from "../collections/utils";
+import type { Route } from "./+types/list";
 
 export const headers = routeHeaders;
 
-export async function loader({
-    request,
-    context: { storefront, weaverse },
-}: LoaderFunctionArgs) {
+export async function loader({ request, context: ctx }: Route.LoaderArgs) {
+    const context = getContext(ctx);
+    const { storefront, weaverse } = context;
     const pagingVariables = getPaginationVariables(request, { pageBy: 16 });
     const searchParams = new URL(request.url).searchParams;
     const { sortKey, reverse } = getSearchSortValues(

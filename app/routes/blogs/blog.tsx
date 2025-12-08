@@ -1,19 +1,21 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import { flattenConnection, getSeoMeta } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs, MetaFunction } from "react-router";
-import { data } from "react-router";
+import { data, type MetaFunction } from "react-router";
 import type { BlogQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
+import { getContext } from "~/types/context";
 import { routeHeaders } from "~/utils/cache";
 import { getWeaverseLocale } from "~/utils/locale";
 import { WeaverseContent } from "~/weaverse";
+import type { Route } from "./+types/blog";
 
 export const headers = routeHeaders;
 
-export const loader = async (args: LoaderFunctionArgs) => {
-    const { params, request, context } = args;
+export const loader = async (args: Route.LoaderArgs) => {
+    const { params, request } = args;
+    const context = getContext(args.context);
     const storefront = context.storefront;
     const { language, country } = storefront.i18n;
     const blogHandle = params?.blogHandle;

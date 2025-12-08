@@ -1,17 +1,20 @@
 import type { SeoConfig } from "@shopify/hydrogen";
 import { AnalyticsPageType, getSeoMeta } from "@shopify/hydrogen";
 import type { PageType } from "@weaverse/hydrogen";
-import type { LoaderFunctionArgs, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import type { ShopQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
+import { getContext } from "~/types/context";
 import { routeHeaders } from "~/utils/cache";
 import { getWeaverseLocale } from "~/utils/locale";
 import { validateWeaverseData, WeaverseContent } from "~/weaverse";
+import type { Route } from "./+types/home";
 
 export const headers = routeHeaders;
 
-export async function loader(args: LoaderFunctionArgs) {
-    const { params, context } = args;
+export async function loader(args: Route.LoaderArgs) {
+    const { params } = args;
+    const context = getContext(args.context);
     const { pathPrefix } = context.storefront.i18n;
     const locale = pathPrefix?.slice(1) || "";
     let type: PageType = "INDEX";

@@ -1,8 +1,10 @@
-import type { LoaderFunctionArgs } from "react-router";
+import { getContext } from "~/types/context";
 import { getWeaverseLocale } from "~/utils/locale";
 import { validateWeaverseData, WeaverseContent } from "~/weaverse";
+import type { Route } from "./+types/catch-all";
 
-export async function loader({ context }: LoaderFunctionArgs) {
+export async function loader({ context: ctx }: Route.LoaderArgs) {
+    const context = getContext(ctx);
     const weaverseData = await context.weaverse.loadPage({
         type: "CUSTOM",
         locale: getWeaverseLocale(context.storefront.i18n),

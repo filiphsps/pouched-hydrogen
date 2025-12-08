@@ -10,7 +10,7 @@ export default {
     ),
     fallbackLng: COUNTRIES.default.language.toLowerCase(),
     defaultNS: "common",
-    react: { useSuspense: false }, // TODO: Figure out why enabling this breaks the entire app.
+    react: { useSuspense: true },
     resources: {
         de: { common: commonDe },
         en: { common: commonEn },

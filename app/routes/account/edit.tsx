@@ -15,6 +15,7 @@ import {
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
+import { getContext } from "~/types/context";
 import { doLogout } from "./auth/logout";
 import { CUSTOMER_UPDATE_MUTATION } from "./profile";
 
@@ -49,7 +50,12 @@ export const handle = {
     renderInModal: true,
 };
 
-export const action: ActionFunction = async ({ request, context, params }) => {
+export const action: ActionFunction = async ({
+    request,
+    context: ctx,
+    params,
+}) => {
+    const context = getContext(ctx);
     const formData = await request.formData();
 
     // Double-check current user is logged in.

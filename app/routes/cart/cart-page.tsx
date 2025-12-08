@@ -9,22 +9,18 @@ import type {
     CartLineUpdateInput,
 } from "@shopify/hydrogen/storefront-api-types";
 import { Suspense } from "react";
-import {
-    type ActionFunctionArgs,
-    Await,
-    data,
-    type LoaderFunctionArgs,
-    redirect,
-    useLoaderData,
-} from "react-router";
+import { Await, data, redirect, useLoaderData } from "react-router";
 import invariant from "tiny-invariant";
 import { CartMain } from "~/components/cart/cart-main";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
+import { getContext } from "~/types/context";
 import { getFeaturedProducts } from "~/utils/featured-products";
+import type { Route } from "./+types/cart-page";
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function action({ request, context: ctx }: Route.ActionArgs) {
+    const context = getContext(ctx);
     const { cart } = context;
     const formData = await request.formData();
     const { action: cartFormAction, inputs } = CartForm.getFormInput(formData);
@@ -107,7 +103,8 @@ export async function action({ request, context }: ActionFunctionArgs) {
     return data({ cart: cartResult, userErrors, errors }, { status, headers });
 }
 
-export async function loader({ context }: LoaderFunctionArgs) {
+export async function loader({ context: ctx }: Route.LoaderArgs) {
+    const context = getContext(ctx);
     const { cart, storefront } = context;
 
     return {

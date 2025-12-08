@@ -1,11 +1,11 @@
 import { getSitemap } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs } from "react-router";
+import type { Route } from "./+types/sitemap-page";
 
 export async function loader({
     request,
     params,
     context: { storefront },
-}: LoaderFunctionArgs) {
+}: Route.LoaderArgs) {
     const response = await getSitemap({
         storefront,
         request,

@@ -6,7 +6,7 @@ import {
 } from "@shopify/hydrogen";
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
 import { useEffect } from "react";
-import type { LoaderFunctionArgs, MetaArgs } from "react-router";
+import type { MetaArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
@@ -17,6 +17,7 @@ import {
 import { seoPayload } from "~/.server/seo";
 import { StructuredData } from "~/components/structured-data";
 import { PRODUCT_QUERY } from "~/graphql/queries";
+import { getContext } from "~/types/context";
 import { routeHeaders } from "~/utils/cache";
 import {
     COMBINED_LISTINGS_CONFIGS,
@@ -25,12 +26,18 @@ import {
 import { getWeaverseLocale } from "~/utils/locale";
 import { generateProductSchema } from "~/utils/structured-data";
 import { WeaverseContent } from "~/weaverse";
+import type { Route } from "./+types/product";
 import { getRecommendedProducts } from "./recommended-product";
 
 export const headers = routeHeaders;
 
-export async function loader({ params, request, context }: LoaderFunctionArgs) {
+export async function loader({
+    params,
+    request,
+    context: ctx,
+}: Route.LoaderArgs) {
     const { productHandle: handle } = params;
+    const context = getContext(ctx);
 
     invariant(handle, "Missing productHandle param, check route filename");
 

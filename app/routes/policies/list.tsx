@@ -1,7 +1,7 @@
 import { FileTextIcon } from "@phosphor-icons/react";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { getSeoMeta } from "@shopify/hydrogen";
-import type { LoaderFunctionArgs, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { useLoaderData } from "react-router";
 import type { PoliciesIndexQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
@@ -10,6 +10,7 @@ import { BreadCrumb } from "~/components/breadcrumb";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
 import { routeHeaders } from "~/utils/cache";
+import type { Route } from "./+types/list";
 
 export const headers = routeHeaders;
 
@@ -20,7 +21,7 @@ type NonNullableFields<T> = {
 export async function loader({
     request,
     context: { storefront },
-}: LoaderFunctionArgs) {
+}: Route.LoaderArgs) {
     const data = await storefront.query<PoliciesIndexQuery>(POLICIES_QUERY);
 
     invariant(data, "No data returned from Shopify API");

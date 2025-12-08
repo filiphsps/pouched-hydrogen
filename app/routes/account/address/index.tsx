@@ -23,6 +23,7 @@ import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
 import type { AccountOutletContext } from "~/routes/account/edit";
+import { getContext } from "~/types/context";
 import { doLogout } from "../auth/logout";
 import {
     CREATE_ADDRESS_MUTATION,
@@ -47,7 +48,12 @@ const ADDRESS_INPUT_KEYS: (keyof CustomerAddressInput)[] = [
     "company",
 ];
 
-export const action: ActionFunction = async ({ request, context, params }) => {
+export const action: ActionFunction = async ({
+    request,
+    context: ctx,
+    params,
+}) => {
+    const context = getContext(ctx);
     const { customerAccount } = context;
     const formData = await request.formData();
 

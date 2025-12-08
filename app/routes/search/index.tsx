@@ -7,7 +7,7 @@ import {
 } from "@shopify/hydrogen";
 import { clsx } from "clsx";
 import { useEffect, useState } from "react";
-import type { LoaderFunctionArgs, MetaArgs } from "react-router";
+import type { MetaArgs } from "react-router";
 import { Form, useLoaderData } from "react-router";
 import type { SearchQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
@@ -16,15 +16,16 @@ import { variants } from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
+import { getContext } from "~/types/context";
 import { cn } from "~/utils/cn";
 import { getFeaturedProducts } from "~/utils/featured-products";
+import type { Route } from "./+types/index";
 import { NoResults } from "./no-results";
 import { PopularKeywords } from "./popular-searches";
 
-export async function loader({
-    request,
-    context: { storefront },
-}: LoaderFunctionArgs) {
+export async function loader({ request, context: ctx }: Route.LoaderArgs) {
+    const context = getContext(ctx);
+    const { storefront } = context;
     const { searchParams } = new URL(request.url);
     const searchTerm = searchParams.get("q");
     let products: SearchQuery["products"] = {

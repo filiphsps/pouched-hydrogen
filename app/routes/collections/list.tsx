@@ -44,7 +44,8 @@ export const loader = async (args: RouteLoaderArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-    return getSeoMeta(data?.seo as SeoConfig);
+    const loaderData = data as Awaited<ReturnType<typeof loader>> | undefined;
+    return getSeoMeta(loaderData?.seo as SeoConfig);
 };
 
 export default function Collections() {

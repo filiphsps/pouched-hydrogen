@@ -1,11 +1,11 @@
 import { flattenConnection } from "@shopify/hydrogen";
 import type { ProductSortKeys } from "@shopify/hydrogen/storefront-api-types";
-import type { LoaderFunctionArgs } from "react-router";
 import { data } from "react-router";
 import type { ApiAllProductsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
+import type { Route } from "./+types/products";
 
 /**
  * Fetch a given set of products from the storefront API
@@ -19,7 +19,7 @@ import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
 export async function loader({
     request,
     context: { storefront },
-}: LoaderFunctionArgs) {
+}: Route.LoaderArgs) {
     const url = new URL(request.url);
     const searchParams = new URLSearchParams(url.search);
     const query = searchParams.get("query") ?? "";

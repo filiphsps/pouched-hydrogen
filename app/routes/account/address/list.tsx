@@ -4,11 +4,9 @@ import type {
     CustomerDetailsFragment,
 } from "customer-account-api.generated";
 import {
-    type ActionFunctionArgs,
     data,
     type Fetcher,
     Form,
-    type LoaderFunctionArgs,
     type MetaFunction,
     useActionData,
     useNavigation,
@@ -16,6 +14,7 @@ import {
 } from "react-router";
 import { Button } from "~/components/button";
 import { Section } from "~/components/section";
+import type { Route } from "./+types/list";
 import {
     CREATE_ADDRESS_MUTATION,
     DELETE_ADDRESS_MUTATION,
@@ -35,13 +34,13 @@ export const meta: MetaFunction = () => {
     return [{ title: "Addresses" }];
 };
 
-export async function loader({ context }: LoaderFunctionArgs) {
+export async function loader({ context }: Route.LoaderArgs) {
     await context.customerAccount.handleAuthStatus();
 
     return {};
 }
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function action({ request, context }: Route.ActionArgs) {
     const { customerAccount } = context;
 
     try {

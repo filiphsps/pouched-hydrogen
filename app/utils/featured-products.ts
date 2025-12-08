@@ -1,11 +1,11 @@
-import type { LoaderFunctionArgs } from "react-router";
+import type { AppLoadContext } from "react-router";
 import type { FeaturedProductsQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { PRODUCT_CARD_FRAGMENT } from "~/graphql/fragments";
 import { maybeFilterOutCombinedListingsQuery } from "~/utils/combined-listings";
 
 export async function getFeaturedProducts(
-    storefront: LoaderFunctionArgs["context"]["storefront"],
+    storefront: AppLoadContext["storefront"],
 ) {
     const featuredProductsData = await storefront.query<FeaturedProductsQuery>(
         FEATURED_PRODUCTS_QUERY,

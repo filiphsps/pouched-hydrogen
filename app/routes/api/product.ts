@@ -2,6 +2,7 @@ import type { ActionFunction, LoaderFunction } from "react-router";
 import { data } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
 import { PRODUCT_QUERY } from "~/graphql/queries";
+import { getContext } from "~/types/context";
 import type {
     JudgeMeReviewType,
     JudgemeProduct,
@@ -15,8 +16,13 @@ const JUDGEME_BADGE_API = "https://api.judge.me/api/v1/widgets/preview_badge";
 const JUDGEME_WIDGET_API = "https://api.judge.me/api/v1/widgets/product_review";
 const JUDGEME_REVIEWS_API = "https://api.judge.me/api/v1/reviews";
 
-export const loader: LoaderFunction = async ({ request, context, params }) => {
+export const loader: LoaderFunction = async ({
+    request,
+    context: ctx,
+    params,
+}) => {
     try {
+        const context = getContext(ctx);
         const { storefront, weaverse, env } = context;
         const url = new URL(request.url);
         const { searchParams, pathname } = url;
@@ -164,8 +170,13 @@ export const loader: LoaderFunction = async ({ request, context, params }) => {
     }
 };
 
-export const action: ActionFunction = async ({ request, context, params }) => {
+export const action: ActionFunction = async ({
+    request,
+    context: ctx,
+    params,
+}) => {
     try {
+        const context = getContext(ctx);
         const { env } = context;
         const { productHandle } = params;
 

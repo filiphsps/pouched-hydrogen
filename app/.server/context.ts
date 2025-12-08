@@ -68,7 +68,9 @@ export async function createHydrogenRouterContext(
     // This preserves the RouterContextProvider class instance
     Object.assign(hydrogenContext, { weaverse });
 
-    return hydrogenContext;
+    return hydrogenContext as typeof hydrogenContext & {
+        weaverse: WeaverseClient;
+    };
 }
 
 class AppSession implements HydrogenSession {

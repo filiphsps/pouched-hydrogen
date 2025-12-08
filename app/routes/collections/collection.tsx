@@ -5,17 +5,19 @@ import {
     getSeoMeta,
 } from "@shopify/hydrogen";
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
-import type { LoaderFunctionArgs, MetaArgs } from "react-router";
+import type { MetaArgs } from "react-router";
 import { redirect, useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
+import { getContext } from "~/types/context";
 import type { SortParam } from "~/types/others";
 import { routeHeaders } from "~/utils/cache";
 import { FILTER_URL_PREFIX } from "~/utils/const";
 import { getWeaverseLocale } from "~/utils/locale";
 import { WeaverseContent } from "~/weaverse";
+import type { Route } from "./+types/collection";
 import { COLLECTION_QUERY } from "./collection-query";
 import { getSortValuesFromParam, parseAsCurrency } from "./utils";
 
@@ -27,7 +29,12 @@ export const meta = ({ matches }: MetaArgs<typeof loader>) => {
 
 export const headers = routeHeaders;
 
-export async function loader({ params, request, context }: LoaderFunctionArgs) {
+export async function loader({
+    params,
+    request,
+    context: ctx,
+}: Route.LoaderArgs) {
+    const context = getContext(ctx);
     const pagingVariables = getPaginationVariables(request, { pageBy: 12 });
     const { collectionHandle } = params;
     const { storefront, env } = context;

@@ -5,17 +5,19 @@ import { CacheNone, generateCacheControlHeader } from "@shopify/hydrogen";
 import { clsx } from "clsx";
 import type { CustomerDetailsQuery } from "customer-account-api.generated";
 import { useTranslation } from "react-i18next";
-import type { LoaderFunctionArgs } from "react-router";
 import { data, Outlet, useLoaderData, useMatches } from "react-router";
 import Link from "~/components/link";
+import { getContext } from "~/types/context";
 import { routeHeaders } from "~/utils/cache";
 import { getFeaturedProducts } from "~/utils/featured-products";
+import type { Route } from "./+types/layout";
 import { doLogout } from "./auth/logout";
 import AccountDashboard from "./dashboard";
 
 export const headers = routeHeaders;
 
-export async function loader({ context }: LoaderFunctionArgs) {
+export async function loader({ context: ctx }: Route.LoaderArgs) {
+    const context = getContext(ctx);
     const { data: d, errors } =
         await context.customerAccount.query<CustomerDetailsQuery>(
             CUSTOMER_DETAILS_QUERY,
