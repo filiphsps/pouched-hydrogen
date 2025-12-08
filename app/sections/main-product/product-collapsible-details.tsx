@@ -46,7 +46,11 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
                 content: getExcerpt(refundPolicy.body),
                 learnMore: `/policies/${refundPolicy.handle}`,
             },
-    ].filter(Boolean);
+    ].filter(Boolean) as {
+        title: string;
+        content: string | React.ReactNode;
+        learnMore?: string;
+    }[];
 
     if (!details.length) {
         return null;
@@ -71,11 +75,17 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
                                 "overflow-hidden [--collapse-from:var(--radix-accordion-content-height)] [--expand-to:var(--radix-accordion-content-height)] data-[state=closed]:animate-collapse data-[state=open]:animate-expand",
                             ])}
                         >
-                            <div
-                                suppressHydrationWarning
-                                className="prose dark:prose-invert py-2.5"
-                                dangerouslySetInnerHTML={{ __html: content }}
-                            />
+                            {typeof content === "string" ? (
+                                <div
+                                    suppressHydrationWarning
+                                    className="prose dark:prose-invert py-2.5"
+                                    dangerouslySetInnerHTML={{
+                                        __html: content,
+                                    }}
+                                />
+                            ) : (
+                                <div className="py-2.5">{content}</div>
+                            )}
                             {learnMore && (
                                 <Link
                                     className="border-line-subtle border-b pb-px text-body-subtle"
