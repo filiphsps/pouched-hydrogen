@@ -4,6 +4,7 @@ import {
     useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import { useTranslation } from "react-i18next";
 import { useLoaderData } from "react-router";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import type { loader as productRouteLoader } from "~/routes/products/product";
@@ -12,7 +13,6 @@ import { useProductQtyStore } from "./product-quantity-selector";
 
 interface ProductATCButtonsProps extends HydrogenComponentProps {
     ref: React.Ref<HTMLDivElement>;
-    addToCartText: string;
     addBundleToCartText: string;
     soldOutText: string;
     showShopPayButton: boolean;
@@ -21,7 +21,6 @@ interface ProductATCButtonsProps extends HydrogenComponentProps {
 export default function ProductATCButtons(props: ProductATCButtonsProps) {
     const {
         ref,
-        addToCartText,
         addBundleToCartText,
         soldOutText,
         showShopPayButton,
@@ -38,13 +37,15 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
     const combinedListing = isCombinedListing(product);
     const isBundle = Boolean(product?.isBundle?.requiresComponents);
 
+    const { t } = useTranslation();
+
     if (!product || combinedListing) {
         return null;
     }
 
-    let atcButtonText = "Add to cart";
+    let atcButtonText: string;
     if (selectedVariant.availableForSale) {
-        atcButtonText = isBundle ? addBundleToCartText : addToCartText;
+        atcButtonText = isBundle ? addBundleToCartText : t("cart.addToCart");
     } else {
         atcButtonText = soldOutText;
     }
@@ -97,13 +98,6 @@ export const schema = createSchema({
         {
             group: "General",
             inputs: [
-                {
-                    type: "text",
-                    label: "Add to cart text",
-                    name: "addToCartText",
-                    defaultValue: "Add to cart",
-                    placeholder: "Add to cart",
-                },
                 {
                     type: "text",
                     label: "Bundle add to cart text",

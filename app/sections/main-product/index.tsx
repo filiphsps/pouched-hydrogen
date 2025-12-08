@@ -259,7 +259,6 @@ export const schema = createSchema({
             },
             {
                 type: "mp--atc-buttons",
-                addToCartText: "Add to cart",
                 addBundleToCartText: "Add bundle to cart",
                 soldOutText: "Sold out",
                 showShopPayButton: true,

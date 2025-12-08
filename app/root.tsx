@@ -71,7 +71,8 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 export const meta = ({ data }: MetaArgs<typeof loader>) => {
-    return getSeoMeta(data?.seo as SeoConfig);
+    const loaderData = data as Awaited<ReturnType<typeof loader>> | undefined;
+    return getSeoMeta(loaderData?.seo as SeoConfig);
 };
 
 export function ErrorBoundary({ error }: { error: Error }) {
