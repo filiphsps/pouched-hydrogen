@@ -188,7 +188,7 @@ export default function Search() {
 }
 
 const SEARCH_QUERY = `#graphql
-  query search(
+  query SearchGlobal(
     $country: CountryCode
     $endCursor: String
     $first: Int

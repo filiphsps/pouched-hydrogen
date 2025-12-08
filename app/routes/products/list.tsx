@@ -199,7 +199,7 @@ function getSearchSortValues(sortParam: SortParam | null): {
 }
 
 const SEARCH_QUERY = `#graphql
-  query search(
+  query SearchProductsFiltered(
     $country: CountryCode
     $language: LanguageCode
     $first: Int
