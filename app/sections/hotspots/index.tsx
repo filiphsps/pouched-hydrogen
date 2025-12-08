@@ -1,5 +1,6 @@
 import type { WeaverseImage } from "@weaverse/hydrogen";
 import { createSchema, IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
+import { useTranslation } from "react-i18next";
 import Heading, {
     type HeadingProps,
     headingInputs,
@@ -41,9 +42,10 @@ function Hotspots(props: HotspotsProps) {
         ref,
         ...rest
     } = props;
+    const { t } = useTranslation();
     const imageData: Partial<WeaverseImage> =
         typeof image === "string"
-            ? { url: image, altText: "Hotspots image" }
+            ? { url: image, altText: t("hotspots.imageAlt") }
             : image;
 
     return (

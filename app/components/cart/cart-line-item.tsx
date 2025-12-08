@@ -7,6 +7,7 @@ import {
     useOptimisticData,
 } from "@shopify/hydrogen";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
@@ -143,6 +144,7 @@ function ItemRemoveButton({
     lineId: CartLine["id"];
     className?: string;
 }) {
+    const { t } = useTranslation();
     return (
         <CartForm
             route="/cart"
@@ -156,7 +158,7 @@ function ItemRemoveButton({
                 )}
                 type="submit"
             >
-                <span className="sr-only">Remove</span>
+                <span className="sr-only">{t("cart.remove")}</span>
                 <TrashIcon aria-hidden="true" className="size-4.5" />
             </button>
             <OptimisticInput id={lineId} data={{ action: "remove" }} />

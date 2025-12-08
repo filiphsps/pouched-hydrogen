@@ -4,6 +4,7 @@ import type {
 } from "@shopify/hydrogen/storefront-api-types";
 import clsx from "clsx";
 import { useEffect, useId } from "react";
+import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
 import type { ProductCardFragment } from "storefront-api.generated";
 import { ProductCard } from "~/components/product/product-card";
@@ -12,7 +13,7 @@ import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 
 interface CartBestSellersProps {
     count: number;
-    heading: string;
+    heading?: string;
     query?: string;
     reverse?: boolean;
     sortKey: ProductSortKeys;
@@ -30,11 +31,12 @@ interface CartBestSellersProps {
  */
 export function CartBestSellers({
     count = 4,
-    heading = "Shop Best Sellers",
+    heading,
     query,
     reverse,
     sortKey = "BEST_SELLING",
 }: CartBestSellersProps) {
+    const { t } = useTranslation();
     const { load, data } = useFetcher<{ products: Product[] }>();
     const queryString = Object.entries({
         count: count * 2,
@@ -55,7 +57,9 @@ export function CartBestSellers({
 
     return (
         <>
-            <h5 className="mt-4 mb-2 text-center lg:mb-6">{heading}</h5>
+            <h5 className="mt-4 mb-2 text-center lg:mb-6">
+                {heading || t("cart.shopBestSellers")}
+            </h5>
             <div
                 className={clsx([
                     "grid grid-cols-2 gap-x-6 gap-y-8",
@@ -82,6 +86,7 @@ function CartBestSellersContent({
     count: CartBestSellersProps["count"];
     products: Product[] | undefined;
 }) {
+    const { t } = useTranslation();
     const id = useId();
 
     if (!products) {
@@ -98,7 +103,7 @@ function CartBestSellersContent({
     }
 
     if (products?.length === 0) {
-        return <div>No products found.</div>;
+        return <div>{t("cart.noProductsFound")}</div>;
     }
 
     return products

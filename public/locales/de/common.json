@@ -27,17 +27,45 @@
     "cart": {
         "title": "Warenkorb",
         "empty": "Ihr Warenkorb ist leer",
+        "emptyMessage": "Es sieht so aus, als hätten Sie noch nichts hinzugefügt, lassen Sie uns beginnen!",
+        "startShopping": "Einkaufen starten",
+        "shopBestSellers": "Bestseller einkaufen",
+        "noProductsFound": "Keine Produkte gefunden.",
         "subtotal": "Zwischensumme",
         "total": "Geschätzte Summe",
         "checkout": "Zur Kasse",
         "continueShopping": "Weiter einkaufen",
+        "continueToCheckout": "Weiter zur Kasse",
         "remove": "Entfernen",
         "quantity": "Menge",
         "addToCart": "In den Warenkorb",
         "added": "Zum Warenkorb hinzugefügt",
         "updating": "Aktualisierung...",
         "viewCart": "Warenkorb ansehen",
-        "taxesDiscountsShipping": "Steuern, Rabatte und Versandkosten werden an der Kasse berechnet."
+        "taxesDiscountsShipping": "Steuern, Rabatte und Versandkosten werden an der Kasse berechnet.",
+        "addNote": "Notiz hinzufügen",
+        "addDiscount": "Rabattcode hinzufügen",
+        "redeemGiftCard": "Geschenkgutschein einlösen",
+        "removeGiftCard": "Geschenkgutschein {{code}} entfernen",
+        "removeDiscount": "Rabattcode {{code}} entfernen",
+        "closeDrawer": "Warenkorb schließen",
+        "quantityLabel": "Menge, {{quantity}}",
+        "increaseQuantity": "Menge erhöhen",
+        "decreaseQuantity": "Menge verringern",
+        "notePlaceholder": "Fügen Sie spezielle Anweisungen oder Notizen für Ihre Bestellung hinzu...",
+        "noteSaved": "Warenkorb-Notiz erfolgreich gespeichert 🎉",
+        "saveNote": "Notiz speichern",
+        "discountPlaceholder": "Rabattcode",
+        "discountApplied": "Rabatt erfolgreich angewendet 🎉",
+        "discountInvalid": "Ungültiger Rabattcode.",
+        "apply": "Anwenden",
+        "giftCardPlaceholder": "Geschenkgutscheincode",
+        "giftCardApplied": "Geschenkgutschein erfolgreich angewendet 🎉",
+        "giftCardInvalid": "Ungültiger Geschenkgutscheincode.",
+        "redeem": "Einlösen",
+        "close": "Schließen",
+        "orderSummary": "Bestellübersicht",
+        "discountTitle": "Rabattcode anwenden"
     },
     "product": {
         "inStock": "Auf Lager",
@@ -163,5 +191,62 @@
         "availability": "Verfügbarkeit",
         "clearAll": "Alle löschen",
         "apply": "Anwenden"
+    },
+    "judgeme": {
+        "form": {
+            "ratingAlert": "Bitte wählen Sie eine Bewertung aus",
+            "success": {
+                "title": "Bewertung erfolgreich übermittelt!",
+                "message": "Vielen Dank für Ihr Feedback. Ihre Bewertung wird im Hintergrund verarbeitet und in Kürze veröffentlicht.",
+                "writeAnother": "Eine weitere Bewertung schreiben"
+            },
+            "error": {
+                "title": "Übermittlung fehlgeschlagen",
+                "message": "Beim Übermitteln Ihrer Bewertung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+                "tryAgain": "Erneut versuchen"
+            },
+            "writeReview": {
+                "title": "Schreiben Sie Ihre Bewertung",
+                "subtitle": "Teilen Sie Ihre Erfahrung mit anderen Kunden"
+            },
+            "fields": {
+                "rating": {
+                    "label": "Bewertung"
+                },
+                "name": {
+                    "label": "Ihr Name",
+                    "placeholder": "Geben Sie Ihren Namen ein"
+                },
+                "email": {
+                    "label": "E-Mail-Adresse",
+                    "placeholder": "Geben Sie Ihre E-Mail-Adresse ein"
+                },
+                "title": {
+                    "label": "Titel der Bewertung",
+                    "placeholder": "Geben Sie Ihrer Bewertung einen Titel"
+                },
+                "body": {
+                    "label": "Ihre Bewertung",
+                    "placeholder": "Teilen Sie Ihre Erfahrungen mit diesem Produkt"
+                }
+            },
+            "buttons": {
+                "cancel": "Abbrechen",
+                "submit": "Bewertung absenden",
+                "submitting": "Wird gesendet..."
+            }
+        },
+        "item": {
+            "imageAlt": "Bewertungsbild {{number}}",
+            "view": "Ansehen",
+            "galleryLabel": "Bewertungsbilder-Galerie",
+            "close": "Bild schließen",
+            "prev": "Vorheriges Bild",
+            "next": "Nächstes Bild",
+            "mainImageAlt": "Bewertungsbild"
+        }
+    },
+    "hotspots": {
+        "imageAlt": "Hotspots Bild"
     }
 }

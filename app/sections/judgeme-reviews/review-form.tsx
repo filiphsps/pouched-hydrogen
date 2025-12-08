@@ -1,6 +1,7 @@
 import { CheckIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import type React from "react";
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useLoaderData } from "react-router";
 import { Button } from "~/components/button";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
@@ -20,6 +21,7 @@ export function ReviewForm({
     setShowForm,
     className,
 }: ReviewFormProps) {
+    const { t } = useTranslation();
     const { product } = useLoaderData<typeof productRouteLoader>();
     const [rating, setRating] = useState(0);
     const [formState, setFormState] = useState<FormState>("idle");
@@ -44,7 +46,7 @@ export function ReviewForm({
 
         // Check if rating is selected first
         if (rating === 0) {
-            alert("Please select a rating");
+            alert(t("judgeme.form.ratingAlert"));
             return;
         }
 
@@ -97,15 +99,13 @@ export function ReviewForm({
                     <CheckIcon className="h-8 w-8 text-green-600" />
                 </div>
                 <h3 className="mb-2 font-semibold text-green-900 text-xl">
-                    Review Submitted Successfully!
+                    {t("judgeme.form.success.title")}
                 </h3>
                 <p className="text-gray-600">
-                    Thank you for your feedback. Your review is being processed
-                    in the background, it will be published shortly in a few
-                    minutes.
+                    {t("judgeme.form.success.message")}
                 </p>
                 <Button type="button" onClick={resetForm} className="mt-4">
-                    Write Another Review
+                    {t("judgeme.form.success.writeAnother")}
                 </Button>
             </div>
             <div
@@ -120,17 +120,17 @@ export function ReviewForm({
                     <WarningCircleIcon className="h-8 w-8 text-red-600" />
                 </div>
                 <h3 className="mb-2 font-semibold text-red-900 text-xl">
-                    Submission Failed
+                    {t("judgeme.form.error.title")}
                 </h3>
                 <p className="text-gray-600">
-                    There was an error submitting your review. Please try again.
+                    {t("judgeme.form.error.message")}
                 </p>
                 <Button
                     type="button"
                     onClick={() => setFormState("idle")}
                     className="mt-4"
                 >
-                    Try Again
+                    {t("judgeme.form.error.tryAgain")}
                 </Button>
             </div>
             <form
@@ -146,10 +146,10 @@ export function ReviewForm({
             >
                 <div className="space-y-2">
                     <h2 className="text-center font-bold text-2xl text-gray-900">
-                        Write Your Review
+                        {t("judgeme.form.writeReview.title")}
                     </h2>
                     <p className="text-center text-gray-600">
-                        Share your experience with other customers
+                        {t("judgeme.form.writeReview.subtitle")}
                     </p>
                 </div>
 
@@ -164,7 +164,7 @@ export function ReviewForm({
 
                 {/* Rating */}
                 <RatingInput
-                    label="Rating"
+                    label={t("judgeme.form.fields.rating.label")}
                     required
                     name="rating"
                     rating={rating}
@@ -177,7 +177,7 @@ export function ReviewForm({
                         htmlFor="judgeme-reviewer-name"
                         className="block font-medium text-gray-700 text-sm"
                     >
-                        Your Name
+                        {t("judgeme.form.fields.name.label")}
                         <span className="ml-1 text-red-500">*</span>
                     </label>
                     <input
@@ -185,7 +185,7 @@ export function ReviewForm({
                         name="name"
                         id="judgeme-reviewer-name"
                         defaultValue=""
-                        placeholder="Enter your name"
+                        placeholder={t("judgeme.form.fields.name.placeholder")}
                         required
                         className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                     />
@@ -197,7 +197,7 @@ export function ReviewForm({
                         htmlFor="judgeme-reviewer-email"
                         className="block font-medium text-gray-700 text-sm"
                     >
-                        Email Address
+                        {t("judgeme.form.fields.email.label")}
                         <span className="ml-1 text-red-500">*</span>
                     </label>
                     <input
@@ -205,7 +205,7 @@ export function ReviewForm({
                         name="email"
                         id="judgeme-reviewer-email"
                         defaultValue=""
-                        placeholder="Enter your email"
+                        placeholder={t("judgeme.form.fields.email.placeholder")}
                         required
                         className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                     />
@@ -217,14 +217,14 @@ export function ReviewForm({
                         htmlFor="judgeme-review-title"
                         className="block font-medium text-gray-700 text-sm"
                     >
-                        Review Title
+                        {t("judgeme.form.fields.title.label")}
                     </label>
                     <input
                         type="text"
                         name="title"
                         id="judgeme-review-title"
                         defaultValue=""
-                        placeholder="Give your review a title"
+                        placeholder={t("judgeme.form.fields.title.placeholder")}
                         className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                     />
                 </div>
@@ -235,7 +235,7 @@ export function ReviewForm({
                         htmlFor="judgeme-review-body"
                         className="block font-medium text-gray-700 text-sm"
                     >
-                        Your Review
+                        {t("judgeme.form.fields.body.label")}
                         <span className="ml-1 text-red-500">*</span>
                     </label>
                     <textarea
@@ -243,7 +243,7 @@ export function ReviewForm({
                         id="judgeme-review-body"
                         defaultValue=""
                         required
-                        placeholder="Share your experience with this product"
+                        placeholder={t("judgeme.form.fields.body.placeholder")}
                         rows={5}
                         className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                     />
@@ -256,12 +256,12 @@ export function ReviewForm({
                         type="button"
                         onClick={() => setShowForm(false)}
                     >
-                        Cancel
+                        {t("judgeme.form.buttons.cancel")}
                     </Button>
                     <Button type="submit" disabled={formState === "submitting"}>
                         {formState === "submitting"
-                            ? "Submitting..."
-                            : "Submit Review"}
+                            ? t("judgeme.form.buttons.submitting")
+                            : t("judgeme.form.buttons.submit")}
                     </Button>
                 </div>
             </form>

@@ -1,5 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon, XIcon } from "@phosphor-icons/react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { StarRating } from "~/components/star-rating";
@@ -37,6 +38,7 @@ export function ReviewItem({
     showReviewTitle = true,
     showReviewDate = true,
 }: ReviewItemProps) {
+    const { t } = useTranslation();
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
         null,
     );
@@ -49,7 +51,7 @@ export function ReviewItem({
             )}
         >
             {/* Left column - Reviewer info */}
-            <div className="w-full flex-shrink-0 space-y-3 md:w-1/4">
+            <div className="w-full shrink-0 space-y-3 md:w-1/4">
                 <StarRating
                     rating={review.rating}
                     className="[&>svg]:size-4.5"
@@ -102,13 +104,15 @@ export function ReviewItem({
                                             image.urls.compact ||
                                             image.urls.original
                                         }
-                                        alt={`Review image ${ind + 1}`}
+                                        alt={t("judgeme.item.imageAlt", {
+                                            number: ind + 1,
+                                        })}
                                         className="h-16 w-16 object-cover transition-transform duration-200"
                                         sizes="(min-width: 45em) 50vw, 100vw"
                                     />
                                     <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-200 group-hover/image:bg-black/50">
                                         <span className="font-medium text-white text-xs opacity-0 transition-opacity duration-200 group-hover/image:opacity-100">
-                                            View
+                                            {t("judgeme.item.view")}
                                         </span>
                                     </div>
                                 </button>
@@ -117,7 +121,7 @@ export function ReviewItem({
                     </div>
                 )}
                 {showReviewDate && (
-                    <p className="flex-shrink-0 truncate text-gray-500 text-sm">
+                    <p className="shrink-0 truncate text-gray-500 text-sm">
                         {formatDate(review.created_at)}
                     </p>
                 )}
@@ -140,6 +144,7 @@ export function ReviewImagesModal({
     setSelectedImageIndex: (index: number | null) => void;
     images: JudgemeReviewImage[];
 }) {
+    const { t } = useTranslation();
     if (selectedImageIndex === null || !images.length) {
         return null;
     }
@@ -152,7 +157,7 @@ export function ReviewImagesModal({
             onClick={() => setSelectedImageIndex(null)}
             role="dialog"
             aria-modal="true"
-            aria-label="Review image gallery"
+            aria-label={t("judgeme.item.galleryLabel")}
         >
             <div className="relative flex h-full w-full items-center justify-center">
                 <div
@@ -164,7 +169,7 @@ export function ReviewImagesModal({
                         variant="outline"
                         onClick={() => setSelectedImageIndex(null)}
                         className="absolute top-6 right-6 border-white p-2 text-white"
-                        aria-label="Close image"
+                        aria-label={t("judgeme.item.close")}
                     >
                         <XIcon className="h-5 w-5" />
                     </Button>
@@ -180,7 +185,7 @@ export function ReviewImagesModal({
                                 setSelectedImageIndex(prevIndex);
                             }}
                             className="-translate-y-1/2 absolute top-1/2 left-4 p-2"
-                            aria-label="Previous image"
+                            aria-label={t("judgeme.item.prev")}
                         >
                             <ArrowLeftIcon className="h-5 w-5" />
                         </Button>
@@ -193,7 +198,7 @@ export function ReviewImagesModal({
                             currentImage.urls.original ||
                             currentImage.urls.small
                         }
-                        alt="Review image"
+                        alt={t("judgeme.item.mainImageAlt")}
                         className="max-h-[85vh] max-w-[85vw] object-contain"
                         width="auto"
                         height="auto"
@@ -210,7 +215,7 @@ export function ReviewImagesModal({
                                 setSelectedImageIndex(nextIndex);
                             }}
                             className="-translate-y-1/2 absolute top-1/2 right-4 p-2"
-                            aria-label="Next image"
+                            aria-label={t("judgeme.item.next")}
                         >
                             <ArrowRightIcon className="h-5 w-5" />
                         </Button>

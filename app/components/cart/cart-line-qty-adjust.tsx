@@ -6,6 +6,7 @@ import {
     useOptimisticData,
 } from "@shopify/hydrogen";
 import type { CartLineUpdateInput } from "@shopify/hydrogen/storefront-api-types";
+import { useTranslation } from "react-i18next";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import type { CartLineOptimisticData } from "./cart-line-item";
 
@@ -14,6 +15,7 @@ export function CartLineQuantityAdjust({
 }: {
     line: OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 }) {
+    const { t } = useTranslation();
     const optimisticId = line?.id;
     const optimisticData =
         useOptimisticData<CartLineOptimisticData>(optimisticId);
@@ -31,7 +33,7 @@ export function CartLineQuantityAdjust({
     return (
         <>
             <label htmlFor={`quantity-${lineId}`} className="sr-only">
-                Quantity, {optimisticQuantity}
+                {t("cart.quantityLabel", { quantity: optimisticQuantity })}
             </label>
             <div className="flex min-w-30 items-center justify-evenly border border-line-subtle">
                 <UpdateCartButton
@@ -40,7 +42,7 @@ export function CartLineQuantityAdjust({
                     <button
                         type="submit"
                         name="decrease-quantity"
-                        aria-label="Decrease quantity"
+                        aria-label={t("cart.decreaseQuantity")}
                         className="inline-flex size-9 items-center justify-center transition disabled:cursor-not-allowed disabled:text-body-subtle"
                         value={prevQuantity}
                         disabled={optimisticQuantity <= 1 || isOptimistic}
@@ -68,7 +70,7 @@ export function CartLineQuantityAdjust({
                         className="inline-flex size-9 items-center justify-center transition disabled:cursor-not-allowed disabled:text-body-subtle"
                         name="increase-quantity"
                         value={nextQuantity}
-                        aria-label="Increase quantity"
+                        aria-label={t("cart.increaseQuantity")}
                         disabled={isOptimistic}
                     >
                         <PlusIcon />

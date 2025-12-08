@@ -80,6 +80,7 @@ export default function RelatedProducts(props: RelatedProductsProps) {
             </Section>
         );
     }
+
     return <section ref={ref} {...rest} />;
 }
 

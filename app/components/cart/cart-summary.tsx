@@ -26,15 +26,8 @@ export function CartSummary({
     layout: CartLayoutType;
 }) {
     const { t } = useTranslation();
-    const {
-        enableCartNote,
-        cartNoteButtonText,
-        enableDiscountCode,
-        discountCodeButtonText,
-        enableGiftCard,
-        giftCardButtonText,
-        checkoutButtonText,
-    } = useThemeSettings();
+    const { enableCartNote, enableDiscountCode, enableGiftCard } =
+        useThemeSettings();
     const [removingDiscountCode, setRemovingDiscountCode] = useState<
         string | null
     >(null);
@@ -66,7 +59,7 @@ export function CartSummary({
             )}
         >
             <h2 id="summary-heading" className="sr-only">
-                Order summary
+                {t("cart.orderSummary")}
             </h2>
             {appliedGiftCards?.length > 0 && (
                 <div className="mb-4 flex flex-wrap justify-end gap-2">
@@ -104,7 +97,9 @@ export function CartSummary({
                                     <button
                                         type="submit"
                                         className="relative ml-1 size-4 transition-colors hover:text-red-600"
-                                        aria-label={`Remove gift card code ${giftCard.id}`}
+                                        aria-label={t("cart.removeGiftCard", {
+                                            code: giftCard.id,
+                                        })}
                                         onClick={() =>
                                             setRemovingGiftCard(
                                                 giftCard.lastCharacters,
@@ -169,7 +164,12 @@ export function CartSummary({
                                         <button
                                             type="submit"
                                             className="relative ml-1 size-4 transition-colors hover:text-red-600"
-                                            aria-label={`Remove discount code ${discount.code}`}
+                                            aria-label={t(
+                                                "cart.removeDiscount",
+                                                {
+                                                    code: discount.code,
+                                                },
+                                            )}
                                             onClick={() =>
                                                 setRemovingDiscountCode(
                                                     discount.code,
@@ -217,13 +217,13 @@ export function CartSummary({
                 {t("cart.taxesDiscountsShipping")}
             </div>
             {(enableCartNote || enableDiscountCode || enableGiftCard) && (
-                <div className="mb-4 flex items-center justify-end gap-2">
+                <div className="mb-4 flex flex-wrap items-center justify-end gap-2">
                     {enableCartNote && (
                         <>
                             <Dialog.Root>
                                 <Dialog.Trigger asChild>
                                     <Button variant="underline">
-                                        {cartNoteButtonText || "Add a note"}
+                                        {t("cart.addNote")}
                                     </Button>
                                 </Dialog.Trigger>
                                 <NoteDialog cartNote={note} />
@@ -238,8 +238,7 @@ export function CartSummary({
                             <Dialog.Root>
                                 <Dialog.Trigger asChild>
                                     <Button variant="underline">
-                                        {discountCodeButtonText ||
-                                            "Add a discount code"}
+                                        {t("cart.addDiscount")}
                                     </Button>
                                 </Dialog.Trigger>
                                 <DiscountDialog discountCodes={discountCodes} />
@@ -251,7 +250,7 @@ export function CartSummary({
                         <Dialog.Root>
                             <Dialog.Trigger asChild>
                                 <Button variant="underline">
-                                    {giftCardButtonText || "Redeem a gift card"}
+                                    {t("cart.redeemGiftCard")}
                                 </Button>
                             </Dialog.Trigger>
                             <GiftCardDialog
@@ -265,7 +264,7 @@ export function CartSummary({
                 <div className="mt-4 flex flex-col gap-3">
                     <a href={checkoutUrl} target="_self">
                         <Button className="w-full">
-                            {checkoutButtonText || "Continue to Checkout"}
+                            {t("cart.continueToCheckout")}
                         </Button>
                     </a>
                     {/* @todo: <CartShopPayButton cart={cart} /> */}

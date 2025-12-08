@@ -97,7 +97,9 @@ export function CartDrawer() {
                                             <button
                                                 type="button"
                                                 className="translate-x-2 p-2"
-                                                aria-label="Close cart drawer"
+                                                aria-label={t(
+                                                    "cart.closeDrawer",
+                                                )}
                                             >
                                                 <XIcon className="h-4 w-4" />
                                             </button>

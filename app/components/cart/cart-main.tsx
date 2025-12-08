@@ -1,6 +1,7 @@
 import { useOptimisticCart } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import useScroll from "react-use/esm/useScroll";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Link } from "~/components/link";
@@ -20,6 +21,7 @@ function CartEmpty({
     layout?: CartLayoutType;
     onClose?: () => void;
 }) {
+    const { t } = useTranslation();
     const scrollRef = useRef<HTMLDivElement>(null);
     const { y } = useScroll(scrollRef as React.RefObject<HTMLElement>);
     return (
@@ -37,10 +39,7 @@ function CartEmpty({
             hidden={hidden}
         >
             <div className={clsx(layout === "page" && "text-center")}>
-                <p className="mb-4">
-                    Looks like you haven&rsquo;t added anything yet, let&rsquo;s
-                    get you started!
-                </p>
+                <p className="mb-4">{t("cart.emptyMessage")}</p>
                 <Link
                     variant="outline"
                     to="/products"
@@ -50,7 +49,7 @@ function CartEmpty({
                     )}
                     onClick={onClose}
                 >
-                    Start Shopping
+                    {t("cart.startShopping")}
                 </Link>
             </div>
             {layout === "page" && (
@@ -58,7 +57,7 @@ function CartEmpty({
                     <div className="grid gap-4">
                         <CartBestSellers
                             count={4}
-                            heading="Shop Best Sellers"
+                            heading={t("cart.shopBestSellers")}
                             sortKey="BEST_SELLING"
                         />
                     </div>
