@@ -97,7 +97,7 @@ describe("Product List Loader", () => {
         } as LoaderFunctionArgs);
 
         expect(mockStorefront.query).toHaveBeenCalledWith(
-            expect.stringContaining("query search"),
+            expect.stringContaining("query SearchProductsFiltered"),
             expect.objectContaining({
                 variables: expect.objectContaining({
                     productFilters: [

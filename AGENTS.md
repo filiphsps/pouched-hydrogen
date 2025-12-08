@@ -2,6 +2,10 @@
 
 This file guides AI agents working in this repository.
 
+## Rules:
+
+- MUST use pnpm (not npm or yarn), that includes pnpx.
+
 ## Build, Lint, and Test Commands
 
 - **Build**: `pnpm run build`
