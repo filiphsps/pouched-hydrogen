@@ -2,7 +2,9 @@ import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 import { Link, useLoaderData } from "react-router";
+import Paragraph from "~/components/paragraph";
 import type { loader as productLoader } from "~/routes/products/product";
 
 function getExcerpt(text: string) {
@@ -20,10 +22,18 @@ interface CollapsibleDetailsProps extends HydrogenComponentProps {
 export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
     const { ref, showShippingPolicy, showRefundPolicy, ...rest } = props;
     const { shop, product } = useLoaderData<typeof productLoader>();
-    const { description } = product;
+    const { t } = useTranslation();
+
+    const description = product.descriptionHtml || product.description;
     const { shippingPolicy, refundPolicy } = shop;
+
     const details = [
-        { title: "Description", content: description },
+        description && {
+            title: t("product.description"),
+            content: (
+                <Paragraph className="leading-relaxed" content={description} />
+            ),
+        },
         showShippingPolicy &&
             shippingPolicy?.body && {
                 title: "Shipping",
@@ -38,6 +48,10 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
             },
     ].filter(Boolean);
 
+    if (!details.length) {
+        return null;
+    }
+
     return (
         <div ref={ref} {...rest}>
             <Accordion.Root type="multiple">
@@ -45,10 +59,7 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
                     <Accordion.Item key={title} value={title}>
                         <Accordion.Trigger
                             className={clsx([
-                                "flex w-full justify-between py-4 font-bold",
-                                "border-line-subtle border-b",
-                                "data-[state=open]:[&>.minus]:inline-block",
-                                "data-[state=open]:[&>.plus]:hidden",
+                                "flex w-full justify-between border-line-subtle border-b py-4 font-bold data-[state=open]:[&>.minus]:inline-block data-[state=open]:[&>.plus]:hidden",
                             ])}
                         >
                             <span>{title}</span>
@@ -57,11 +68,7 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
                         </Accordion.Trigger>
                         <Accordion.Content
                             className={clsx([
-                                "overflow-hidden",
-                                "[--expand-to:var(--radix-accordion-content-height)]",
-                                "[--collapse-from:var(--radix-accordion-content-height)]",
-                                "data-[state=closed]:animate-collapse",
-                                "data-[state=open]:animate-expand",
+                                "overflow-hidden [--collapse-from:var(--radix-accordion-content-height)] [--expand-to:var(--radix-accordion-content-height)] data-[state=closed]:animate-collapse data-[state=open]:animate-expand",
                             ])}
                         >
                             <div

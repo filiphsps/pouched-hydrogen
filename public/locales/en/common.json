@@ -83,8 +83,26 @@
         "add": "Add",
         "metafield": {
             "nicotine": "{{value}} mg/g",
-            "nicotine_pouch": "{{value}} mg/pouch"
-        }
+            "nicotine_pouch": "{{value}} mg/pouch",
+            "label": {
+                "brand": "Brand",
+                "strength": "Strength",
+                "nicotine": "Nicotine per gram",
+                "nicotine_pouch": "Nicotine per bag",
+                "aroma": "Aroma",
+                "format": "Format",
+                "flavor": "Flavor",
+                "bags_per_can": "Bags per can",
+                "weight_per_bag": "Weight per bag",
+                "subtitle": "Subtitle"
+            },
+            "format": {
+                "nicotine": "{{value}} mg/g",
+                "nicotine_pouch": "{{value}} mg/pouch",
+                "weight_per_bag": "{{value}} g"
+            }
+        },
+        "description": "Description"
     },
     "search": {
         "title": "Predictive search",

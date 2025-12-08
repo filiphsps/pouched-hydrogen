@@ -1,5 +1,6 @@
-import { createSchema } from "@weaverse/hydrogen";
+import { createSchema, type WeaverseLoaderData } from "@weaverse/hydrogen";
 import clsx from "clsx";
+import React, { isValidElement, useMemo } from "react";
 import { useLoaderData } from "react-router";
 import {
     ProductMedia,
@@ -30,22 +31,106 @@ export default function ProductInformation(
         zoomButtonVisibility,
         ...rest
     } = props;
-    const { product } = useLoaderData<typeof productRouteLoader>();
+
+    const loaderData = useLoaderData<typeof productRouteLoader>();
+    const weaverseData = (
+        loaderData as {
+            weaverseData?: WeaverseLoaderData & { items?: Record<string, any> };
+        }
+    ).weaverseData;
+    const { product } = loaderData;
 
     const combinedListing = isCombinedListing(product);
 
-    if (product) {
-        const { handle } = product;
+    // Create a map of ID -> Type from the Weaverse data
+    // This handles cases where items are stored in an array or indexed by number but referenced by UUID
+    const idToTypeMap = useMemo(() => {
+        const map = new Map<string, string>();
+        if (weaverseData?.page?.items) {
+            // Iterate over values because keys might be numeric indices
+            for (const item of Object.values(weaverseData.page.items)) {
+                if ((item as any)?.id && (item as any)?.type) {
+                    map.set((item as any).id, (item as any).type);
+                }
+            }
+        }
+        if (weaverseData?.items) {
+            for (const item of Object.values(weaverseData.items)) {
+                if ((item as any)?.id && (item as any)?.type) {
+                    map.set((item as any).id, (item as any).type);
+                }
+            }
+        }
+        return map;
+    }, [weaverseData]);
 
+    if (!product) {
         return (
-            <Section ref={ref} {...rest} overflow="unset">
-                <div
-                    className={clsx([
-                        "space-y-5 lg:grid lg:space-y-0",
-                        "lg:gap-[clamp(30px,5%,60px)]",
-                        "lg:grid-cols-[1fr_clamp(360px,45%,480px)]",
-                    ])}
-                >
+            <div ref={ref} {...rest}>
+                No product data...
+            </div>
+        );
+    }
+
+    const { handle } = product;
+    const mediaBelowChildren: React.ReactNode[] = [];
+    const detailsChildren: React.ReactNode[] = [];
+
+    React.Children.forEach(children, (child) => {
+        if (isValidElement(child)) {
+            const childProps = child.props as Record<string, unknown>;
+
+            // Extract ID
+            const childId = (childProps.id ||
+                (childProps.data as any)?.id ||
+                (childProps.item as any)?.id) as string | undefined;
+
+            // Strategy 1: Static Type Check
+            let resolvedType = ((child.type as { weaverseType?: string })
+                ?.weaverseType ||
+                (typeof childProps.type === "string"
+                    ? childProps.type
+                    : undefined)) as string | undefined;
+
+            // Strategy 2: ID Map Lookup
+            if (!resolvedType && childId) {
+                resolvedType = idToTypeMap.get(childId);
+            }
+
+            // Strategy 3: Props Fallback
+            if (!resolvedType) {
+                resolvedType =
+                    (childProps.item as any)?.type ||
+                    (childProps.data as any)?.type;
+            }
+
+            // Fallback: JSON Scan
+            if (
+                !resolvedType &&
+                JSON.stringify(childProps).includes("mp--media-below")
+            ) {
+                resolvedType = "mp--media-below";
+            }
+
+            if (resolvedType === "mp--media-below") {
+                mediaBelowChildren.push(child);
+            } else {
+                detailsChildren.push(child);
+            }
+        }
+    });
+
+    return (
+        <Section ref={ref} {...rest} overflow="unset">
+            <div
+                className={clsx([
+                    "space-y-5 lg:grid lg:space-y-0",
+                    "lg:gap-[clamp(30px,5%,60px)]",
+                    "lg:grid-cols-[1fr_clamp(360px,45%,480px)]",
+                ])}
+            >
+                {/* Left Column: Media + Below Content */}
+                <div className="flex min-w-0 flex-col gap-10">
                     <ProductMedia
                         key={handle}
                         mediaLayout={mediaLayout}
@@ -74,24 +159,23 @@ export default function ProductInformation(
                         zoomTrigger={zoomTrigger}
                         zoomButtonVisibility={zoomButtonVisibility}
                     />
-                    <div>
-                        <div
-                            className="sticky flex flex-col justify-start gap-5"
-                            style={{ top: "calc(var(--height-nav) + 20px)" }}
-                        >
-                            {children}
-                        </div>
-                    </div>
+                    {/* Render content below media (Left Column) */}
+                    {mediaBelowChildren}
                 </div>
 
-                <StickyAddToCart />
-            </Section>
-        );
-    }
-    return (
-        <div ref={ref} {...rest}>
-            No product data...
-        </div>
+                {/* Right Column: Sticky Details */}
+                <div>
+                    <div
+                        className="sticky flex flex-col justify-start gap-5"
+                        style={{ top: "calc(var(--height-nav) + 20px)" }}
+                    >
+                        {detailsChildren}
+                    </div>
+                </div>
+            </div>
+
+            <StickyAddToCart />
+        </Section>
     );
 }
 
@@ -110,8 +194,12 @@ export const schema = createSchema({
         "mp--bundled-variants",
         "mp--variant-selector",
         "mp--quantity-selector",
+        "mp--quantity-breaks",
+        "mp--attribute-bar",
+        "mp--facts",
         "mp--atc-buttons",
         "mp--collapsible-details",
+        "mp--media-below",
     ],
     limit: 1,
     enabledOn: {

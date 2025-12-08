@@ -41,6 +41,22 @@ export const PRODUCT_QUERY = `#graphql
         namespace
         value
       }
+      # Product page custom fields - query common metafield keys
+      customMetafields: metafields(identifiers: [
+        { namespace: "custom", key: "subtitle" }
+        { namespace: "custom", key: "nicotine" }
+        { namespace: "custom", key: "nicotine_pouch" }
+        { namespace: "custom", key: "strength" }
+        { namespace: "custom", key: "format" }
+        { namespace: "custom", key: "flavor" }
+        { namespace: "custom", key: "aroma" }
+        { namespace: "custom", key: "bags_per_can" }
+        { namespace: "custom", key: "weight_per_bag" }
+      ]) {
+        key
+        namespace
+        value
+      }
       options {
         ...ProductOption
       }

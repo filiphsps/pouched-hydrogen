@@ -34,12 +34,16 @@ import * as JudgemeReviewSummary from "~/sections/judgeme-reviews/review-summary
 import * as MainProduct from "~/sections/main-product";
 import * as JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import * as ProductATCButtons from "~/sections/main-product/product-atc-buttons";
+import * as ProductAttributeBar from "~/sections/main-product/product-attribute-bar";
 import * as ProductBadges from "~/sections/main-product/product-badges";
 import * as ProductBreadcrumb from "~/sections/main-product/product-breadcrumb";
 import * as ProductBundledVariants from "~/sections/main-product/product-bundled-variants";
 import * as ProductCollapsibleDetails from "~/sections/main-product/product-collapsible-details";
 import * as ProductDescription from "~/sections/main-product/product-description";
+import * as ProductFacts from "~/sections/main-product/product-facts";
+import * as ProductMediaBelow from "~/sections/main-product/product-media-below";
 import * as ProductPrices from "~/sections/main-product/product-prices";
+import * as ProductQuantityBreaks from "~/sections/main-product/product-quantity-breaks";
 import * as ProductQuantitySelector from "~/sections/main-product/product-quantity-selector";
 import * as ProductSummary from "~/sections/main-product/product-summary";
 import * as ProductTitle from "~/sections/main-product/product-title";
@@ -121,6 +125,10 @@ export const components: HydrogenComponent[] = [
     ProductBundledVariants,
     ProductVariantSelector,
     ProductQuantitySelector,
+    ProductQuantityBreaks,
+    ProductAttributeBar,
+    ProductMediaBelow,
+    ProductFacts,
     ProductATCButtons,
     ProductCollapsibleDetails,
     RelatedProducts,

@@ -6,6 +6,8 @@ This file guides AI agents working in this repository.
 
 - MUST use pnpm (not npm or yarn), that includes pnpx.
 - When using the `cn` tailwind class util; don't create multiple rows of strings when they can be combined into one long string (even if it exceeds the line length limit).
+- NEVER start the dev server yourself, it's already running.
+- MUST always implement and fix things properly, no shortcuts, hard-coding, or lazy solutions.
 
 ## Build, Lint, and Test Commands
 
