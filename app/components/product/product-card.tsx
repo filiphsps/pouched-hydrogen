@@ -133,7 +133,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
                 {image && (
                     <div className="group relative rounded-(--pcard-radius) rounded-t-(--pcard-radius) bg-transparent transition-colors duration-300 group-hover/card:bg-background">
                         {/* Sale badge - top left */}
-                        <div className="absolute top-3 left-3 z-10 flex gap-1">
+                        <div className="absolute top-2 left-2 z-10 flex gap-1">
                             {isBundle && pcardShowBundleBadge && (
                                 <BundleBadge />
                             )}
@@ -149,7 +149,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
                         {/* Wishlist button - top right */}
                         {pcardShowWishlist && (
-                            <div className="absolute top-3 right-3 z-10">
+                            <div className="absolute top-2 right-2 z-10">
                                 <WishlistButton
                                     productId={product.id}
                                     className="group-hover/card:bg-gray-150"
@@ -157,9 +157,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
                             </div>
                         )}
 
-                        {/* NEW badge - bottom left of image */}
+                        {/* NEW badge - top left of image */}
                         {pcardShowNewBadge && (
-                            <div className="absolute top-3 left-3 z-10">
+                            <div className="absolute top-2 left-2 z-10">
                                 <NewBadge
                                     publishedAt={product.publishedAt}
                                     className="group-hover/card:bg-gray-150"
@@ -169,7 +169,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
                         {/* Out of stock badge - bottom left of image */}
                         {pcardShowOutOfStockBadge && (
-                            <div className="absolute bottom-3 left-3 z-10">
+                            <div className="absolute bottom-2 left-2 z-10">
                                 <SoldOutBadge />
                             </div>
                         )}
