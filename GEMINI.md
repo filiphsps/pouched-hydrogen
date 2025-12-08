@@ -4,7 +4,7 @@ This document provides essential context for the Gemini CLI when interacting wit
 
 ## Project Overview
 
-`pouched-hydrogen` is an innovative Shopify theme named "Pilot," built with Shopify Hydrogen, React Router 7, and Weaverse. It's designed to create high-performance, lightning-fast storefronts for Shopify. The project emphasizes a streamlined development experience by integrating a powerful suite of tools and features.
+`pouched-hydrogen` is an innovative Shopify theme named "Gothenburg," built with Shopify Hydrogen, React Router 7, and Weaverse. It's designed to create high-performance, lightning-fast storefronts for Shopify. The project emphasizes a streamlined development experience by integrating a powerful suite of tools and features.
 
 **Key Technologies:**
 *   **Frontend Framework:** Shopify Hydrogen (React-based), React Router 7

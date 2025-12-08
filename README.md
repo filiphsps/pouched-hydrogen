@@ -1,32 +1,6 @@
-<h1 align="center">Pilot - Production-ready Shopify Hydrogen Theme</h1>
+# Gothenburg – Shopify Hydrogen Headless Frontend
 
-<div align="center">
-
-📚 [Read the docs](https://weaverse.io/docs) | 🗣 [Join our community on Slack](https://join.slack.com/t/weaversecommunity/shared_invite/zt-235bv7d80-velzJU8CpZIHWdrzFwAdXg) | 🐞 [Report a bug](https://github.com/weaverse/pilot/issues)
-
-</div>
-
-![Weaverse + Hydrogen + Shopify](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/weaverse-x-hydrogen-x-shopify.png?v=1755245801)
-
-_Pilot is an innovative Shopify theme, powered by Hydrogen, React Router 7, and Weaverse, designed to create lightning-fast storefronts with exceptional performance. This theme combines a collection of powerful tools and features to streamline your Shopify development experience._
-
-## Who is using Weaverse/Pilot on production?
-These **Shopify (Plus)** brands built on top of Weaverse/Pilot:
-- [Huckleberry Roasters](https://www.huckleberryroasters.com/) - Crafting coffee in Colorado since 2011, Huckleberry Roasters delivers award-winning flavors with ethically sourced beans.
-- [Bubble Goods](https://bubblegoods.com/) - 2,000+ healthy food products shipped from small independent U.S. makers to your door.
-- [Karma and Luck](https://www.karmaandluck.com) - modern lifestyle brand rooted in timeless traditions and spiritual intention.
-- [Baltzar](https://baltzar.com/) - curated selection of menswear brands from world renowned specialists such as Frank Clegg, Albert Thurston and Astorflex.
-- [iROCKER](https://irockersup.com/) - provide life on the water to all, with gear that goes the extra mile.
-- [Roland (Brazil)](https://store.roland.com.br/) - electronic musical instruments, drums, digital pianos, synthesizers, and dance/DJ gears.
-- [Timothy London](https://timothy.london/) - British brand of premium travel goods and accessories.
-- [Vasuma Eyewear](https://vasuma.com/) - Vasuma creates eyewear for both men and women. From Stockholm, Sweden our eyewear are inspired by the best of the vintage eras of the 50s and 60s.
-- And many more...
-
-## Links
-
-- Live store: https://pilot.weaverse.dev
-- Customizing Pilot on Weaverse Studio: https://studio.weaverse.io/demo?theme=pilot
-  ![pilot.weaverse.dev](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/pilot.weavverse.dev_0b0b2f77-b79e-4524-8cf5-bc22d6ec4ba9.png?v=1744963684)
+Gothenburg is an innovative Shopify theme, powered by Hydrogen, React Router 7, and Weaverse, designed to create lightning-fast storefronts with exceptional performance. This theme combines a collection of powerful tools and features to streamline your Shopify development experience._
 
 ## What's included
 
@@ -49,10 +23,6 @@ These **Shopify (Plus)** brands built on top of Weaverse/Pilot:
 - Full-featured setup of components and routes
 - Fully customizable inside [Weaverse Studio](https://weaverse.io)
 
-## Deployment
-
-- [Deploy to Shopify Oxygen](https://weaverse.io/docs/deployment/oxygen)
-- [Deploy to Vercel](https://wvse.cc/deploy-pilot-to-vercel)
 
 ## Getting started
 
@@ -61,7 +31,7 @@ These **Shopify (Plus)** brands built on top of Weaverse/Pilot:
 - Node.js version 20.0.0 or higher
 - `pnpm` or `pnpm` package manager
 
-**Follow these steps to get started with Pilot and begin crafting your Hydrogen-driven storefront:**
+**Follow these steps to get started with Gothenburg and begin crafting your Hydrogen-driven storefront:**
 
 1. Install [Weaverse Hydrogen Customizer](https://apps.shopify.com/weaverse) from Shopify App Store.
 2. Create new Hydrogen storefront inside Weaverse.
@@ -93,7 +63,7 @@ pnpm run e2e
 
 ### Fetching page data with parallel loading
 
-Pilot uses parallel data loading for optimal performance. Every route loads Weaverse data alongside GraphQL queries using `Promise.all()`:
+Gothenburg uses parallel data loading for optimal performance. Every route loads Weaverse data alongside GraphQL queries using `Promise.all()`:
 
 ```ts:routes/($locale)._index.tsx
 import { data } from '@shopify/remix-oxygen';
@@ -330,30 +300,6 @@ export const components: HydrogenComponent[] = [
 ];
 ```
 
-### Manage content and style your pages within Weaverse Studio
-
-Weaverse provides a convenient way to customize your theme inside the **Weaverse Studio**. You can add new sections, customize existing ones, and change the theme settings.
-
-![Pilot in Weaverse Studio](https://cdn.shopify.com/s/files/1/0838/0052/3057/files/pilot-in-weaverse-studio.png?v=1755247352)
-
-### Project Structure
-
-```
-app/
-├── components/     # Reusable UI components
-├── sections/       # Weaverse sections/components
-├── routes/         # React Router routes (with locale prefix)
-├── graphql/        # GraphQL queries and fragments
-├── utils/          # Helper functions
-└── weaverse/       # Weaverse configuration
-
-Key configuration files:
-- biome.json                  # Code formatting and linting
-- codegen.ts                  # GraphQL code generation
-- react-router.config.ts      # React Router configuration
-- vite.config.ts              # Vite bundler configuration
-```
-
 ### Development Tools
 
 - **Development server**: http://localhost:3456
@@ -373,7 +319,3 @@ Key configuration files:
 ## License
 
 This project is provided under the [MIT License](LICENSE).
-
----
-
-Let **Weaverse** & **Pilot** empower your Shopify store with top-notch performance and unmatched customization possibilities! 🚀
