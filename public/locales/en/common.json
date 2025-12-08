@@ -80,7 +80,11 @@
         "shipping": "Shipping",
         "returns": "Returns",
         "new": "New",
-        "add": "Add"
+        "add": "Add",
+        "metafield": {
+            "nicotine": "{{value}} mg/g",
+            "nicotine_pouch": "{{value}} mg/pouch"
+        }
     },
     "search": {
         "title": "Predictive search",

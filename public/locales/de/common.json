@@ -80,7 +80,11 @@
         "shipping": "Versand",
         "returns": "Rückgabe",
         "new": "Neu",
-        "add": "Korb"
+        "add": "Korb",
+        "metafield": {
+            "nicotine": "{{value}} mg/g",
+            "nicotine_pouch": "{{value}} mg/Beutel"
+        }
     },
     "search": {
         "title": "Prädiktive Suche",

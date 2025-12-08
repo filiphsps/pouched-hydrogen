@@ -150,13 +150,16 @@ export function ProductCard({ product, className }: ProductCardProps) {
                         {/* Wishlist button - top right */}
                         {pcardShowWishlist && (
                             <div className="absolute top-3 right-3 z-10">
-                                <WishlistButton productId={product.id} />
+                                <WishlistButton
+                                    productId={product.id}
+                                    className="group-hover/card:bg-gray-150"
+                                />
                             </div>
                         )}
 
                         {/* NEW badge - bottom left of image */}
                         {pcardShowNewBadge && (
-                            <div className="absolute bottom-3 left-3 z-10">
+                            <div className="absolute top-3 left-3 z-10">
                                 <NewBadge
                                     publishedAt={product.publishedAt}
                                     className="group-hover/card:bg-gray-150"
@@ -242,7 +245,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
                 {/* Attribute pills */}
                 {pcardShowAttributePills && (
-                    <AttributePills product={product} className="mb-1" />
+                    <AttributePills product={product} className="mb-1.5" />
                 )}
 
                 {/* Title and price section */}
