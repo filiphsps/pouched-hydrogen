@@ -41,16 +41,25 @@ export function CartLineQuantityAdjust({
     const nextQuantity = Number((optimisticQuantity + 1).toFixed(0));
 
     /**
-     * Handle input blur event to submit quantity changes
-     * Removes line item if quantity is 0
+     * Handle input blur event to submit quantity changes.
+     * Removes line item if quantity is 0 or empty string.
      */
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        const newQuantity = Number.parseInt(inputValue, 10);
+        const trimmedValue = inputValue.trim();
+
+        // Treat empty string as 0 (remove item)
+        const newQuantity =
+            trimmedValue === "" ? 0 : Number.parseInt(trimmedValue, 10);
 
         // Validate and ensure non-negative integer
         if (Number.isNaN(newQuantity) || newQuantity < 0) {
             setInputValue(String(optimisticQuantity));
             return;
+        }
+
+        // Update local state to reflect the parsed value
+        if (trimmedValue === "") {
+            setInputValue("0");
         }
 
         // Only submit if quantity has changed

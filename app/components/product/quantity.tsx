@@ -8,15 +8,30 @@ interface QuantityProps {
 }
 export function Quantity(props: QuantityProps) {
     const { value, onChange, label = "Quantity", className } = props;
+    /**
+     * Handles keydown events on the quantity input.
+     * Allows keyboard shortcuts (Cmd+A, Ctrl+C, etc.) while preventing
+     * non-numeric character entry.
+     */
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        // Allow keyboard shortcuts (Cmd+A, Ctrl+C, etc.)
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+
+        // Allow navigation and editing keys
+        const allowedKeys = [
+            "Backspace",
+            "Delete",
+            "ArrowLeft",
+            "ArrowRight",
+            "Tab",
+            "Home",
+            "End",
+        ];
+
         // Prevent the user from entering non-numeric characters
-        if (
-            e.key !== "Backspace" &&
-            e.key !== "Delete" &&
-            e.key !== "ArrowLeft" &&
-            e.key !== "ArrowRight" &&
-            Number.isNaN(Number(e.key))
-        ) {
+        if (!allowedKeys.includes(e.key) && Number.isNaN(Number(e.key))) {
             e.preventDefault();
         }
     };
