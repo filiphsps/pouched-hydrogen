@@ -1,7 +1,7 @@
 import { CaretRightIcon, ListIcon, XIcon } from "@phosphor-icons/react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import * as Dialog from "@radix-ui/react-dialog";
-import { forwardRef } from "react";
+import type { RefObject } from "react";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
 import { useShopMenu } from "~/hooks/use-shop-menu";
@@ -99,12 +99,15 @@ function CollapsibleMenuItem({ item }: { item: SingleMenuItem }) {
     );
 }
 
-const MenuTrigger = forwardRef<HTMLButtonElement, Dialog.DialogTriggerProps>(
-    (props, ref) => {
-        return (
-            <button ref={ref} type="button" {...props}>
-                <ListIcon className="h-5 w-5" />
-            </button>
-        );
-    },
-);
+const MenuTrigger = ({
+    ref,
+    ...props
+}: Dialog.DialogTriggerProps & {
+    ref?: RefObject<HTMLButtonElement | null>;
+}) => {
+    return (
+        <button ref={ref} type="button" {...props}>
+            <ListIcon className="h-5 w-5" />
+        </button>
+    );
+};

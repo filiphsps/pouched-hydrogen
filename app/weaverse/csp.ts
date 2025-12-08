@@ -9,7 +9,15 @@ export function getWeaverseCsp(
     const weaverseHost =
         url.searchParams.get("weaverseHost") || context.env.WEAVERSE_HOST;
     const isDesignMode = url.searchParams.get("weaverseHost");
-    const weaverseHosts = ["*.weaverse.io", "*.shopify.com", "*.myshopify.com"];
+    const weaverseHosts = [
+        "*.weaverse.io",
+        "*.shopify.com",
+        "*.myshopify.com",
+        "http://localhost:*",
+        "http://127.0.0.1:*",
+        "ws://localhost:*",
+        "ws://127.0.0.1:*",
+    ];
     if (weaverseHost) {
         weaverseHosts.push(weaverseHost);
     }
@@ -31,7 +39,13 @@ export function getWeaverseCsp(
         ],
         connectSrc: ["vimeo.com", "*.google-analytics.com", ...weaverseHosts],
         styleSrc: weaverseHosts,
-        scriptSrc: ["'unsafe-eval'", "'unsafe-inline'", ...weaverseHosts],
+        scriptSrc: [
+            "'script-src'",
+            "'script-src-elem'",
+            "'unsafe-eval'",
+            "'unsafe-inline'",
+            ...weaverseHosts,
+        ],
     };
     if (isDesignMode) {
         updatedCsp.frameAncestors = ["*"];

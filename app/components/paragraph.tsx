@@ -57,6 +57,15 @@ function Paragraph(props: ParagraphProps) {
         className,
         ...rest
     } = props;
+
+    // If rendering as a paragraph, strip outer <p> tags from content to prevent invalid nesting (p within p)
+    let renderedContent = content;
+    if (Tag === "p" && content.trim().match(/^<p[^>]*>.*<\/p>$/is)) {
+        renderedContent = content
+            .replace(/^<p[^>]*>/i, "")
+            .replace(/<\/p>$/i, "");
+    }
+
     return (
         <Tag
             ref={ref}
@@ -67,7 +76,7 @@ function Paragraph(props: ParagraphProps) {
                 variants({ textSize, width, alignment, className }),
             )}
             suppressHydrationWarning
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: renderedContent }}
         />
     );
 }

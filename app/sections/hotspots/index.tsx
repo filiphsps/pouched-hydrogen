@@ -64,7 +64,7 @@ function Hotspots(props: HotspotsProps) {
                 />
             )}
             {description && (
-                <Paragraph as="p" content={description} alignment="center" />
+                <Paragraph as="div" content={description} alignment="center" />
             )}
             <div
                 className="relative"

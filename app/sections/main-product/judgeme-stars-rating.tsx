@@ -1,6 +1,7 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import clsx from "clsx";
-import { forwardRef, useEffect, useState } from "react";
+import type { Ref } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useLoaderData } from "react-router";
 import { Skeleton } from "~/components/skeleton";
@@ -24,145 +25,139 @@ function formatRatingText(text: string, rating: number, totalReviews: number) {
         .replace(/\{\{total_reviews\}\}/g, totalReviews.toString());
 }
 
-const JudgemeStarsRating = forwardRef<HTMLDivElement, JudgemeStarsRatingProps>(
-    (props, ref) => {
-        const {
-            productHandle,
-            onClickEvent = "do-nothing",
-            sectionId,
-            ratingText = "{{rating}}/5 - ({{total_reviews}} reviews)",
-            noReviewsText = "No reviews",
-            errorText = "Unable to load reviews",
-            ...rest
-        } = props;
+const JudgemeStarsRating = ({
+    ref,
+    ...props
+}: JudgemeStarsRatingProps & { ref?: Ref<HTMLDivElement> }) => {
+    const {
+        productHandle,
+        onClickEvent = "do-nothing",
+        sectionId,
+        ratingText = "{{rating}}/5 - ({{total_reviews}} reviews)",
+        noReviewsText = "No reviews",
+        errorText = "Unable to load reviews",
+        ...rest
+    } = props;
 
-        const [status, setStatus] = useState<
-            "idle" | "loading" | "error" | "ok"
-        >("idle");
-        const [data, setData] = useState<JudgemeStarsRatingData | null>(null);
-        const { product } = useLoaderData<typeof productRouteLoader>();
-        const handle = productHandle || product?.handle;
-        const ratingAPI = usePrefixPathWithLocale(
-            `/api/product/${handle}/reviews?type=rating`,
-        );
+    const [status, setStatus] = useState<"idle" | "loading" | "error" | "ok">(
+        "idle",
+    );
+    const [data, setData] = useState<JudgemeStarsRatingData | null>(null);
+    const { product } = useLoaderData<typeof productRouteLoader>();
+    const handle = productHandle || product?.handle;
+    const ratingAPI = usePrefixPathWithLocale(
+        `/api/product/${handle}/reviews?type=rating`,
+    );
 
-        const { ref: inViewRef, inView } = useInView({ triggerOnce: true });
+    const { ref: inViewRef, inView } = useInView({ triggerOnce: true });
 
-        const setRefs = (node: HTMLDivElement) => {
-            if (ref && typeof ref === "object") {
-                ref.current = node;
-            } else if (typeof ref === "function") {
-                ref(node);
-            }
-            inViewRef(node);
-        };
+    const setRefs = (node: HTMLDivElement) => {
+        if (ref && typeof ref === "object") {
+            ref.current = node;
+        } else if (typeof ref === "function") {
+            ref(node);
+        }
+        inViewRef(node);
+    };
 
-        // biome-ignore lint/correctness/useExhaustiveDependencies: only fetch when product handle change
-        useEffect(() => {
-            if (!(handle && inView)) {
-                return;
-            }
+    // biome-ignore lint/correctness/useExhaustiveDependencies: only fetch when product handle change
+    useEffect(() => {
+        if (!(handle && inView)) {
+            return;
+        }
 
-            setStatus("loading");
-            fetch(ratingAPI)
-                .then((res) => {
-                    if (res.ok) {
-                        return res.json<JudgemeStarsRatingData | null>();
-                    }
+        setStatus("loading");
+        fetch(ratingAPI)
+            .then((res) => {
+                if (res.ok) {
+                    return res.json<JudgemeStarsRatingData | null>();
+                }
 
-                    throw new Error("Response not ok");
-                })
-                .then((d: JudgemeStarsRatingData | null) => {
-                    if (d) {
-                        setData(d);
-                        setStatus("ok");
-                    } else {
-                        setStatus("error");
-                        setData(null);
-                    }
-                })
-                .catch((err) => {
-                    console.error(
-                        "Error fetching Judge.me stars rating data:",
-                        err,
-                    );
+                throw new Error("Response not ok");
+            })
+            .then((d: JudgemeStarsRatingData | null) => {
+                if (d) {
+                    setData(d);
+                    setStatus("ok");
+                } else {
                     setStatus("error");
                     setData(null);
-                });
-        }, [handle, inView]);
+                }
+            })
+            .catch((err) => {
+                console.error(
+                    "Error fetching Judge.me stars rating data:",
+                    err,
+                );
+                setStatus("error");
+                setData(null);
+            });
+    }, [handle, inView]);
 
-        if (!handle) {
-            return null;
-        }
+    if (!handle) {
+        return null;
+    }
 
-        if (status === "idle" || status === "loading") {
-            return (
-                <div {...rest} ref={setRefs} className="flex">
-                    <div className="inline-flex items-center gap-1">
-                        <Skeleton className="h-4 w-20 rounded" />
-                        <Skeleton className="h-4 w-8 rounded" />
-                    </div>
-                </div>
-            );
-        }
-
-        if (status === "error" || !data) {
-            return (
-                <div {...rest} ref={ref}>
-                    <div
-                        className={clsx(
-                            "text-gray-500",
-                            !errorText && "hidden",
-                        )}
-                    >
-                        {errorText}
-                    </div>
-                </div>
-            );
-        }
-
+    if (status === "idle" || status === "loading") {
         return (
-            <div
-                {...rest}
-                ref={ref}
-                onClick={
-                    onClickEvent !== "do-nothing"
-                        ? () => {
-                              if (
-                                  onClickEvent === "scroll-to-section" &&
-                                  sectionId
-                              ) {
-                                  const element =
-                                      document.getElementById(sectionId);
-                                  if (element) {
-                                      element.scrollIntoView({
-                                          behavior: "smooth",
-                                      });
-                                  }
-                              }
-                          }
-                        : undefined
-                }
-                className={
-                    onClickEvent !== "do-nothing" ? "cursor-pointer" : ""
-                }
-            >
-                <div className="flex items-center gap-2">
-                    <StarRating rating={data?.averageRating} />
-                    <span className="leading-4">
-                        {data?.totalReviews > 0
-                            ? formatRatingText(
-                                  ratingText,
-                                  data.averageRating,
-                                  data.totalReviews,
-                              )
-                            : noReviewsText}
-                    </span>
+            <div {...rest} ref={setRefs} className="flex">
+                <div className="inline-flex items-center gap-1">
+                    <Skeleton className="h-4 w-20 rounded" />
+                    <Skeleton className="h-4 w-8 rounded" />
                 </div>
             </div>
         );
-    },
-);
+    }
+
+    if (status === "error" || !data) {
+        return (
+            <div {...rest} ref={ref}>
+                <div className={clsx("text-gray-500", !errorText && "hidden")}>
+                    {errorText}
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div
+            {...rest}
+            ref={ref}
+            onClick={
+                onClickEvent !== "do-nothing"
+                    ? () => {
+                          if (
+                              onClickEvent === "scroll-to-section" &&
+                              sectionId
+                          ) {
+                              const element =
+                                  document.getElementById(sectionId);
+                              if (element) {
+                                  element.scrollIntoView({
+                                      behavior: "smooth",
+                                  });
+                              }
+                          }
+                      }
+                    : undefined
+            }
+            className={onClickEvent !== "do-nothing" ? "cursor-pointer" : ""}
+        >
+            <div className="flex items-center gap-2">
+                <StarRating rating={data?.averageRating} />
+                <span className="leading-4">
+                    {data?.totalReviews > 0
+                        ? formatRatingText(
+                              ratingText,
+                              data.averageRating,
+                              data.totalReviews,
+                          )
+                        : noReviewsText}
+                </span>
+            </div>
+        </div>
+    );
+};
 
 export default JudgemeStarsRating;
 

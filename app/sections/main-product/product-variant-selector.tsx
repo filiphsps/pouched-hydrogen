@@ -1,5 +1,5 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
+import type { RefObject } from "react";
 import { useLoaderData, useNavigate, useSearchParams } from "react-router";
 import { VariantSelector } from "~/components/product/variant-selector";
 import type { loader as productRouteLoader } from "~/routes/products/product";
@@ -8,10 +8,12 @@ interface ProductVariantSelectorProps extends HydrogenComponentProps {
     showVariantImage: boolean;
 }
 
-const ProductVariantSelectorComponent = forwardRef<
-    HTMLDivElement,
-    ProductVariantSelectorProps
->((props, ref) => {
+const ProductVariantSelectorComponent = ({
+    ref,
+    ...props
+}: ProductVariantSelectorProps & {
+    ref?: RefObject<HTMLDivElement | null>;
+}) => {
     const { showVariantImage, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
     const navigate = useNavigate();
@@ -46,7 +48,7 @@ const ProductVariantSelectorComponent = forwardRef<
             />
         </div>
     );
-});
+};
 
 export default ProductVariantSelectorComponent;
 

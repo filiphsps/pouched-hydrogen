@@ -1,5 +1,5 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef } from "react";
+import type { RefObject } from "react";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
@@ -7,22 +7,23 @@ interface ProductTitleProps extends HydrogenComponentProps {
     headingTag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
-const ProductTitle = forwardRef<HTMLDivElement, ProductTitleProps>(
-    (props, ref) => {
-        const { headingTag: Tag, ...rest } = props;
-        const { product } = useLoaderData<typeof productRouteLoader>();
+const ProductTitle = ({
+    ref,
+    ...props
+}: ProductTitleProps & { ref?: RefObject<HTMLDivElement | null> }) => {
+    const { headingTag: Tag, ...rest } = props;
+    const { product } = useLoaderData<typeof productRouteLoader>();
 
-        if (!product) {
-            return null;
-        }
+    if (!product) {
+        return null;
+    }
 
-        return (
-            <div ref={ref} {...rest}>
-                <Tag className="h3 tracking-tight!">{product.title}</Tag>
-            </div>
-        );
-    },
-);
+    return (
+        <div ref={ref} {...rest}>
+            <Tag className="h3 tracking-tight!">{product.title}</Tag>
+        </div>
+    );
+};
 
 export default ProductTitle;
 

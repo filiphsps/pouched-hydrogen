@@ -5,7 +5,8 @@ import {
     CaretRightIcon,
 } from "@phosphor-icons/react";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { forwardRef, useEffect } from "react";
+import type { RefObject } from "react";
+import { useEffect } from "react";
 import { cn } from "~/utils/cn";
 import { ReviewItem, type ReviewItemProps } from "./review-item";
 import { useJudgemeStore } from "./store";
@@ -130,7 +131,10 @@ interface ReviewListProps
     reviewsPerPage?: number;
 }
 
-const ReviewList = forwardRef<HTMLDivElement, ReviewListProps>((props, ref) => {
+const ReviewList = ({
+    ref,
+    ...props
+}: ReviewListProps & { ref?: RefObject<HTMLDivElement | null> }) => {
     const {
         showReviewerName = true,
         showReviewerEmail = true,
@@ -176,7 +180,7 @@ const ReviewList = forwardRef<HTMLDivElement, ReviewListProps>((props, ref) => {
         );
     }
     return null;
-});
+};
 
 export default ReviewList;
 

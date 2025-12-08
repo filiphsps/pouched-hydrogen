@@ -5,7 +5,7 @@ import {
     useThemeSettings,
 } from "@weaverse/hydrogen";
 import { cva, type VariantProps } from "class-variance-authority";
-import { forwardRef, type HTMLAttributes } from "react";
+import type { HTMLAttributes, RefObject } from "react";
 import {
     Link as RemixLink,
     type LinkProps as RemixLinkProps,
@@ -140,7 +140,10 @@ function useHrefWithLocale(href: LinkProps["to"]) {
  *
  * Ultimately, it is up to you to decide how to implement this behavior.
  */
-export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
+export const Link = ({
+    ref,
+    ...props
+}: LinkProps & { ref?: RefObject<HTMLAnchorElement | null> }) => {
     let {
         to,
         text,
@@ -203,7 +206,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
             {children || text}
         </RemixLink>
     );
-});
+};
 
 export default Link;
 
