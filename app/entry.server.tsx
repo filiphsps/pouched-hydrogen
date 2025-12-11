@@ -8,7 +8,6 @@
 import {
     createContentSecurityPolicy,
     type HydrogenRouterContextProvider,
-    storefrontRedirect,
 } from "@shopify/hydrogen";
 import { createInstance } from "i18next";
 import { isbot } from "isbot";

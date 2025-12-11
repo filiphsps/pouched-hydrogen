@@ -2,7 +2,7 @@
 # Uses a custom Edge Function for SSR with proper Hydrogen context
 
 [build]
-  command = "DEPLOY_TARGET=netlify pnpm exec react-router build"
+  command = "pnpm run build:netlify"
   publish = "dist/client"
   # Edge Functions directory for our custom handler
   edge_functions = "netlify/edge-functions"

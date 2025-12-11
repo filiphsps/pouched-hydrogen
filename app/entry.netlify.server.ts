@@ -6,7 +6,7 @@
  * which is what Netlify expects.
  */
 import { buildEnvFromNetlify } from "~/lib/env.server";
-import server from "./server";
+import server from "../server";
 
 /**
  * Netlify Edge Function Handler
