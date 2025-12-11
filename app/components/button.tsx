@@ -9,7 +9,7 @@ export const variants = cva(
     [
         "relative inline-flex items-center justify-center overflow-hidden rounded-full",
         "whitespace-nowrap font-normal text-base leading-tight",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50!",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
         "transition-all duration-200",
         "select-none",
     ],
