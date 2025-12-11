@@ -1,7 +1,6 @@
 import { Money, mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import { useState } from "react";
 import { useViewTransitionState } from "react-router";
 import type {
@@ -354,7 +353,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
                         }
                         setSelectedVariant(variant);
                     }}
-                    className={clsx(
+                    className={cn(
                         isVertical && [
                             pcardAlignment === "left" && "justify-start",
                             pcardAlignment === "center" && "justify-center",

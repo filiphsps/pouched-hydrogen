@@ -1,5 +1,4 @@
 import { useOptimisticCart } from "@shopify/hydrogen";
-import clsx from "clsx";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import useScroll from "react-use/esm/useScroll";
@@ -8,6 +7,7 @@ import { Link } from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
 import { Section } from "~/components/section";
 import type { CartLayoutType } from "~/types/others";
+import { cn } from "~/utils/cn";
 import { CartBestSellers } from "./cart-best-sellers";
 import { CartLineItem } from "./cart-line-item";
 import { CartSummary } from "./cart-summary";
@@ -28,7 +28,7 @@ function CartEmpty({
         <div
             ref={scrollRef}
             data-testid="cart-empty"
-            className={clsx(
+            className={cn(
                 layout === "drawer" && [
                     "flex h-screen-dynamic flex-col content-start justify-center space-y-12 overflow-y-scroll px-5 pb-5 text-center transition",
                     y > 0 && "border-t",
@@ -39,12 +39,12 @@ function CartEmpty({
             )}
             hidden={hidden}
         >
-            <div className={clsx(layout === "page" && "text-center")}>
+            <div className={cn(layout === "page" && "text-center")}>
                 <p className="mb-4">{t("cart.emptyMessage")}</p>
                 <Link
                     variant="outline"
                     to="/products"
-                    className={clsx(
+                    className={cn(
                         layout === "drawer" ? "w-full" : "min-w-48",
                         "justify-center",
                     )}
@@ -89,7 +89,7 @@ export function CartMain({
         <>
             <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />
             <div
-                className={clsx(
+                className={cn(
                     layout === "drawer" &&
                         "grid grow grid-cols-1 grid-rows-[1fr_auto]",
                     layout === "page" && [
@@ -101,7 +101,7 @@ export function CartMain({
             >
                 <div
                     ref={scrollRef}
-                    className={clsx([
+                    className={cn([
                         "pb-4",
                         y > 0 ? "border-line-subtle border-t" : "",
                         layout === "page" && "grow md:translate-y-4",
@@ -109,13 +109,13 @@ export function CartMain({
                     ])}
                 >
                     <ScrollArea
-                        className={clsx(
+                        className={cn(
                             layout === "drawer" && "max-h-[calc(100vh-312px)]",
                         )}
                         size="sm"
                     >
                         <ul
-                            className={clsx(
+                            className={cn(
                                 "grid px-4",
                                 layout === "page" && "gap-9",
                                 layout === "drawer" && "gap-5",

@@ -1,10 +1,10 @@
 import { CaretRightIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
-import clsx from "clsx";
 import Link from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import type { SingleMenuItem } from "~/types/menu";
+import { cn } from "~/utils/cn";
 
 export function FooterMenu() {
     const { footerMenu } = useShopMenu();
@@ -33,7 +33,7 @@ export function FooterMenu() {
                         )}
                     </div>
                     <Accordion.Content
-                        className={clsx([
+                        className={cn([
                             "[--expand-to:var(--radix-accordion-content-height)]",
                             "[--collapse-from:var(--radix-accordion-content-height)]",
                             "data-[state=closed]:animate-collapse",

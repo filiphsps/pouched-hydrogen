@@ -1,11 +1,11 @@
 import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 import { Link, useLoaderData } from "react-router";
 import Paragraph from "~/components/paragraph";
 import type { loader as productLoader } from "~/routes/products/product";
+import { cn } from "~/utils/cn";
 
 function getExcerpt(text: string) {
     const regex = /<p.*>(.*?)<\/p>/;
@@ -62,7 +62,7 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
                 {details.map(({ title, content, learnMore }) => (
                     <Accordion.Item key={title} value={title}>
                         <Accordion.Trigger
-                            className={clsx([
+                            className={cn([
                                 "flex w-full justify-between border-line-subtle border-b py-4 font-bold data-[state=open]:[&>.minus]:inline-block data-[state=open]:[&>.plus]:hidden",
                             ])}
                         >
@@ -71,7 +71,7 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
                             <PlusIcon className="plus h-4 w-4" />
                         </Accordion.Trigger>
                         <Accordion.Content
-                            className={clsx([
+                            className={cn([
                                 "overflow-hidden [--collapse-from:var(--radix-accordion-content-height)] [--expand-to:var(--radix-accordion-content-height)] data-[state=closed]:animate-collapse data-[state=open]:animate-expand",
                             ])}
                         >

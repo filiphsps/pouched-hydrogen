@@ -6,7 +6,6 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { Image } from "~/components/image";
 import Link, { type LinkStyles, linkStylesInputs } from "~/components/link";
@@ -14,6 +13,7 @@ import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { useAnimation } from "~/hooks/use-animation";
 import type { ImageAspectRatio } from "~/types/others";
+import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
 import type { FeaturedCollectionsLoaderData } from ".";
 
@@ -99,7 +99,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
         <div
             ref={scope}
             {...rest}
-            className={clsx(
+            className={cn(
                 [
                     "snap-x snap-mandatory",
                     "hidden-scroll scroll-px-6 overflow-x-scroll md:overflow-x-hidden",
@@ -116,7 +116,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
                 >
                     {collection?.image && (
                         <div
-                            className={clsx(
+                            className={cn(
                                 "overflow-hidden",
                                 variants({ borderRadius }),
                             )}
@@ -132,7 +132,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
                                 width={collection.image.width || 600}
                                 height={collection.image.height || 400}
                                 sizes="(max-width: 32em) 100vw, 45vw"
-                                className={clsx([
+                                className={cn([
                                     "transition-all duration-300",
                                     "scale-100 will-change-transform group-hover:scale-[1.05]",
                                 ])}
@@ -145,11 +145,11 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
                             overlayColor={overlayColor}
                             overlayColorHover={overlayColorHover}
                             overlayOpacity={overlayOpacity}
-                            className={clsx("z-0", variants({ borderRadius }))}
+                            className={cn("z-0", variants({ borderRadius }))}
                         />
                     )}
                     <div
-                        className={clsx(
+                        className={cn(
                             "items-center",
                             variants({ contentPosition }),
                         )}
@@ -160,7 +160,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
                                     "--col-name-color": collectionNameColor,
                                 } as CSSProperties
                             }
-                            className={clsx(
+                            className={cn(
                                 contentPosition === "over"
                                     ? "space-y-4 px-4 py-16 text-center text-(--col-name-color) xl:space-y-7"
                                     : "py-4",

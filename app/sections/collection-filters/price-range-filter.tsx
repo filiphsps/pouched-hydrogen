@@ -1,10 +1,10 @@
 import * as Slider from "@radix-ui/react-slider";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
-import clsx from "clsx";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
+import { cn } from "~/utils/cn";
 import { FILTER_URL_PREFIX } from "~/utils/const";
 import { filterInputToParams } from "./filter-utils";
 
@@ -85,7 +85,7 @@ export function PriceRangeFilter({
                         onPointerDown={() => {
                             thumbRef.current = s;
                         }}
-                        className={clsx(
+                        className={cn(
                             "block h-4 w-4 cursor-grab rounded-full bg-gray-800 shadow-md",
                             "focus-visible:outline-hidden",
                         )}

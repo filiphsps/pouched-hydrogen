@@ -1,9 +1,9 @@
 import { SealCheckIcon, XIcon } from "@phosphor-icons/react";
-import clsx from "clsx";
 import { useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { Image } from "~/components/image";
 import { StarRating } from "~/components/star-rating";
+import { cn } from "~/utils/cn";
 import { formatDate } from "~/utils/misc";
 
 export type AliReview = {
@@ -103,7 +103,7 @@ export function ReviewItem(props: ReviewItemProps) {
                     {review.media.map((media) => (
                         <div
                             key={media.id}
-                            className={clsx(
+                            className={cn(
                                 "flex h-20 w-20 cursor-pointer items-center justify-center overflow-hidden bg-gray-800",
                                 "outline-offset-2 hover:outline-2 hover:outline-gray-500 hover:outline-solid",
                                 previewMedia?.id === media.id &&

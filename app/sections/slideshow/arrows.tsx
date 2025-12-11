@@ -6,9 +6,9 @@ import {
 } from "@phosphor-icons/react";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import clsx from "clsx";
 import { useState } from "react";
 import { useSwiper } from "swiper/react";
+import { cn } from "~/utils/cn";
 
 const variants = cva(
     [
@@ -94,7 +94,7 @@ export function Arrows(props: SlideshowArrowsProps) {
         <>
             <button
                 type="button"
-                className={clsx(
+                className={cn(
                     "slideshow-arrow-prev",
                     variants({
                         arrowsColor,
@@ -118,7 +118,7 @@ export function Arrows(props: SlideshowArrowsProps) {
             </button>
             <button
                 type="button"
-                className={clsx(
+                className={cn(
                     "slideshow-arrow-next",
                     variants({
                         arrowsColor,

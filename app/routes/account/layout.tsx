@@ -2,13 +2,13 @@ import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { CacheNone, generateCacheControlHeader } from "@shopify/hydrogen";
-import { clsx } from "clsx";
 import type { CustomerDetailsQuery } from "customer-account-api.generated";
 import { useTranslation } from "react-i18next";
 import { data, Outlet, useLoaderData, useMatches } from "react-router";
 import Link from "~/components/link";
 import { getContext } from "~/types/context";
 import { routeHeaders } from "~/utils/cache";
+import { cn } from "~/utils/cn";
 import { getFeaturedProducts } from "~/utils/featured-products";
 import type { Route } from "./+types/layout";
 import { doLogout } from "./auth/logout";
@@ -71,7 +71,7 @@ export default function AccountLayout() {
                         <Dialog.Overlay className="fixed inset-0 z-10 bg-black/50 data-[state=open]:animate-fade-in" />
                         <Dialog.Content
                             onCloseAutoFocus={(e) => e.preventDefault()}
-                            className={clsx([
+                            className={cn([
                                 "fixed inset-0 z-10 w-screen p-4",
                                 "flex items-center justify-center",
                                 "[--slide-up-from:20px]",

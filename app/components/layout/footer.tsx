@@ -8,12 +8,13 @@ import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
 import { useTranslation } from "react-i18next";
-import { useFetcher } from "react-router";
+import { useFetcher, useRouteLoaderData } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import Link from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import { cn } from "~/utils/cn";
+import { resolveWeaverseString } from "~/utils/weaverse";
 import { CountrySelector } from "./country-selector";
 import { FooterMenu } from "./menu/footer-menu";
 
@@ -35,6 +36,7 @@ const variants = cva("", {
 export function Footer() {
     const { shopName } = useShopMenu();
     const { t } = useTranslation();
+    const rootData = useRouteLoaderData<any>("root");
     const {
         footerWidth,
         socialFacebook,
@@ -61,6 +63,11 @@ export function Footer() {
         fetcher.data && !fetcher.data.ok
             ? fetcher.data.error || t("footer.signUpError")
             : "";
+
+    // Resolve copyright text with root data context
+    const resolvedCopyright = resolveWeaverseString(copyright, {
+        root: rootData,
+    });
 
     const SOCIAL_ACCOUNTS = [
         {
@@ -200,7 +207,9 @@ export function Footer() {
                     <div className="flex gap-2">
                         <CountrySelector />
                     </div>
-                    <div dangerouslySetInnerHTML={{ __html: copyright }} />
+                    <div
+                        dangerouslySetInnerHTML={{ __html: resolvedCopyright }}
+                    />
                 </div>
             </div>
         </footer>

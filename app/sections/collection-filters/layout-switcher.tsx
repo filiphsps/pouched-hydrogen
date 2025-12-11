@@ -1,5 +1,4 @@
 import type { IconProps } from "@phosphor-icons/react";
-import clsx from "clsx";
 import { cn } from "~/utils/cn";
 
 const LAYOUT_ICONS = {
@@ -44,7 +43,7 @@ export function LayoutSwitcher({
                                 : gridSizeMobile === col
                         }
                         onClick={() => onGridSizeChange(col)}
-                        className={clsx(
+                        className={cn(
                             "h-12 w-12 items-center justify-center border",
                             col > 2 ? "hidden lg:flex" : "flex lg:hidden",
                         )}

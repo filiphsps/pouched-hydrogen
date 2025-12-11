@@ -8,7 +8,6 @@ import {
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { parseGid } from "@shopify/hydrogen";
-import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import type {
     Media_MediaImage_Fragment,
@@ -114,7 +113,7 @@ export function ZoomModal({
                 <Dialog.Overlay className="fixed inset-0 z-10 bg-white data-[state=open]:animate-fade-in" />
                 <Dialog.Content
                     onCloseAutoFocus={(e) => e.preventDefault()}
-                    className={clsx([
+                    className={cn([
                         "[--slide-up-from:20px]",
                         "data-[state=open]:animate-slide-up",
                         "fixed inset-0 z-10 w-screen",
@@ -275,7 +274,7 @@ export function ZoomButton({ className, ...props }: ZoomButtonProps) {
     return (
         <button
             type="button"
-            className={clsx(
+            className={cn(
                 "rounded-full border border-transparent p-2 text-center",
                 "transition-all duration-200",
                 "bg-white text-gray-900 hover:bg-gray-800 hover:text-white",

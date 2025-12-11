@@ -1,7 +1,6 @@
 import { CaretRightIcon } from "@phosphor-icons/react";
 import * as Accordion from "@radix-ui/react-accordion";
 import type { Filter } from "@shopify/hydrogen/storefront-api-types";
-import clsx from "clsx";
 import { useRef } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
@@ -73,7 +72,7 @@ export function Filters({ className }: { className?: string }) {
                                 <CaretRightIcon className="h-4 w-4 rotate-0 transition-transform" />
                             </Accordion.Trigger>
                             <Accordion.Content
-                                className={clsx([
+                                className={cn([
                                     "overflow-hidden",
                                     "[--expand-to:var(--radix-accordion-content-height)]",
                                     "[--collapse-from:var(--radix-accordion-content-height)]",
@@ -82,7 +81,7 @@ export function Filters({ className }: { className?: string }) {
                                 ])}
                             >
                                 <div
-                                    className={clsx(
+                                    className={cn(
                                         "flex pt-8",
                                         asSwatch || asButton
                                             ? "flex-wrap gap-1.5"

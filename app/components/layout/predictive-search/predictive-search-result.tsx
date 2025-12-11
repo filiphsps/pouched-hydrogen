@@ -1,5 +1,4 @@
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
-import clsx from "clsx";
 import type { ProductVariantFragment } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
@@ -9,6 +8,7 @@ import type {
     NormalizedPredictiveSearchResultItem,
     NormalizedPredictiveSearchResults,
 } from "~/types/predictive-search";
+import { cn } from "~/utils/cn";
 
 type SearchResultTypeProps = {
     items?: NormalizedPredictiveSearchResultItem[];
@@ -28,7 +28,7 @@ export function PredictiveSearchResult({ items, type }: SearchResultTypeProps) {
             </div>
             {items?.length ? (
                 <ul
-                    className={clsx(
+                    className={cn(
                         type === "queries" && "space-y-1",
                         type === "articles" && "space-y-3",
                         type === "products" && "space-y-4",
@@ -103,7 +103,7 @@ function SearchResultItem({
                         </RevealUnderline>
                     ) : (
                         <div
-                            className={clsx(
+                            className={cn(
                                 __typename === "Product"
                                     ? "line-clamp-1"
                                     : "line-clamp-2",

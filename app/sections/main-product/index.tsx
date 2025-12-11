@@ -1,5 +1,4 @@
 import { createSchema, type WeaverseLoaderData } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import React, { isValidElement, useMemo } from "react";
 import { useLoaderData } from "react-router";
 import {
@@ -8,6 +7,7 @@ import {
 } from "~/components/product/product-media";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
 import type { loader as productRouteLoader } from "~/routes/products/product";
+import { cn } from "~/utils/cn";
 import { isCombinedListing } from "~/utils/combined-listings";
 import { StickyAddToCart } from "./sticky-add-to-cart";
 
@@ -123,7 +123,7 @@ export default function ProductInformation(
     return (
         <Section ref={ref} {...rest} overflow="unset" className="bg-gray-100">
             <div
-                className={clsx([
+                className={cn([
                     "space-y-3 lg:grid lg:grid-cols-[1fr_clamp(360px,55%,550px)] lg:gap-[clamp(30px,5%,60px)] lg:space-y-0",
                 ])}
             >

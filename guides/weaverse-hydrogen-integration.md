@@ -291,7 +291,7 @@ const Style = createGlobalStyle<{
 A complete example of a section component with data fetching capabilities.
 
 ```tsx
-import clsx from "clsx";
+import { cn } from "~/utils/cn";
 import type { HydrogenComponentProps, ComponentLoaderArgs } from "@weaverse/hydrogen";
 import { createSchema } from "@weaverse/hydrogen";
 import { Money, Image, Link } from "@shopify/hydrogen";
@@ -456,7 +456,7 @@ export default function FeaturedCollection(props: FeaturedCollectionProps) {
     return (
       <div
         ref={ref}
-        className={clsx("featured-collection py-8 text-center", className)}
+        className={cn("featured-collection py-8 text-center", className)}
       >
         <div className="container mx-auto">
           <p>Select a collection to display its products</p>
@@ -468,7 +468,7 @@ export default function FeaturedCollection(props: FeaturedCollectionProps) {
   return (
     <div
       ref={ref}
-      className={clsx("featured-collection py-8", className)}
+      className={cn("featured-collection py-8", className)}
     >
       <div className="container mx-auto">
         {heading && (
@@ -477,7 +477,7 @@ export default function FeaturedCollection(props: FeaturedCollectionProps) {
 
         {/* Products grid */}
         <div
-          className={clsx(
+          className={cn(
             "grid gap-4",
             `sm:grid-cols-${columnsMobile}`,
             `lg:grid-cols-${columnsDesktop}`

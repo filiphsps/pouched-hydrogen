@@ -1,6 +1,5 @@
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import type {
     ProductCardFragment,
     ProductVariantFragment,
@@ -80,7 +79,7 @@ export function ProductCardOptions({
                                             />
                                         ) : (
                                             <span
-                                                className={clsx(
+                                                className={cn(
                                                     "inline-block h-full w-full rounded-full text-[0px]",
                                                     (!isValidColor(
                                                         swatchColor,
@@ -111,7 +110,7 @@ export function ProductCardOptions({
                             key={name}
                             variant="outline"
                             animate={false}
-                            className={clsx(
+                            className={cn(
                                 "border border-line-subtle px-2 py-1 text-center text-sm transition-colors",
                                 selectedValue === name &&
                                     "border-body bg-body text-body-inverse",

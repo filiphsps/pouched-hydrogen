@@ -2,7 +2,6 @@ import type {
     Product,
     ProductSortKeys,
 } from "@shopify/hydrogen/storefront-api-types";
-import clsx from "clsx";
 import { useEffect, useId } from "react";
 import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
@@ -10,6 +9,7 @@ import type { ProductCardFragment } from "storefront-api.generated";
 import { ProductCard } from "~/components/product/product-card";
 import { Skeleton } from "~/components/skeleton";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import { cn } from "~/utils/cn";
 
 interface CartBestSellersProps {
     count: number;
@@ -61,7 +61,7 @@ export function CartBestSellers({
                 {heading || t("cart.shopBestSellers")}
             </h5>
             <div
-                className={clsx([
+                className={cn([
                     "grid grid-cols-2 gap-x-6 gap-y-8",
                     "[&_.bundle-badge,&_.new-badge,&_.best-seller-badge]:hidden",
                     "sm:grid-cols-4 md:grid-cols-4",

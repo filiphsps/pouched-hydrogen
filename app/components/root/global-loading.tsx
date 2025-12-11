@@ -1,6 +1,6 @@
-import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "react-router";
+import { cn } from "~/utils/cn";
 
 export function GlobalLoading() {
     const transition = useNavigation();
@@ -35,7 +35,7 @@ export function GlobalLoading() {
         >
             <div
                 ref={ref}
-                className={clsx(
+                className={cn(
                     "h-full bg-linear-to-r from-neutral-500 to-gray-400 transition-all duration-500 ease-in-out",
                     transition.state === "idle" &&
                         (animating

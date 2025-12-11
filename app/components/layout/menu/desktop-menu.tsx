@@ -1,6 +1,5 @@
 import { CaretDownIcon } from "@phosphor-icons/react";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import clsx from "clsx";
 import { useState } from "react";
 import { Image } from "~/components/image";
 import Link from "~/components/link";
@@ -114,7 +113,7 @@ function MegaMenu({ items }: { items: SingleMenuItem[] }) {
                             <Link
                                 to={to}
                                 prefetch="intent"
-                                className={clsx([
+                                className={cn([
                                     "absolute inset-0 flex items-center justify-center p-2 text-center",
                                     "bg-black/20 group-hover/item:bg-black/40",
                                     "h6 text-body-inverse transition-all duration-300",

@@ -1,6 +1,6 @@
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import clsx from "clsx";
+import { cn } from "~/utils/cn";
 
 export interface SlideshowDotsProps extends VariantProps<typeof variants> {
     className?: string;
@@ -34,8 +34,6 @@ const variants = cva(
 export function Dots(props: SlideshowDotsProps) {
     const { className, dotsPosition, dotsColor } = props;
     return (
-        <div
-            className={clsx(variants({ dotsPosition, dotsColor }), className)}
-        />
+        <div className={cn(variants({ dotsPosition, dotsColor }), className)} />
     );
 }

@@ -1,10 +1,10 @@
 import { CaretDownIcon } from "@phosphor-icons/react";
 import { Content, Item, Root, Trigger } from "@radix-ui/react-dropdown-menu";
-import clsx from "clsx";
 import { useState } from "react";
 import Link from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import type { SingleMenuItem } from "~/types/menu";
+import { cn } from "~/utils/cn";
 
 export function DropdownMenu({ menuItem }: { menuItem: SingleMenuItem }) {
     const [open, setOpen] = useState(false);
@@ -13,7 +13,7 @@ export function DropdownMenu({ menuItem }: { menuItem: SingleMenuItem }) {
         <div onMouseLeave={() => setOpen(false)}>
             <Root open={open} onOpenChange={setOpen} modal={false}>
                 <Trigger
-                    className={clsx([
+                    className={cn([
                         "flex h-full cursor-pointer items-center gap-1.5 px-3 py-2",
                         "uppercase focus:outline-hidden",
                         "data-[state=open]:[&>svg]:rotate-180",

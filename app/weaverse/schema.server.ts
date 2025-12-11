@@ -1123,7 +1123,8 @@ export const themeSchema: HydrogenThemeSchema = {
                     type: "richtext",
                     name: "copyright",
                     label: "Copyright text",
-                    defaultValue: "© 2024 Weaverse. All rights reserved.",
+                    defaultValue:
+                        "© 2024 {{root.layout.shop.name}}. All rights reserved.",
                 },
             ],
         },

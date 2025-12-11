@@ -1,6 +1,5 @@
 import { createSchema } from "@weaverse/hydrogen";
 import { cva, type VariantProps } from "class-variance-authority";
-import clsx from "clsx";
 import Heading from "~/components/heading";
 import Link, {
     type LinkProps,
@@ -10,6 +9,7 @@ import Link, {
 import Paragraph from "~/components/paragraph";
 import type { SectionProps } from "~/components/section";
 import { Section } from "~/components/section";
+import { cn } from "~/utils/cn";
 
 const variants = cva("", {
     variants: {
@@ -77,7 +77,7 @@ export default function MapSection(props: MapSectionProps) {
         <Section
             ref={ref}
             {...rest}
-            containerClassName={clsx(
+            containerClassName={cn(
                 "flex items-start p-6 md:p-12",
                 variants({ height, alignment }),
             )}

@@ -4,8 +4,8 @@ import {
     IMAGES_PLACEHOLDERS,
     type WeaverseImage,
 } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import { Image } from "~/components/image";
+import { cn } from "~/utils/cn";
 
 interface TestimonialItemProps extends HydrogenComponentProps {
     ref: React.Ref<HTMLDivElement>;
@@ -34,7 +34,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
             ref={ref}
             {...rest}
             data-motion="slide-in"
-            className={clsx(hideOnMobile && "hidden sm:block")}
+            className={cn(hideOnMobile && "hidden sm:block")}
         >
             <figure className="rounded-sm bg-gray-50 p-6">
                 <blockquote>

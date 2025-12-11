@@ -1,6 +1,5 @@
 import { SlidersIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
-import clsx from "clsx";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import { Button } from "~/components/button";
@@ -78,7 +77,7 @@ function FiltersDrawer({
             </Dialog.Trigger>
             <Dialog.Portal>
                 <Dialog.Overlay
-                    className={clsx(
+                    className={cn(
                         "fixed inset-0 z-10 bg-black/50",
                         "data-[state=open]:animate-[fade-in_150ms_ease-out]",
                         "data-[state=closed]:animate-[fade-out_150ms_ease-in]",
@@ -86,8 +85,8 @@ function FiltersDrawer({
                 />
                 <Dialog.Content
                     onCloseAutoFocus={(e) => e.preventDefault()}
-                    className={clsx(
-                        "fixed inset-y-0 left-0 z-10 w-full bg-(--color-background) py-4 md:w-[360px]",
+                    className={cn(
+                        "fixed inset-y-0 left-0 z-10 w-full bg-background py-4 md:w-[360px]",
                         "data-[state=open]:animate-[enter-from-left_200ms_ease-out]",
                         "data-[state=closed]:animate-[exit-to-left_200ms_ease-in]",
                     )}

@@ -1,13 +1,13 @@
 import { HandbagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { type CartReturn, useAnalytics } from "@shopify/hydrogen";
-import clsx from "clsx";
 import { Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Await, useLocation, useRouteLoaderData } from "react-router";
 import { CartMain } from "~/components/cart/cart-main";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
+import { cn } from "~/utils/cn";
 import { useCartDrawerStore } from "./store";
 
 export function CartDrawer() {
@@ -49,7 +49,7 @@ export function CartDrawer() {
                             <HandbagIcon className="h-5 w-5" />
                             {cart && cart?.totalQuantity > 0 && (
                                 <div
-                                    className={clsx(
+                                    className={cn(
                                         "cart-count",
                                         "-right-1.5 absolute top-0",
                                         "flex h-4.5 min-w-4.5 items-center justify-center rounded-full px-1 text-center",
@@ -67,7 +67,7 @@ export function CartDrawer() {
                         </Dialog.Trigger>
                         <Dialog.Portal>
                             <Dialog.Overlay
-                                className={clsx(
+                                className={cn(
                                     "fixed inset-0 z-10 bg-black/50",
                                     "data-[state=open]:animate-[fade-in_150ms_ease-out]",
                                     "data-[state=closed]:animate-[fade-out_150ms_ease-in]",
@@ -75,7 +75,7 @@ export function CartDrawer() {
                             />
                             <Dialog.Content
                                 onCloseAutoFocus={(e) => e.preventDefault()}
-                                className={clsx(
+                                className={cn(
                                     "fixed inset-y-0 right-0 z-10 w-screen max-w-[480px] bg-background py-4",
                                     "data-[state=open]:animate-[enter-from-right_200ms_ease-out]",
                                     "data-[state=closed]:animate-[exit-to-right_200ms_ease-in]",

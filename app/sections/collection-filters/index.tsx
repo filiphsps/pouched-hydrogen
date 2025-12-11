@@ -1,5 +1,4 @@
 import { createSchema } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
@@ -9,6 +8,7 @@ import { ProductsPagination } from "~/components/filters/products-pagination";
 import { ToolsBar } from "~/components/filters/tools-bar";
 import { Image } from "~/components/image";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import { cn } from "~/utils/cn";
 
 export interface CollectionFiltersData {
     showBreadcrumb: boolean;
@@ -110,7 +110,7 @@ export default function CollectionFilters(props: CollectionFiltersProps) {
                     )}
                     {showBanner && banner && (
                         <div
-                            className={clsx([
+                            className={cn([
                                 "mt-6 overflow-hidden bg-gray-100",
                                 "rounded-(--banner-border-radius)",
                                 "h-(--banner-height-mobile) lg:h-(--banner-height-desktop)",

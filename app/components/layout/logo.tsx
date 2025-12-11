@@ -1,8 +1,8 @@
 import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import { Link } from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
+import { cn } from "~/utils/cn";
 
 export function Logo() {
     const { shopName } = useShopMenu();
@@ -23,7 +23,7 @@ export function Logo() {
                         <Image
                             data={logoData}
                             sizes="auto"
-                            className={clsx(
+                            className={cn(
                                 "main-logo",
                                 "mx-auto h-full max-w-full object-contain",
                                 "transition-opacity duration-300 ease-in group-hover/header:opacity-100",
@@ -35,7 +35,7 @@ export function Logo() {
                             <Image
                                 data={transparentLogoData}
                                 sizes="auto"
-                                className={clsx(
+                                className={cn(
                                     "transparent-logo",
                                     "absolute top-0 left-0 mx-auto h-full max-w-full object-contain",
                                     "transition-opacity duration-300 ease-in group-hover/header:opacity-0",

@@ -5,8 +5,8 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import clsx from "clsx";
 import { Image } from "~/components/image";
+import { cn } from "~/utils/cn";
 
 const variants = cva("h-(--image-height)", {
     variants: {
@@ -57,9 +57,7 @@ function ImageGalleryItem(props: ImageGalleryItemProps) {
         <Image
             ref={ref}
             {...rest}
-            className={clsx(
-                variants({ columnSpan, borderRadius, hideOnMobile }),
-            )}
+            className={cn(variants({ columnSpan, borderRadius, hideOnMobile }))}
             data-motion="slide-in"
             loading="lazy"
             data={data}

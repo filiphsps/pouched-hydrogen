@@ -1,6 +1,5 @@
 import { FunnelXIcon, XIcon } from "@phosphor-icons/react";
 import { Pagination } from "@shopify/hydrogen";
-import clsx from "clsx";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import {
@@ -169,7 +168,7 @@ function ProductsLoadedOnScroll(props: ProductsLoadedOnScrollProps) {
 
     return (
         <div
-            className={clsx([
+            className={cn([
                 "w-full gap-x-4 gap-y-6 lg:gap-y-10",
                 "grid grid-cols-(--cols-mobile) lg:grid-cols-(--cols-desktop)",
             ])}

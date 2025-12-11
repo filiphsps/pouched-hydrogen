@@ -3,7 +3,6 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import * as Dialog from "@radix-ui/react-dialog";
 import { flattenConnection } from "@shopify/hydrogen";
 import type { CustomerAddressInput } from "@shopify/hydrogen/customer-account-api-types";
-import clsx from "clsx";
 import type {
     CustomerAddressCreateMutation,
     CustomerAddressDeleteMutation,
@@ -24,6 +23,7 @@ import { Button } from "~/components/button";
 import Link from "~/components/link";
 import type { AccountOutletContext } from "~/routes/account/edit";
 import { getContext } from "~/types/context";
+import { cn } from "~/utils/cn";
 import { doLogout } from "../auth/logout";
 import {
     CREATE_ADDRESS_MUTATION,
@@ -391,7 +391,7 @@ export default function AccountEditAddressForm() {
                         name="defaultAddress"
                         id="defaultAddress"
                         defaultChecked={defaultAddress?.id === address?.id}
-                        className={clsx(
+                        className={cn(
                             "h-5 w-5 shrink-0",
                             "border border-line focus-visible:outline-hidden",
                             "disabled:cursor-not-allowed disabled:opacity-50",

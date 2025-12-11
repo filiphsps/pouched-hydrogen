@@ -43,7 +43,7 @@
         "useSortedClasses": {
           "level": "error",
           "options": {
-            "functions": ["clsx", "cva", "tw"]
+            "functions": ["clsx", "cva", "cn", "tw"]
           }
         }
       },

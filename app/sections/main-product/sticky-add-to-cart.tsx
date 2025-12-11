@@ -1,10 +1,10 @@
 import { Money, useOptimisticVariant } from "@shopify/hydrogen";
-import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import { Image } from "~/components/image";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import type { loader as productRouteLoader } from "~/routes/products/product";
+import { cn } from "~/utils/cn";
 import { useProductQtyStore } from "./product-quantity-selector";
 
 export function StickyAddToCart() {
@@ -50,7 +50,7 @@ export function StickyAddToCart() {
 
     return (
         <div
-            className={clsx(
+            className={cn(
                 "fixed bottom-0 left-0 z-40 w-full border-t bg-background px-4 py-3 transition-transform duration-300 md:px-8",
                 isVisible ? "translate-y-0" : "translate-y-full",
             )}

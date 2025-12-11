@@ -1,13 +1,13 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import clsx from "clsx";
 import type { CSSProperties } from "react";
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { useAnimation } from "~/hooks/use-animation";
+import { cn } from "~/utils/cn";
 
 const SECTION_HEIGHTS = {
     small: {
@@ -151,7 +151,7 @@ export default function HeroVideo(props: HeroVideoProps) {
             style={sectionStyle}
         >
             <div
-                className={clsx(
+                className={cn(
                     "relative flex items-center justify-center overflow-hidden",
                     "h-(--mobile-height) sm:h-(--desktop-height)",
                     "w-[max(var(--mobile-height)/9*16,100vw)] sm:w-[max(var(--desktop-height)/9*16,100vw)]",
@@ -182,7 +182,7 @@ export default function HeroVideo(props: HeroVideoProps) {
                 />
                 <div
                     ref={scope}
-                    className={clsx(variants({ gap }))}
+                    className={cn(variants({ gap }))}
                     suppressHydrationWarning
                 >
                     {children}

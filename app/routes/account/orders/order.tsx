@@ -1,12 +1,12 @@
 import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { flattenConnection } from "@shopify/hydrogen";
 import type { FulfillmentStatus } from "@shopify/hydrogen/customer-account-api-types";
-import clsx from "clsx";
 import type { OrderFragment, OrderQuery } from "customer-account-api.generated";
 import { useTranslation } from "react-i18next";
 import { type MetaFunction, redirect, useLoaderData } from "react-router";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
+import { cn } from "~/utils/cn";
 import type { Route } from "./+types/order";
 import { OrderLineItem } from "./order-line-item";
 import { CUSTOMER_ORDER_QUERY } from "./order-query";
@@ -151,7 +151,7 @@ export default function OrderDetails() {
                             </div>
                             {fulfillmentStatus && (
                                 <div
-                                    className={clsx(
+                                    className={cn(
                                         "mt-3 inline-block w-auto px-2.5 py-1 text-sm",
                                         "bg-body-subtle text-body-inverse",
                                     )}

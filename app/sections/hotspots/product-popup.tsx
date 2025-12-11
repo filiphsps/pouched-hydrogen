@@ -1,11 +1,11 @@
 import { Money } from "@shopify/hydrogen";
 import type { MediaImage } from "@shopify/hydrogen/storefront-api-types";
 import { IMAGES_PLACEHOLDERS } from "@weaverse/hydrogen";
-import clsx from "clsx";
 import type { CSSProperties } from "react";
 import type { ProductQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { cn } from "~/utils/cn";
 import type { HotspotsItemData } from "./item";
 
 interface ProductPopupProps
@@ -67,7 +67,7 @@ export function ProductPopup({
 
     return (
         <div
-            className={clsx(
+            className={cn(
                 "absolute z-10 py-1.5 text-sm transition-all sm:text-base",
                 "invisible opacity-0",
                 "w-40 sm:w-(--popup-width)",

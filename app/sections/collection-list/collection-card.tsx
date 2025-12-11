@@ -1,10 +1,10 @@
 import type { Collection } from "@shopify/hydrogen/storefront-api-types";
-import { clsx } from "clsx";
 import type { CSSProperties } from "react";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Overlay, type OverlayProps } from "~/components/overlay";
 import type { ImageAspectRatio } from "~/types/others";
+import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
 
 interface CollectionCardProps extends OverlayProps {
@@ -64,7 +64,7 @@ export function CollectionCard({
                         height={collectionImage.height || 400}
                         sizes="(max-width: 32em) 100vw, 45vw"
                         loading={loading}
-                        className={clsx(
+                        className={cn(
                             "absolute inset-0 z-0",
                             "transition-all duration-300",
                             "scale-100 will-change-transform group-hover:scale-[1.03]",

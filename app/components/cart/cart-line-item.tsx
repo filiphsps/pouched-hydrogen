@@ -6,7 +6,6 @@ import {
     OptimisticInput,
     useOptimisticData,
 } from "@shopify/hydrogen";
-import clsx from "clsx";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import type { CartApiQueryFragment } from "storefront-api.generated";
@@ -165,7 +164,7 @@ function ItemRemoveButton({
             inputs={{ lineIds: [lineId] }}
         >
             <button
-                className={clsx(
+                className={cn(
                     "flex h-8 w-8 items-center justify-center border-none",
                     className,
                 )}

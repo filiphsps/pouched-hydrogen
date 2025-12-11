@@ -6,9 +6,9 @@ import {
 } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import clsx from "clsx";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { cn } from "~/utils/cn";
 import type { SlideshowArrowsProps } from "./arrows";
 import { Arrows } from "./arrows";
 import type { SlideshowDotsProps } from "./dots";
@@ -109,7 +109,7 @@ export default function Slideshow(
                     showDots && {
                         el: ".slideshow-dots",
                         clickable: true,
-                        bulletClass: clsx(
+                        bulletClass: cn(
                             "dot cursor-pointer rounded-full",
                             "h-2.5 w-2.5 p-0",
                             "outline-2 outline-solid outline-transparent outline-offset-3",

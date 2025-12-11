@@ -5,7 +5,6 @@ import {
     getSeoMeta,
     Pagination,
 } from "@shopify/hydrogen";
-import { clsx } from "clsx";
 import { useEffect, useState } from "react";
 import type { MetaArgs } from "react-router";
 import { Form, useLoaderData } from "react-router";
@@ -147,7 +146,7 @@ export default function Search() {
                                     </PreviousLink>
                                 )}
                                 <div
-                                    className={clsx([
+                                    className={cn([
                                         "w-full gap-x-4 gap-y-6 lg:gap-y-10",
                                         "grid grid-cols-1 lg:grid-cols-4",
                                     ])}
