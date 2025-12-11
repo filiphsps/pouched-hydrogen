@@ -1,25 +1,15 @@
 # Netlify configuration for Hydrogen deployment
-# This file configures the build and deployment settings for Netlify
+# Following https://github.com/netlify/hydrogen-template/blob/main/netlify.toml
 
 [build]
   command = "DEPLOY_TARGET=netlify pnpm run build"
   publish = "dist/client"
 
-[build.environment]
-  NODE_VERSION = "24"
+[dev]
+  command = "pnpm run dev"
 
-# Headers for static assets
+# Set immutable caching for static files, because they have fingerprinted filenames
 [[headers]]
   for = "/assets/*"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/*.js"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/*.css"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=31560000, immutable"

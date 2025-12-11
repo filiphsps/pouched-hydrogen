@@ -15,14 +15,16 @@ const isNetlify = process.env.DEPLOY_TARGET === "netlify";
 /**
  * Gets the appropriate deployment plugin based on target.
  * - Oxygen (default): Uses mini-oxygen for local dev
- * - Netlify: Uses @netlify/vite-plugin-react-router with Edge Functions
+ * - Netlify: Uses @netlify/remix-edge-adapter for Edge Functions
+ *
+ * @see https://github.com/netlify/hydrogen-template/blob/main/vite.config.ts
  */
 async function getDeploymentPlugin() {
 	if (isNetlify) {
-		const { default: netlifyReactRouter } = await import(
-			"@netlify/vite-plugin-react-router"
+		const { netlifyPlugin } = await import(
+			"@netlify/remix-edge-adapter/plugin"
 		);
-		return netlifyReactRouter({ edge: true });
+		return netlifyPlugin();
 	}
 	return oxygen();
 }
