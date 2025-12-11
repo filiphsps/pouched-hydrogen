@@ -25,12 +25,30 @@ export default {
         try {
             // Check if running on Netlify and build proper Env object
             const isNetlify = Boolean(globalThis.Netlify);
-            const appEnv = isNetlify ? buildEnvFromNetlify() : env;
+            console.log(`[Server] isNetlify: ${isNetlify}`);
+
+            let appEnv = env;
+            if (isNetlify) {
+                console.log("[Server] Building Env from Netlify global");
+                appEnv = buildEnvFromNetlify();
+            } else {
+                console.log(
+                    "[Server] Using passed env object. Keys:",
+                    Object.keys(env || {}),
+                );
+            }
 
             const hydrogenContext = await createHydrogenRouterContext(
                 request,
                 appEnv,
                 executionContext,
+            );
+
+            console.log(
+                "[Server] Context created. Weaverse:",
+                hydrogenContext.weaverse,
+                "Storefront:",
+                hydrogenContext.storefront,
             );
 
             /**
