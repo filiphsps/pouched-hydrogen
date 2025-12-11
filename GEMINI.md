@@ -1,8 +1,6 @@
 # Gemini CLI Context
 
-> [!NOTE]
-> **ALL CONTEXT IS NOW SHARED.**
+> [!IMPORTANT]
+> **You MUST read and follow `.agent/project-context.md`**
 
-Please refer to: **[.agent/project-context.md](.agent/project-context.md)**
-
-This file contains the consolidated Project Overview, Rules, Commands, and Guidelines for all agents (Gemini and others).
+This file contains the consolidated Project Overview, Rules, Commands, and Guidelines.
