@@ -1,5 +1,5 @@
 import { parseGid } from "@shopify/hydrogen";
-import type { Route } from "./+types/robots";
+import type { Route } from "./+types/robots[.txt]";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
     const url = new URL(request.url);
@@ -12,7 +12,6 @@ export async function loader({ request, context }: Route.LoaderArgs) {
         status: 200,
         headers: {
             "Content-Type": "text/plain",
-
             "Cache-Control": `max-age=${60 * 60 * 24}`,
         },
     });

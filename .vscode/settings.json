@@ -11,6 +11,8 @@
         "editor.defaultFormatter": "biomejs.biome"
     },
     "cSpell.words": [
+        "adsbot",
+        "Ahrefs",
         "autoplay",
         "codegen",
         "isbot",
