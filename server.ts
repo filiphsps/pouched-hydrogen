@@ -21,6 +21,16 @@ export default {
         executionContext: ExecutionContext,
     ): Promise<Response> {
         try {
+            const url = new URL(request.url);
+            if (url.pathname.endsWith("/") && url.pathname.length > 1) {
+                return new Response(null, {
+                    status: 301,
+                    headers: {
+                        Location: url.pathname.slice(0, -1) + url.search,
+                    },
+                });
+            }
+
             const hydrogenContext = await createHydrogenRouterContext(
                 request,
                 env,
