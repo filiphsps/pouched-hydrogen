@@ -6,9 +6,9 @@
  * our Hydrogen context (storefront, session, weaverse).
  */
 import {
-	createContentSecurityPolicy,
-	type HydrogenRouterContextProvider,
-	storefrontRedirect,
+    createContentSecurityPolicy,
+    type HydrogenRouterContextProvider,
+    storefrontRedirect,
 } from "@shopify/hydrogen";
 import { createInstance } from "i18next";
 import { isbot } from "isbot";
@@ -16,32 +16,9 @@ import { renderToReadableStream } from "react-dom/server";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import type { AppLoadContext, EntryContext } from "react-router";
 import { ServerRouter } from "react-router";
-import { createHydrogenRouterContext } from "~/.server/context";
-import { buildEnvFromNetlify } from "~/lib/env.server";
 import { getWeaverseCsp } from "~/weaverse/csp";
 import i18n from "./i18n";
 import i18next from "./i18n.server";
-
-/**
- * Determines if we're running in Netlify Edge Functions environment.
- */
-const isNetlifyEdge = typeof globalThis.Netlify !== "undefined";
-
-/**
- * Get load context for Netlify Edge Functions.
- * This function is called by our custom handler to create
- * the Hydrogen router context for each request.
- *
- * @param request - The incoming HTTP request
- * @returns Hydrogen context with storefront, session, weaverse, etc.
- */
-export async function getLoadContext(
-	request: Request,
-): Promise<HydrogenRouterContextProvider> {
-	console.log("[Entry] getLoadContext called");
-	const env = buildEnvFromNetlify();
-	return createHydrogenRouterContext(request, env);
-}
 
 /**
  * Default export handles the actual rendering of the application.
@@ -55,80 +32,80 @@ export async function getLoadContext(
  * @param context - Hydrogen context (storefront, session, weaverse, etc.)
  */
 export default async function handleRequest(
-	request: Request,
-	responseStatusCode: number,
-	responseHeaders: Headers,
-	reactRouterContext: EntryContext,
-	context: AppLoadContext,
+    request: Request,
+    responseStatusCode: number,
+    responseHeaders: Headers,
+    reactRouterContext: EntryContext,
+    context: AppLoadContext,
 ) {
-	console.log("[Entry] handleRequest called");
+    console.log("[Entry] handleRequest called");
 
-	// Cast to Hydrogen context type for proper typing
-	const hydrogenContext = context as HydrogenRouterContextProvider;
+    // Cast to Hydrogen context type for proper typing
+    const hydrogenContext = context as HydrogenRouterContextProvider;
 
-	console.log(
-		"[Entry] handleRequest context keys:",
-		Object.keys(context || {}),
-	);
-	if (hydrogenContext?.storefront) {
-		console.log(
-			"[Entry] handleRequest storefront.i18n:",
-			hydrogenContext.storefront.i18n,
-		);
-	} else {
-		console.error("[Entry] handleRequest MISSING STOREFRONT IN CONTEXT");
-	}
+    console.log(
+        "[Entry] handleRequest context keys:",
+        Object.keys(context || {}),
+    );
+    if (hydrogenContext?.storefront) {
+        console.log(
+            "[Entry] handleRequest storefront.i18n:",
+            hydrogenContext.storefront.i18n,
+        );
+    } else {
+        console.error("[Entry] handleRequest MISSING STOREFRONT IN CONTEXT");
+    }
 
-	const { nonce, header, NonceProvider } = createContentSecurityPolicy({
-		...getWeaverseCsp(request, hydrogenContext),
-		shop: {
-			checkoutDomain:
-				hydrogenContext.env?.PUBLIC_CHECKOUT_DOMAIN ||
-				hydrogenContext.env?.PUBLIC_STORE_DOMAIN,
-			storeDomain: hydrogenContext.env?.PUBLIC_STORE_DOMAIN,
-		},
-	});
+    const { nonce, header, NonceProvider } = createContentSecurityPolicy({
+        ...getWeaverseCsp(request, hydrogenContext),
+        shop: {
+            checkoutDomain:
+                hydrogenContext.env?.PUBLIC_CHECKOUT_DOMAIN ||
+                hydrogenContext.env?.PUBLIC_STORE_DOMAIN,
+            storeDomain: hydrogenContext.env?.PUBLIC_STORE_DOMAIN,
+        },
+    });
 
-	const instance = createInstance();
-	const lng = hydrogenContext.storefront.i18n.language.toLowerCase();
-	const ns = i18next.getRouteNamespaces(reactRouterContext);
+    const instance = createInstance();
+    const lng = hydrogenContext.storefront.i18n.language.toLowerCase();
+    const ns = i18next.getRouteNamespaces(reactRouterContext);
 
-	await instance.use(initReactI18next).init({
-		...i18n,
-		lng,
-		ns,
-	});
+    await instance.use(initReactI18next).init({
+        ...i18n,
+        lng,
+        ns,
+    });
 
-	const body = await renderToReadableStream(
-		<I18nextProvider i18n={instance}>
-			<NonceProvider>
-				<ServerRouter
-					context={reactRouterContext}
-					url={request.url}
-					nonce={nonce}
-				/>
-			</NonceProvider>
-		</I18nextProvider>,
-		{
-			nonce,
-			signal: request.signal,
-			onError(error) {
-				console.error(error);
-				responseStatusCode = 500;
-			},
-		},
-	);
+    const body = await renderToReadableStream(
+        <I18nextProvider i18n={instance}>
+            <NonceProvider>
+                <ServerRouter
+                    context={reactRouterContext}
+                    url={request.url}
+                    nonce={nonce}
+                />
+            </NonceProvider>
+        </I18nextProvider>,
+        {
+            nonce,
+            signal: request.signal,
+            onError(error) {
+                console.error(error);
+                responseStatusCode = 500;
+            },
+        },
+    );
 
-	if (isbot(request.headers.get("user-agent"))) {
-		await body.allReady;
-	}
+    if (isbot(request.headers.get("user-agent"))) {
+        await body.allReady;
+    }
 
-	responseHeaders.set("Content-Type", "text/html");
-	// TODO: change to Content-Security-Policy when you ready with your CSP configs.
-	responseHeaders.set("Content-Security-Policy-Report-Only", header);
+    responseHeaders.set("Content-Type", "text/html");
+    // TODO: change to Content-Security-Policy when you ready with your CSP configs.
+    responseHeaders.set("Content-Security-Policy-Report-Only", header);
 
-	return new Response(body, {
-		headers: responseHeaders,
-		status: responseStatusCode,
-	});
+    return new Response(body, {
+        headers: responseHeaders,
+        status: responseStatusCode,
+    });
 }
