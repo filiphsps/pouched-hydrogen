@@ -107,10 +107,10 @@ export default function ProductAttributeBar(props: ProductAttributeBarProps) {
                             index === attributes.length - 1 && "rounded-r-lg",
                         )}
                     >
-                        <span className="text-body-subtle text-sm">
+                        <span className="font-normal text-body-subtle text-sm">
                             {attr.label}
                         </span>
-                        <span className="mt-1 font-medium text-sm">
+                        <span className="mt-1 font-semibold text-base">
                             {attr.value}
                         </span>
                     </div>

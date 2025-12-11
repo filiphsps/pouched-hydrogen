@@ -6,7 +6,6 @@ import {
 } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { ShopPayButton } from "@shopify/hydrogen";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -24,6 +23,7 @@ import { Skeleton } from "~/components/skeleton";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import { cn } from "~/utils/cn";
 import { ProductBadges } from "./badges";
+import { StyledShopPayButton } from "./styled-shop-pay-button";
 import { VariantPrices } from "./variant-prices";
 import { VariantSelector } from "./variant-selector";
 
@@ -107,7 +107,7 @@ export function QuickShop({
                             : "Sold out"}
                     </AddToCartButton>
                     {selectedVariant?.availableForSale && (
-                        <ShopPayButton
+                        <StyledShopPayButton
                             width="100%"
                             variantIdsAndQuantities={[
                                 {
@@ -116,7 +116,7 @@ export function QuickShop({
                                 },
                             ]}
                             storeDomain={storeDomain}
-                            className="-mt-2 overflow-hidden rounded-xl"
+                            className="-mt-2"
                         />
                     )}
                     <Link

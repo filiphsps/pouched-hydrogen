@@ -228,13 +228,17 @@ export function ProductMedia(props: ProductMediaProps) {
                         </Swiper>
                     </div>
                 )}
-                <div className="relative w-[calc(100%-var(--thumbs-width,0px))] lg:p-12">
+                <div className="-my-6 relative w-[calc(100%-var(--thumbs-width,0px))] lg:my-0 lg:p-12">
                     <Swiper
                         onSwiper={setSwiper}
                         thumbs={{ swiper: thumbsSwiper }}
                         slidesPerView={1}
                         spaceBetween={4}
                         autoHeight
+                        autoplay={{
+                            delay: 2500,
+                            disableOnInteraction: true,
+                        }}
                         loop
                         navigation={{
                             nextEl: ".media_slider__next",
@@ -242,7 +246,7 @@ export function ProductMedia(props: ProductMediaProps) {
                         }}
                         pagination={{ type: "fraction" }}
                         modules={[Pagination, Navigation, Thumbs]}
-                        className="overflow-visible pb-10 md:overflow-hidden md:pb-0 md:[&_.swiper-pagination]:hidden"
+                        className="overflow-visible md:overflow-hidden md:pb-0 lg:pb-10 [&_.swiper-pagination]:hidden"
                     >
                         {media.map((med, idx) => {
                             return (

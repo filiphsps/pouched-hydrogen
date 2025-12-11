@@ -11,7 +11,7 @@ const ProductMediaBelow = ({
 }: ProductMediaBelowProps & { ref?: RefObject<HTMLDivElement | null> }) => {
     const { children, ...rest } = props;
     return (
-        <div ref={ref} {...rest} className="mt-10 space-y-10">
+        <div ref={ref} {...rest} className="space-y-10 lg:mt-10">
             {children}
         </div>
     );

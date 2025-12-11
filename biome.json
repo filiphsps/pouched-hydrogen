@@ -40,7 +40,12 @@
         "useConsistentArrowReturn": "off",
         "noUnnecessaryConditions": "off",
         "noIncrementDecrement": "off",
-        "useSortedClasses": "error"
+        "useSortedClasses": {
+          "level": "error",
+          "options": {
+            "functions": ["clsx", "cva", "tw"]
+          }
+        }
       },
       "correctness": {
         "noUnusedVariables": "off",

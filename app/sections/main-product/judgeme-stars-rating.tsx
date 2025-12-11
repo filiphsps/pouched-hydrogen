@@ -110,13 +110,8 @@ const JudgemeStarsRating = ({
     }
 
     if (status === "error" || !data) {
-        return (
-            <div {...rest} ref={ref}>
-                <div className={clsx("text-gray-500", !errorText && "hidden")}>
-                    {errorText}
-                </div>
-            </div>
-        );
+        console.error(errorText);
+        return null;
     }
 
     return (

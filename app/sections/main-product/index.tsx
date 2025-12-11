@@ -124,11 +124,11 @@ export default function ProductInformation(
         <Section ref={ref} {...rest} overflow="unset" className="bg-gray-100">
             <div
                 className={clsx([
-                    "space-y-5 lg:grid lg:grid-cols-[1fr_clamp(360px,55%,550px)] lg:gap-[clamp(30px,5%,60px)] lg:space-y-0",
+                    "space-y-3 lg:grid lg:grid-cols-[1fr_clamp(360px,55%,550px)] lg:gap-[clamp(30px,5%,60px)] lg:space-y-0",
                 ])}
             >
                 {/* Left Column: Media + Below Content */}
-                <div className="flex min-w-0 flex-col gap-10">
+                <div className="flex min-w-0 flex-col gap-3">
                     <ProductMedia
                         key={handle}
                         mediaLayout={mediaLayout}
@@ -164,7 +164,8 @@ export default function ProductInformation(
                 {/* Right Column: Sticky Details */}
                 <div>
                     <div
-                        className="sticky flex flex-col justify-start gap-5 rounded-2xl bg-background p-6 shadow-xs lg:p-8"
+                        // Full-width on mobile
+                        className="-mx-4 sticky flex w-screen flex-col justify-start gap-5 rounded-none bg-background p-4 shadow-xs lg:mx-0 lg:w-auto lg:rounded-2xl lg:p-8"
                         style={{ top: "calc(var(--height-nav) + 20px)" }}
                     >
                         {detailsChildren}

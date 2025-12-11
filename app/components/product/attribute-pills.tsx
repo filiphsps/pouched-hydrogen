@@ -13,7 +13,7 @@ import {
  * CVA variant definition for attribute pill styling.
  */
 const pillVariants = cva(
-    "rounded-full bg-background text-xs font-medium text-gray-700",
+    "rounded-full bg-background font-medium text-gray-700 text-xs",
     {
         variants: {
             size: {

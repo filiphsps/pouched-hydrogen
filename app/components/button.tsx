@@ -7,7 +7,7 @@ import { cn } from "~/utils/cn";
 
 export const variants = cva(
     [
-        "relative inline-flex items-center justify-center",
+        "relative inline-flex items-center justify-center overflow-hidden rounded-full",
         "whitespace-nowrap font-normal text-base leading-tight",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50!",
         "transition-all duration-200",
@@ -23,6 +23,7 @@ export const variants = cva(
                     "hover:text-(--btn-primary-bg)",
                     "hover:bg-(--btn-primary-text)",
                     "hover:border-(--btn-primary-bg)",
+                    "shadow-xs",
                 ],
                 secondary: [
                     "border px-4 py-3",
@@ -136,7 +137,7 @@ export const Button = ({
             type={type}
             {...rest}
             data-motion={animate ? "fade-up" : undefined}
-            className={cn("rounded-xl", variants({ variant, className }))}
+            className={cn(variants({ variant, className }))}
             whileTap={{ scale: 0.98 }}
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}

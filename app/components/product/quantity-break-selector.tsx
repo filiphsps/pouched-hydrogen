@@ -92,30 +92,35 @@ export function QuantityBreakSelector({
                     {label || "Quantity"}
                 </span>
             )}
-            <div className="flex flex-wrap items-end justify-between gap-2">
-                <ToggleGroup.Root
-                    type="single"
-                    value={currentValue}
-                    onValueChange={handleValueChange}
-                    className="flex shrink-0 flex-wrap items-end gap-2"
-                    data-testid="quantity-break-selector"
-                >
-                    {breaks.map((breakOption) => (
-                        <QuantityBreakButton
-                            key={breakOption.quantity}
-                            quantity={breakOption.quantity}
-                            discountPercentage={breakOption.discountPercentage}
-                            value={String(breakOption.quantity)}
-                            selected={
-                                !isCustomMode &&
-                                selectedQuantity === breakOption.quantity
-                            }
-                            className="h-14"
-                        />
-                    ))}
-                </ToggleGroup.Root>
+            <div className="flex flex-wrap items-end justify-between gap-4">
+                <div className="flex flex-wrap items-end justify-between gap-2">
+                    <ToggleGroup.Root
+                        type="single"
+                        value={currentValue}
+                        onValueChange={handleValueChange}
+                        className="flex shrink-0 flex-wrap items-end gap-2"
+                        data-testid="quantity-break-selector"
+                    >
+                        {breaks.map((breakOption) => (
+                            <QuantityBreakButton
+                                key={breakOption.quantity}
+                                quantity={breakOption.quantity}
+                                discountPercentage={
+                                    breakOption.discountPercentage
+                                }
+                                value={String(breakOption.quantity)}
+                                selected={
+                                    !isCustomMode &&
+                                    selectedQuantity === breakOption.quantity
+                                }
+                                className="h-14"
+                            />
+                        ))}
+                    </ToggleGroup.Root>
+                </div>
+
                 {/* Custom quantity input - grows to fill space, wraps with min-width */}
-                <div className="min-w-32 flex-1">
+                <div className="min-w-36 flex-1">
                     <Quantity
                         value={selectedQuantity}
                         onChange={handleCustomQuantityChange}

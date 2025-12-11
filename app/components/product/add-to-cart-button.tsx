@@ -92,6 +92,7 @@ function AddToCartButtonContent({
                 value={JSON.stringify(analytics)}
             />
             <Button
+                variant="primary"
                 type="submit"
                 className={cn(
                     "relative hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",

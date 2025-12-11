@@ -93,7 +93,7 @@ export function Quantity(props: QuantityProps) {
             )}
             <div
                 className={cn(
-                    "flex w-full items-center rounded-xl border border-line",
+                    "flex w-full items-center rounded-full border border-line",
                     className,
                 )}
             >

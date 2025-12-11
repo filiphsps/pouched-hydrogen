@@ -1,4 +1,4 @@
-import { Money, ShopPayButton } from "@shopify/hydrogen";
+import { Money } from "@shopify/hydrogen";
 import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
 import {
     type ComponentLoaderArgs,
@@ -21,6 +21,7 @@ import { ProductBadges, SoldOutBadge } from "~/components/product/badges";
 import { BundledVariants } from "~/components/product/bundled-variants";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
+import { StyledShopPayButton } from "~/components/product/styled-shop-pay-button";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
 import { layoutInputs, Section } from "~/components/section";
@@ -209,7 +210,7 @@ export default function SingleProduct(props: SingleProductProps) {
                             {atcText}
                         </AddToCartButton>
                         {selectedVariant?.availableForSale && (
-                            <ShopPayButton
+                            <StyledShopPayButton
                                 width="100%"
                                 variantIdsAndQuantities={[
                                     {
@@ -218,7 +219,7 @@ export default function SingleProduct(props: SingleProductProps) {
                                     },
                                 ]}
                                 storeDomain={storeDomain}
-                                className="-mt-2 overflow-hidden rounded-xl"
+                                className="-mt-2"
                             />
                         )}
                         <Link

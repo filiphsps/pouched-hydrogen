@@ -7,12 +7,12 @@ import { cn } from "~/utils/cn";
  * Matches reference design with solid black selected state and discount badges.
  */
 const quantityBreakButtonVariants = cva(
-    "relative flex flex-col items-center justify-center transition-all duration-200 rounded-lg px-4 py-3 min-w-14 border text-sm font-medium cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+    "relative flex min-w-14 cursor-pointer flex-col items-center justify-center rounded-lg border px-4 py-3 font-medium text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
     {
         variants: {
             selected: {
-                true: "bg-body text-background border-body",
-                false: "bg-transparent text-body border-line hover:border-body",
+                true: "border-body bg-body text-background",
+                false: "border-line bg-transparent text-body hover:border-body",
             },
         },
         defaultVariants: {
@@ -56,7 +56,7 @@ export function QuantityBreakButton({
             {/* Discount badge positioned above the button */}
             {discountPercentage != null && discountPercentage > 0 && (
                 <span
-                    className="mb-2 whitespace-nowrap rounded-full bg-teal-400 px-1.5 py-0.5 text-center font-semibold text-white text-xs"
+                    className="mb-1 whitespace-nowrap rounded-full bg-teal-400 px-1.5 py-0.5 text-center font-semibold text-white text-xs"
                     data-testid={`discount-badge-${quantity}`}
                 >
                     -{discountPercentage}%

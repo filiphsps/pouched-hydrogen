@@ -1,12 +1,12 @@
 import {
     getAdjacentAndFirstAvailableVariants,
-    ShopPayButton,
     useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useTranslation } from "react-i18next";
 import { useLoaderData } from "react-router";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
+import { StyledShopPayButton } from "~/components/product/styled-shop-pay-button";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { isCombinedListing } from "~/utils/combined-listings";
 import { useProductQtyStore } from "./product-quantity-selector";
@@ -55,6 +55,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
             ref={ref}
             {...rest}
             id="atc-buttons"
+            style={{ "--shop-pay-button-height": "100%" }}
             className="space-y-2 empty:hidden"
         >
             <AddToCartButton
@@ -68,12 +69,12 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
                     },
                 ]}
                 data-test="add-to-cart"
-                className="w-full uppercase"
+                className="h-14 w-full uppercase"
             >
                 {atcButtonText}
             </AddToCartButton>
             {showShopPayButton && selectedVariant?.availableForSale && (
-                <ShopPayButton
+                <StyledShopPayButton
                     width="100%"
                     variantIdsAndQuantities={[
                         {
@@ -82,7 +83,6 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
                         },
                     ]}
                     storeDomain={storeDomain}
-                    className="overflow-hidden rounded-xl"
                 />
             )}
         </div>

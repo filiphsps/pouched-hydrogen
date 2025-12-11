@@ -110,7 +110,7 @@ export function CartLineQuantityAdjust({
             <label htmlFor={`quantity-${lineId}`} className="sr-only">
                 {t("cart.quantityLabel", { quantity: optimisticQuantity })}
             </label>
-            <div className="flex min-w-30 items-center justify-evenly rounded-xl border border-line-subtle">
+            <div className="flex min-w-30 items-center justify-evenly rounded-full border border-line-subtle">
                 <UpdateCartButton
                     lines={[{ id: lineId, quantity: prevQuantity }]}
                 >
