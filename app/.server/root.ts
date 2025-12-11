@@ -70,7 +70,7 @@ export function loadDeferredData({ context }: { context: AppLoadContext }) {
             (
                 customerAccount as typeof customerAccount | undefined
             )?.isLoggedIn() ?? false,
-        cart: cart.get(),
+        cart: cart?.get ? cart.get() : Promise.resolve(null),
     };
 }
 

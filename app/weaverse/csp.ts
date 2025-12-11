@@ -5,9 +5,8 @@ export function getWeaverseCsp(
     context: HydrogenRouterContextProvider,
 ) {
     const url = new URL(request.url);
-    // Get weaverse host from query params
     const weaverseHost =
-        url.searchParams.get("weaverseHost") || context.env.WEAVERSE_HOST;
+        url.searchParams.get("weaverseHost") || context?.env?.WEAVERSE_HOST;
     const isDesignMode = url.searchParams.get("weaverseHost");
     const weaverseHosts = [
         "*.weaverse.io",
