@@ -15,6 +15,7 @@ import { CartMain } from "~/components/cart/cart-main";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
+import { Title } from "~/components/title";
 import { getContext } from "~/types/context";
 import { getFeaturedProducts } from "~/utils/featured-products";
 import type { Route } from "./+types/cart-page";
@@ -119,9 +120,9 @@ export default function CartRoute() {
     return (
         <>
             <Section width="fixed" verticalPadding="medium">
-                <h1 className="h3 mb-8 text-center md:mb-16">
+                <Title as="h1" size="2xl" className="mb-8 text-center md:mb-16">
                     Cart ({cart?.totalQuantity || 0})
-                </h1>
+                </Title>
                 <CartMain layout="page" cart={cart} />
                 <Analytics.CartView />
             </Section>
@@ -137,9 +138,13 @@ export default function CartRoute() {
                                 verticalPadding="large"
                                 gap={32}
                             >
-                                <h2 className="h4 text-center">
+                                <Title
+                                    as="h2"
+                                    size="xl"
+                                    className="text-center"
+                                >
                                     More from our best sellers
-                                </h2>
+                                </Title>
                                 <Swimlane className="gap-4">
                                     {products.nodes.map((product) => (
                                         <ProductCard

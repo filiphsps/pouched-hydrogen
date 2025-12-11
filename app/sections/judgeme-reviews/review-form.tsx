@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLoaderData } from "react-router";
 import { Button } from "~/components/button";
+import { Title } from "~/components/title";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
@@ -98,9 +99,13 @@ export function ReviewForm({
                 <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
                     <CheckIcon className="h-8 w-8 text-green-600" />
                 </div>
-                <h3 className="mb-2 font-semibold text-green-900 text-xl">
+                <Title
+                    as="h3"
+                    size="xl"
+                    className="mb-2 font-semibold text-green-900"
+                >
                     {t("judgeme.form.success.title")}
-                </h3>
+                </Title>
                 <p className="text-gray-600">
                     {t("judgeme.form.success.message")}
                 </p>
@@ -119,9 +124,13 @@ export function ReviewForm({
                 <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
                     <WarningCircleIcon className="h-8 w-8 text-red-600" />
                 </div>
-                <h3 className="mb-2 font-semibold text-red-900 text-xl">
+                <Title
+                    as="h3"
+                    size="xl"
+                    className="mb-2 font-semibold text-red-900"
+                >
                     {t("judgeme.form.error.title")}
-                </h3>
+                </Title>
                 <p className="text-gray-600">
                     {t("judgeme.form.error.message")}
                 </p>
@@ -145,9 +154,13 @@ export function ReviewForm({
                 )}
             >
                 <div className="space-y-2">
-                    <h2 className="text-center font-bold text-2xl text-gray-900">
+                    <Title
+                        as="h2"
+                        size="2xl"
+                        className="text-center font-bold text-gray-900"
+                    >
                         {t("judgeme.form.writeReview.title")}
-                    </h2>
+                    </Title>
                     <p className="text-center text-gray-600">
                         {t("judgeme.form.writeReview.subtitle")}
                     </p>

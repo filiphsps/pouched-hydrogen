@@ -1,3 +1,4 @@
+import { Title } from "~/components/title";
 import { cn } from "~/utils/cn";
 
 /**
@@ -44,12 +45,14 @@ export function ProductFactsTable({
             data-testid="product-facts-table"
         >
             {title && (
-                <h3
-                    className="font-medium text-body-subtle text-sm"
+                <Title
+                    as="h3"
+                    size="sm"
+                    className="font-medium text-body-subtle"
                     data-testid="facts-title"
                 >
                     {title}
-                </h3>
+                </Title>
             )}
             <div className="divide-y divide-line">
                 {facts.map((fact) => (

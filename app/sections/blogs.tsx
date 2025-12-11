@@ -5,6 +5,7 @@ import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import { Title } from "~/components/title";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio, getImageLoadingPriority } from "~/utils/image";
@@ -35,7 +36,9 @@ export default function Blogs(props: BlogsProps) {
     if (blog) {
         return (
             <Section ref={ref} {...rest}>
-                <h4 className="text-center font-medium">{blog.title}</h4>
+                <Title as="h4" size="2xl" className="text-center font-medium">
+                    {blog.title}
+                </Title>
                 <div className="grid grid-cols-1 gap-x-4 gap-y-12 lg:grid-cols-3">
                     {articles.map((article, i) => (
                         <ArticleCard

@@ -8,6 +8,7 @@ import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
+import { Title } from "~/components/title";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
@@ -179,9 +180,13 @@ export function NewsletterPopup() {
                                         : "w-full",
                                 )}
                             >
-                                <h3 className="mb-4 font-semibold text-2xl">
+                                <Title
+                                    as="h3"
+                                    size="2xl"
+                                    className="mb-4 font-semibold"
+                                >
                                     {newsletterPopupHeading}
-                                </h3>
+                                </Title>
                                 <p className="mb-6 text-body-subtle">
                                     {newsletterPopupDescription}
                                 </p>

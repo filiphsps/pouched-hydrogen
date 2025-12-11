@@ -8,6 +8,7 @@ import type { OrderItemFragment } from "customer-account-api.generated";
 import type * as React from "react";
 import { Link, type MetaFunction, useLoaderData } from "react-router";
 import { Section } from "~/components/section";
+import { Title } from "~/components/title";
 import type { Route } from "./+types/list";
 
 // https://shopify.dev/docs/api/customer/latest/objects/Order
@@ -106,7 +107,9 @@ export default function Orders() {
         >
             <div className="space-y-6">
                 <div className="space-y-4">
-                    <h1 className="h4 font-medium">Orders</h1>
+                    <Title as="h1" size="xl" className="font-medium">
+                        Orders
+                    </Title>
                 </div>
                 {orders.nodes.length ? (
                     <PaginatedOrders connection={orders}>

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import { Image } from "~/components/image";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
+import { Title } from "~/components/title";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
 import { useProductQtyStore } from "./product-quantity-selector";
@@ -68,7 +69,9 @@ export function StickyAddToCart() {
                         </div>
                     )}
                     <div>
-                        <h3 className="font-medium text-sm">{product.title}</h3>
+                        <Title as="h3" size="sm" className="font-medium">
+                            {product.title}
+                        </Title>
                         <div className="text-body-subtle text-sm">
                             {selectedVariant.title !== "Default Title" &&
                                 selectedVariant.title}

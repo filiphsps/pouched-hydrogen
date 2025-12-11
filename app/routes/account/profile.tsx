@@ -11,6 +11,7 @@ import {
 } from "react-router";
 import { Button } from "~/components/button";
 import { Section } from "~/components/section";
+import { Title } from "~/components/title";
 import type { Route } from "./+types/profile";
 
 // https://shopify.dev/docs/api/customer/latest/mutations/customerUpdate
@@ -132,9 +133,9 @@ export default function AccountProfile() {
         >
             <div className="space-y-6">
                 <div className="space-y-4">
-                    <h1 className="h4 font-medium">
+                    <Title as="h1" size="xl" className="font-medium">
                         {t("account.personalInfo")}
-                    </h1>
+                    </Title>
                 </div>
                 <Form method="PUT" className="space-y-6">
                     <fieldset className="space-y-4">

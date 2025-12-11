@@ -14,6 +14,7 @@ export function GlobalStyle() {
             colorTextInverse,
             colorLine,
             colorLineSubtle,
+            colorMutedForeground,
             topbarTextColor,
             topbarBgColor,
             headerBgColor,
@@ -62,6 +63,7 @@ export function GlobalStyle() {
               --color-text-inverse: ${colorTextInverse};
               --color-line: ${colorLine};
               --color-line-subtle: ${colorLineSubtle};
+              --color-muted-foreground: ${colorMutedForeground};
 
               /* Colors (header & footer) */
               --color-topbar-text: ${topbarTextColor};

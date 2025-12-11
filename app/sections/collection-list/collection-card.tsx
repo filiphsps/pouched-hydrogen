@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import { Image } from "~/components/image";
 import { Link } from "~/components/link";
 import { Overlay, type OverlayProps } from "~/components/overlay";
+import { Title } from "~/components/title";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
@@ -71,9 +72,14 @@ export function CollectionCard({
                         )}
                     />
                 ) : null}
-                <h5 style={{ color: collectionNameColor }} className="z-1">
+                <Title
+                    as="h5"
+                    size="lg"
+                    style={{ color: collectionNameColor }}
+                    className="z-1"
+                >
                     {collection.title}
-                </h5>
+                </Title>
                 <Overlay
                     enableOverlay={enableOverlay}
                     overlayColor={overlayColor}

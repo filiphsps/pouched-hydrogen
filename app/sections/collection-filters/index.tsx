@@ -8,6 +8,7 @@ import { ProductsPagination } from "~/components/filters/products-pagination";
 import { ToolsBar } from "~/components/filters/tools-bar";
 import { Image } from "~/components/image";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import { Title } from "~/components/title";
 import { cn } from "~/utils/cn";
 
 export interface CollectionFiltersData {
@@ -102,7 +103,9 @@ export default function CollectionFilters(props: CollectionFiltersProps) {
                             className="mb-2.5"
                         />
                     )}
-                    <h3>{collection.title}</h3>
+                    <Title as="h3" size="2xl">
+                        {collection.title}
+                    </Title>
                     {showDescription && collection.description && (
                         <p className="mt-2.5 text-body-subtle">
                             {collection.description}

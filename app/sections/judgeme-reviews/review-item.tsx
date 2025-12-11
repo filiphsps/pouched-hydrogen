@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { StarRating } from "~/components/star-rating";
+import { Title } from "~/components/title";
 import type { JudgeMeReviewType, JudgemeReviewImage } from "~/types/judgeme";
 import { cn } from "~/utils/cn";
 import { formatDate } from "~/utils/misc";
@@ -75,9 +76,13 @@ export function ReviewItem({
             {/* Right column - Review content */}
             <div className="grow space-y-4">
                 {showReviewTitle && review.title && (
-                    <h4 className="font-semibold text-gray-900 text-lg leading-none">
+                    <Title
+                        as="h4"
+                        size="lg"
+                        className="font-semibold text-gray-900 leading-none"
+                    >
                         {review.title}
-                    </h4>
+                    </Title>
                 )}
                 {/* Review body */}
                 {review.body && (

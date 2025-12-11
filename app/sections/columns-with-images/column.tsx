@@ -9,6 +9,7 @@ import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
 import { Image } from "~/components/image";
 import Link, { type LinkProps, linkContentInputs } from "~/components/link";
+import { Title } from "~/components/title";
 import type { ImageAspectRatio } from "~/types/others";
 import { calculateAspectRatio } from "~/utils/image";
 
@@ -70,7 +71,11 @@ function ColumnWithImageItem(props: ColumnWithImageItemProps) {
                 aspectRatio={calculateAspectRatio(imageSrc, imageAspectRatio)}
             />
             <div className="mt-6 w-full space-y-3.5 text-center">
-                {heading && <h6>{heading}</h6>}
+                {heading && (
+                    <Title as="h6" size="lg">
+                        {heading}
+                    </Title>
+                )}
                 {content && <p dangerouslySetInnerHTML={{ __html: content }} />}
                 {text && (
                     <Link variant={variant} to={to}>

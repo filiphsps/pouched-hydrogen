@@ -13,6 +13,7 @@ import {
 import type { ArticleQuery } from "storefront-api.generated";
 import { Image } from "~/components/image";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import { Title } from "~/components/title";
 import type { RootLoader } from "~/root";
 
 interface BlogPostProps extends SectionProps {
@@ -53,7 +54,9 @@ export default function BlogPost(props: BlogPostProps) {
             )}
             <div className="space-y-5 py-4 text-center lg:py-16">
                 <div className="text-body-subtle">{formattedDate}</div>
-                <h1 className="h3 leading-tight!">{title}</h1>
+                <Title as="h1" size="3xl" className="leading-tight!">
+                    {title}
+                </Title>
                 {author?.name && (
                     <div className="font-medium uppercase">
                         by <span>{author.name}</span>

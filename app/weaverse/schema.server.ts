@@ -216,6 +216,12 @@ export const themeSchema: HydrogenThemeSchema = {
                     defaultValue: "#F0F0F0",
                 },
                 {
+                    type: "color",
+                    label: "Muted foreground",
+                    name: "colorMutedForeground",
+                    defaultValue: "#888888",
+                },
+                {
                     type: "heading",
                     label: "Announcement bar",
                 },

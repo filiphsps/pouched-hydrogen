@@ -30,6 +30,7 @@
   --color-background: var(--color-background);
   --color-line: var(--color-line);
   --color-line-subtle: var(--color-line-subtle);
+  --color-muted-foreground: var(--color-muted-foreground);
 
   --text-scale: calc(
     var(--min-size-px) +

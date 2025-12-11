@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { type MetaFunction, redirect, useLoaderData } from "react-router";
 import { Link } from "~/components/link";
 import { Section } from "~/components/section";
+import { Title } from "~/components/title";
 import { cn } from "~/utils/cn";
 import type { Route } from "./+types/order";
 import { OrderLineItem } from "./order-line-item";
@@ -89,9 +90,9 @@ export default function OrderDetails() {
         <Section width="fixed" verticalPadding="medium">
             <div className="w-full lg:py-6">
                 <div className="mb-8 flex flex-col gap-4">
-                    <h1 className="h4 font-medium">
+                    <Title as="h1" size="xl" className="font-medium">
                         {t("account.orders.detail")}
-                    </h1>
+                    </Title>
                     <Link
                         to="/account"
                         className="w-fit items-center gap-2 text-body-subtle after:bg-body-subtle"

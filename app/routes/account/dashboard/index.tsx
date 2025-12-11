@@ -6,6 +6,7 @@ import { Await, Form, useLoaderData, useOutletContext } from "react-router";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
+import { Title } from "~/components/title";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as accountLoader } from "../layout";
 import { AccountDetails } from "./account-details";
@@ -40,7 +41,9 @@ export default function AccountDashboard() {
             containerClassName="space-y-10"
         >
             <div className="space-y-4">
-                <h1 className="h4 font-medium">{t(heading)}</h1>
+                <Title as="h1" size="xl" className="font-medium">
+                    {t(heading)}
+                </Title>
                 <Form method="post" action={signOutUrl}>
                     <button
                         type="submit"
@@ -64,7 +67,9 @@ export default function AccountDashboard() {
                     >
                         {({ featuredProducts: products }) => (
                             <div className="space-y-8 pt-20">
-                                <h5>{t("account.featuredProducts.title")}</h5>
+                                <Title as="h5" size="lg">
+                                    {t("account.featuredProducts.title")}
+                                </Title>
                                 <Swimlane>
                                     {products.nodes.map((product) => (
                                         <ProductCard

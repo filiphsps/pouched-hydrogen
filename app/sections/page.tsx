@@ -3,6 +3,7 @@ import { useLoaderData } from "react-router";
 import type { PageDetailsQuery } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import { Title } from "~/components/title";
 
 interface PageProps extends SectionProps {
     ref: React.Ref<HTMLElement>;
@@ -24,7 +25,9 @@ export default function Page(props: PageProps) {
                     <span>/</span>
                     <span>{page.title}</span>
                 </div>
-                <h1 className="h2 mb-8 text-center md:mb-16">{page.title}</h1>
+                <Title as="h1" size="3xl" className="mb-8 text-center md:mb-16">
+                    {page.title}
+                </Title>
                 <div
                     suppressHydrationWarning
                     dangerouslySetInnerHTML={{ __html: page.body }}

@@ -19,6 +19,7 @@ import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
 import { Skeleton } from "~/components/skeleton";
+import { Title } from "~/components/title";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import { cn } from "~/utils/cn";
 import { ProductBadges } from "./badges";
@@ -66,7 +67,9 @@ export function QuickShop({
                             selectedVariant={selectedVariant}
                         />
                         <div className="flex flex-col gap-2">
-                            <h5>{product.title}</h5>
+                            <Title as="h5" size="xl">
+                                {product.title}
+                            </Title>
                         </div>
                         <VariantPrices variant={selectedVariant} />
                         <JudgemeStarsRating

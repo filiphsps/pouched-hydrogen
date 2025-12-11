@@ -3,6 +3,7 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { RefObject } from "react";
 import { useLoaderData } from "react-router";
 import { BundledVariants } from "~/components/product/bundled-variants";
+import { Title } from "~/components/title";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 
 interface ProductBundledVariantsProps extends HydrogenComponentProps {
@@ -29,7 +30,9 @@ const ProductBundledVariants = ({
 
     return (
         <div ref={ref} {...rest} className="space-y-3 empty:hidden">
-            <h4 className="text-2xl">{headingText}</h4>
+            <Title as="h4" size="2xl">
+                {headingText}
+            </Title>
             <BundledVariants
                 variants={bundledVariants as ProductVariantComponent[]}
             />

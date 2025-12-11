@@ -11,6 +11,7 @@ import { Image } from "~/components/image";
 import Link, { type LinkStyles, linkStylesInputs } from "~/components/link";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
+import { Title } from "~/components/title";
 import { useAnimation } from "~/hooks/use-animation";
 import type { ImageAspectRatio } from "~/types/others";
 import { cn } from "~/utils/cn";
@@ -167,9 +168,13 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
                             )}
                         >
                             {contentPosition === "over" ? (
-                                <h5>{collection.title}</h5>
+                                <Title as="h5" size="lg">
+                                    {collection.title}
+                                </Title>
                             ) : (
-                                <h6>{collection.title}</h6>
+                                <Title as="h6" size="base">
+                                    {collection.title}
+                                </Title>
                             )}
                             {contentPosition === "over" && buttonText && (
                                 <Link

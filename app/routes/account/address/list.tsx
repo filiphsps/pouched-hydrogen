@@ -14,6 +14,7 @@ import {
 } from "react-router";
 import { Button } from "~/components/button";
 import { Section } from "~/components/section";
+import { Title } from "~/components/title";
 import type { Route } from "./+types/list";
 import {
     CREATE_ADDRESS_MUTATION,
@@ -273,12 +274,16 @@ export default function Addresses() {
         >
             <div className="space-y-8">
                 <div className="space-y-4">
-                    <h1 className="h4">Addresses</h1>
+                    <Title as="h1" size="xl">
+                        Addresses
+                    </Title>
                 </div>
                 {addresses.edges.length ? (
                     <div className="space-y-8">
                         <div className="space-y-4">
-                            <h3 className="text-lg">Add New Address</h3>
+                            <Title as="h3" size="lg">
+                                Add New Address
+                            </Title>
                             <NewAddressForm />
                         </div>
                         <div className="border-border border-t" />
@@ -344,7 +349,9 @@ function ExistingAddresses({
 }: Pick<CustomerDetailsFragment, "addresses" | "defaultAddress">) {
     return (
         <div className="space-y-6">
-            <h3 className="text-lg">Saved Addresses</h3>
+            <Title as="h3" size="lg">
+                Saved Addresses
+            </Title>
             <div className="grid gap-6 md:grid-cols-2">
                 {addresses.edges.map(({ node: address }) => (
                     <AddressForm

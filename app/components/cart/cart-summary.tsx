@@ -10,6 +10,7 @@ import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
+import { Title } from "~/components/title";
 import type { CartLayoutType } from "~/types/others";
 import { cn } from "~/utils/cn";
 import {
@@ -59,9 +60,9 @@ export function CartSummary({
                     "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
             )}
         >
-            <h2 id="summary-heading" className="sr-only">
+            <Title as="h2" id="summary-heading" className="sr-only">
                 {t("cart.orderSummary")}
-            </h2>
+            </Title>
             {appliedGiftCards?.length > 0 && (
                 <div className="mb-4 flex flex-wrap justify-end gap-2">
                     {appliedGiftCards.map((giftCard) => {

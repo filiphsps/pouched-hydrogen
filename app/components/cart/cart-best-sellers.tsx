@@ -8,6 +8,7 @@ import { useFetcher } from "react-router";
 import type { ProductCardFragment } from "storefront-api.generated";
 import { ProductCard } from "~/components/product/product-card";
 import { Skeleton } from "~/components/skeleton";
+import { Title } from "~/components/title";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { cn } from "~/utils/cn";
 
@@ -57,9 +58,9 @@ export function CartBestSellers({
 
     return (
         <>
-            <h5 className="mt-4 mb-2 text-center lg:mb-6">
+            <Title as="h5" size="lg" className="mt-4 mb-2 text-center lg:mb-6">
                 {heading || t("cart.shopBestSellers")}
-            </h5>
+            </Title>
             <div
                 className={cn([
                     "grid grid-cols-2 gap-x-6 gap-y-8",

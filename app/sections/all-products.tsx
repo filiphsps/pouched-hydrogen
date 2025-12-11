@@ -6,6 +6,7 @@ import { Filters, type FiltersProps } from "~/components/filters/filters";
 import { ProductsPagination } from "~/components/filters/products-pagination";
 import { ToolsBar } from "~/components/filters/tools-bar";
 import { layoutInputs, Section, type SectionProps } from "~/components/section";
+import { Title } from "~/components/title";
 import type { loader } from "~/routes/products/list";
 
 interface AllProductsProps extends SectionProps {
@@ -105,9 +106,13 @@ export default function AllProducts(props: AllProductsProps) {
                 <BreadCrumb page={heading} className="mb-4 justify-center" />
             )}
             {props.showHeading && (
-                <h4 className="mb-8 text-center font-medium lg:mb-20">
+                <Title
+                    as="h4"
+                    size="2xl"
+                    className="mb-8 text-center font-medium lg:mb-20"
+                >
                     {heading}
-                </h4>
+                </Title>
             )}
             {showToolbar && (
                 <ToolsBar

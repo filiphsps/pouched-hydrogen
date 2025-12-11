@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
-import Link from "~/components/link";
+import { Link } from "~/components/link";
 import { Section } from "~/components/section";
+import { Title } from "~/components/title";
 
 export function GenericError({
     error,
@@ -23,7 +24,9 @@ export function GenericError({
             verticalPadding="large"
             containerClassName="space-y-4 flex justify-center items-center flex-col"
         >
-            <h4 className="font-medium">{heading}</h4>
+            <Title as="h4" size="2xl" className="font-medium">
+                {heading}
+            </Title>
             <p>{description}</p>
             {error?.stack && (
                 <pre

@@ -6,6 +6,7 @@ import Link from "~/components/link";
 import { ProductCard } from "~/components/product/product-card";
 import { Section } from "~/components/section";
 import { Swimlane } from "~/components/swimlane";
+import { Title } from "~/components/title";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { FeaturedProductsData } from "~/utils/featured-products";
 
@@ -15,9 +16,13 @@ export function NotFound({ type = "page" }: { type?: string }) {
         <Section width="fixed" verticalPadding="medium">
             <div className="space-y-4 py-20">
                 <BreadCrumb className="justify-center" page="404" />
-                <h4 className="mt-4 mb-2.5 text-center font-medium">
+                <Title
+                    as="h4"
+                    size="2xl"
+                    className="mt-4 mb-2.5 text-center font-medium"
+                >
                     {t("error.notFound.heading", { type })}
-                </h4>
+                </Title>
                 <p className="mx-auto pt-1 text-center lg:w-1/2">
                     {t("error.notFound.description", { type })}
                 </p>
@@ -59,7 +64,9 @@ function FeaturedProducts() {
 
     return (
         <div className="space-y-8 pt-20">
-            <h5>{t("error.notFound.featuredProducts")}</h5>
+            <Title as="h5" size="xl">
+                {t("error.notFound.featuredProducts")}
+            </Title>
             <Swimlane>
                 {featuredProducts.nodes.map((product) => (
                     <ProductCard

@@ -25,6 +25,7 @@ import { StyledShopPayButton } from "~/components/product/styled-shop-pay-button
 import { VariantPrices } from "~/components/product/variant-prices";
 import { VariantSelector } from "~/components/product/variant-selector";
 import { layoutInputs, Section } from "~/components/section";
+import { Title } from "~/components/title";
 import { PRODUCT_QUERY } from "~/graphql/queries";
 import { useAnimation } from "~/hooks/use-animation";
 import JudgemeStarsRating from "../main-product/judgeme-stars-rating";
@@ -76,12 +77,14 @@ export default function SingleProduct(props: SingleProductProps) {
                         />
                         <div className="flex flex-col items-start justify-start gap-4">
                             <SoldOutBadge />
-                            <h3
+                            <Title
+                                as="h3"
+                                size="3xl"
                                 data-motion="fade-up"
                                 className="tracking-tight"
                             >
                                 EXAMPLE PRODUCT TITLE
-                            </h3>
+                            </Title>
                             <Money
                                 withoutTrailingZeros
                                 data={{ amount: "19.99", currencyCode: "USD" }}
@@ -154,12 +157,14 @@ export default function SingleProduct(props: SingleProductProps) {
                                 selectedVariant={selectedVariant}
                                 className="[&_span:nth-child(n+3)]:hidden"
                             />
-                            <h3
+                            <Title
+                                as="h3"
+                                size="3xl"
                                 data-motion="fade-up"
                                 className="tracking-tight"
                             >
                                 {product?.title}
-                            </h3>
+                            </Title>
                             <VariantPrices variant={selectedVariant} />
                             <JudgemeStarsRating
                                 productHandle={product.handle}
@@ -172,9 +177,9 @@ export default function SingleProduct(props: SingleProductProps) {
                             />
                             {isBundle && (
                                 <div className="space-y-3">
-                                    <h4 className="text-2xl">
+                                    <Title as="h4" size="2xl">
                                         Bundled Products
-                                    </h4>
+                                    </Title>
                                     <BundledVariants
                                         variants={
                                             bundledVariants as ProductVariantComponent[]

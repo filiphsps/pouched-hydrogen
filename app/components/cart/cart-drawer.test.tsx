@@ -76,7 +76,8 @@ describe("CartDrawer Integration", () => {
         // Check if drawer content appears
         // Radix Dialog renders content in a Portal, so it should be in the document
         await waitFor(() => {
-            expect(screen.getByText("cart.title (3)")).toBeInTheDocument();
+            expect(screen.getByText("cart.title")).toBeInTheDocument();
+            expect(screen.getByText("(3)")).toBeInTheDocument();
             expect(screen.getByTestId("cart-main")).toBeInTheDocument();
         });
     });
