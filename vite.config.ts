@@ -18,55 +18,55 @@ const isNetlify = process.env.DEPLOY_TARGET === "netlify";
  * - Netlify: Uses @netlify/vite-plugin-react-router for Edge Functions
  */
 async function getDeploymentPlugin() {
-	if (isNetlify) {
-		const { default: netlifyReactRouter } = await import(
-			"@netlify/vite-plugin-react-router"
-		);
-		return netlifyReactRouter({ edge: true });
-	}
-	return oxygen();
+    if (isNetlify) {
+        const { default: netlifyReactRouter } = await import(
+            "@netlify/vite-plugin-react-router"
+        );
+        return netlifyReactRouter({ edge: true });
+    }
+    return oxygen();
 }
 
 export default defineConfig(async (): Promise<UserConfig> => {
-	const deploymentPlugin = await getDeploymentPlugin();
+    const deploymentPlugin = await getDeploymentPlugin();
 
-	return {
-		plugins: [
-			hydrogen(),
-			deploymentPlugin,
-			reactRouter(),
-			tsconfigPaths() as any,
-			tailwindcss(),
-		],
-		build: {
-			// Allow a strict Content-Security-Policy
-			// without inlining assets as base64:
-			assetsInlineLimit: 0,
-		},
-		server: {
-			fs: {
-				strict: false,
-				allow: ["~/", ".."],
-			},
-			warmup: {
-				clientFiles: [
-					"./app/routes/**/*",
-					"./app/sections/**/*",
-					"./app/components/**/*",
-				],
-			},
-			allowedHosts: true,
-			cors: true,
-		},
-		ssr: {
-			noExternal: ["remix-i18next"],
-			optimizeDeps: {
-				include: [
-					"react-i18next",
-					"react-share",
-					"@fontsource-variable/inter",
-				],
-			},
-		},
-	};
+    return {
+        plugins: [
+            hydrogen(),
+            deploymentPlugin,
+            reactRouter(),
+            tsconfigPaths() as any,
+            tailwindcss(),
+        ],
+        build: {
+            // Allow a strict Content-Security-Policy
+            // without inlining assets as base64:
+            assetsInlineLimit: 0,
+        },
+        server: {
+            fs: {
+                strict: false,
+                allow: ["~/", ".."],
+            },
+            warmup: {
+                clientFiles: [
+                    "./app/routes/**/*",
+                    "./app/sections/**/*",
+                    "./app/components/**/*",
+                ],
+            },
+            allowedHosts: true,
+            cors: true,
+        },
+        ssr: {
+            noExternal: ["remix-i18next"],
+            optimizeDeps: {
+                include: [
+                    "react-i18next",
+                    "react-share",
+                    "@fontsource-variable/inter",
+                ],
+            },
+        },
+    };
 });

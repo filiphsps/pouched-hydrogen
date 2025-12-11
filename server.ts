@@ -23,9 +23,26 @@ export default {
         executionContext: ExecutionContext,
     ): Promise<Response> {
         try {
-            // Check if running on Netlify and build proper Env object
-            const isNetlify = Boolean(globalThis.Netlify);
-            console.log(`[Server] isNetlify: ${isNetlify}`);
+            // Robust check: Netlify Edge Functions pass a Context object as the second argument,
+            // which has a 'next' function and 'cookies'. Cloudflare passes the Env object.
+            type NetlifyContext = {
+                next?: unknown;
+                cookies?: unknown;
+            };
+            const potentialContext = env as unknown as NetlifyContext;
+            const isNetlifyContext = Boolean(
+                potentialContext &&
+                    typeof potentialContext.next === "function" &&
+                    potentialContext.cookies,
+            );
+
+            // Fallback to global check if argument check is inconclusive but global exists
+            const isNetlifyGlobal = typeof globalThis.Netlify !== "undefined";
+
+            const isNetlify = isNetlifyContext || isNetlifyGlobal;
+            console.log(
+                `[Server] Environment Detection - Context: ${isNetlifyContext}, Global: ${isNetlifyGlobal}`,
+            );
 
             let appEnv = env;
             if (isNetlify) {
@@ -46,9 +63,9 @@ export default {
 
             console.log(
                 "[Server] Context created. Weaverse:",
-                hydrogenContext.weaverse,
+                Boolean(hydrogenContext.weaverse),
                 "Storefront:",
-                hydrogenContext.storefront,
+                Boolean(hydrogenContext.storefront),
             );
 
             /**
