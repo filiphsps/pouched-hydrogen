@@ -18,7 +18,7 @@ export async function loader({
         switch (type) {
             case "products": {
                 const data = await storefront.query(PRODUCTS_COUNT_QUERY);
-                count = data.products.totalCount;
+                count = data.search.totalCount;
                 break;
             }
             case "collections": {
@@ -89,7 +89,7 @@ ${sitemapLines}
 
 const PRODUCTS_COUNT_QUERY = `#graphql
   query ProductsCount {
-    products(first: 0) {
+    search(first: 0, types: PRODUCT) {
       totalCount
     }
   }
