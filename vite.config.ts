@@ -42,14 +42,6 @@ export default defineConfig(async (): Promise<UserConfig> => {
             // Allow a strict Content-Security-Policy
             // without inlining assets as base64:
             assetsInlineLimit: 0,
-            rollupOptions: {
-                output: {
-                    // ensure filenames are concrete and include a content hash
-                    entryFileNames: 'assets/[name]-[hash].js',
-                    chunkFileNames: 'assets/[name]-[hash].js',
-                    assetFileNames: 'assets/[name]-[hash][extname]'
-                }
-            }
         },
         server: {
             fs: {
