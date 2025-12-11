@@ -2,16 +2,24 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { RefObject } from "react";
 import { useLoaderData } from "react-router";
 import type { loader as productRouteLoader } from "~/routes/products/product";
+import { removeVendorFromTitle } from "~/utils/product";
 
 interface ProductTitleProps extends HydrogenComponentProps {
     headingTag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+    showVendor: boolean;
+    removeVendorFromTitle: boolean;
 }
 
 const ProductTitle = ({
     ref,
     ...props
 }: ProductTitleProps & { ref?: RefObject<HTMLDivElement | null> }) => {
-    const { headingTag: Tag, ...rest } = props;
+    const {
+        headingTag: Tag,
+        showVendor,
+        removeVendorFromTitle: shouldRemoveVendor,
+        ...rest
+    } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
     if (!product) {
@@ -20,7 +28,18 @@ const ProductTitle = ({
 
     return (
         <div ref={ref} {...rest}>
-            <Tag className="h3 tracking-tight!">{product.title}</Tag>
+            {showVendor && (
+                <span className="mb-2 block font-medium text-body-subtle text-sm uppercase">
+                    {product.vendor}
+                </span>
+            )}
+            <Tag className="h3 tracking-tight!">
+                {removeVendorFromTitle(
+                    product.title,
+                    product.vendor,
+                    shouldRemoveVendor,
+                )}
+            </Tag>
         </div>
     );
 };
@@ -53,6 +72,18 @@ export const schema = createSchema({
                             { value: "h6", label: "H6" },
                         ],
                     },
+                },
+                {
+                    type: "switch",
+                    label: "Show vendor",
+                    name: "showVendor",
+                    defaultValue: true,
+                },
+                {
+                    type: "switch",
+                    label: "Remove vendor from title",
+                    name: "removeVendorFromTitle",
+                    defaultValue: true,
                 },
             ],
         },
