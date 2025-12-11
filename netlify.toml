@@ -1,14 +1,13 @@
 # Netlify configuration for Hydrogen deployment
-# Following https://github.com/netlify/hydrogen-template/blob/main/netlify.toml
 
 [build]
-  command = "DEPLOY_TARGET=netlify pnpm run build"
+  command = "DEPLOY_TARGET=netlify pnpm exec react-router build"
   publish = "dist/client"
 
 [dev]
   command = "pnpm run dev"
 
-# Set immutable caching for static files, because they have fingerprinted filenames
+# Set immutable caching for static files
 [[headers]]
   for = "/assets/*"
   [headers.values]

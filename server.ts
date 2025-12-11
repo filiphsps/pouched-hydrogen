@@ -1,10 +1,18 @@
-import * as remixBuild from "virtual:react-router/server-build"; // Virtual entry point for the app
+/**
+ * Hydrogen server entry point.
+ * Handles both Shopify Oxygen and Netlify Edge Functions deployments.
+ *
+ * For Netlify Edge, this exports the handler for virtual:netlify-server-entry.
+ * For Oxygen, this exports a fetch handler in module format.
+ */
+import * as remixBuild from "virtual:react-router/server-build";
 import { storefrontRedirect } from "@shopify/hydrogen";
 import { createRequestHandler } from "@shopify/hydrogen/oxygen";
 import { createHydrogenRouterContext } from "~/.server/context";
 
 /**
- * Export a fetch handler in module format.
+ * Oxygen deployment handler.
+ * Export a fetch handler in module format for Cloudflare Workers.
  */
 export default {
     async fetch(
