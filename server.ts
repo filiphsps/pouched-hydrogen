@@ -10,6 +10,8 @@ import { storefrontRedirect } from "@shopify/hydrogen";
 import { createRequestHandler } from "@shopify/hydrogen/oxygen";
 import { createHydrogenRouterContext } from "~/.server/context";
 
+import { buildEnvFromNetlify } from "~/lib/env.server";
+
 /**
  * Oxygen deployment handler.
  * Export a fetch handler in module format for Cloudflare Workers.
@@ -21,9 +23,13 @@ export default {
         executionContext: ExecutionContext,
     ): Promise<Response> {
         try {
+            // Check if running on Netlify and build proper Env object
+            const isNetlify = Boolean(globalThis.Netlify);
+            const appEnv = isNetlify ? buildEnvFromNetlify() : env;
+
             const hydrogenContext = await createHydrogenRouterContext(
                 request,
-                env,
+                appEnv,
                 executionContext,
             );
 
