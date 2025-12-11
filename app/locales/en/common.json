@@ -1,0 +1,277 @@
+{
+  "site": {
+    "title": "Pouched",
+    "description": "Premium Swedish Snus"
+  },
+  "navigation": {
+    "skipToContent": "Skip to content",
+    "mainContent": "Main content"
+  },
+  "header": {
+    "search": "Search",
+    "account": "Account",
+    "cart": "Cart",
+    "menu": "Menu"
+  },
+  "footer": {
+    "email": "Email",
+    "signUpSuccess": "Thank you for signing up! 🎉",
+    "signUpError": "An error occurred while signing up.",
+    "social": {
+      "instagram": "Instagram",
+      "x": "X",
+      "linkedin": "LinkedIn",
+      "facebook": "Facebook"
+    }
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty",
+    "emptyMessage": "Looks like you haven't added anything yet, let's get you started!",
+    "startShopping": "Start Shopping",
+    "shopBestSellers": "Shop Best Sellers",
+    "noProductsFound": "No products found.",
+    "subtotal": "Subtotal",
+    "total": "Estimated total",
+    "checkout": "Checkout",
+    "continueShopping": "Continue shopping",
+    "continueToCheckout": "Continue to Checkout",
+    "remove": "Remove",
+    "quantity": "Quantity",
+    "addToCart": "Add to cart",
+    "added": "Added to cart",
+    "updating": "Updating...",
+    "viewCart": "View cart",
+    "taxesDiscountsShipping": "Taxes, discounts and shipping calculated at checkout.",
+    "addNote": "Add a note",
+    "addDiscount": "Add a discount code",
+    "redeemGiftCard": "Redeem a gift card",
+    "removeGiftCard": "Remove gift card code {{code}}",
+    "removeDiscount": "Remove discount code {{code}}",
+    "closeDrawer": "Close cart drawer",
+    "quantityLabel": "Quantity, {{quantity}}",
+    "increaseQuantity": "Increase quantity",
+    "decreaseQuantity": "Decrease quantity",
+    "notePlaceholder": "Add any special instructions or notes for your order...",
+    "noteSaved": "Cart note saved successfully 🎉",
+    "saveNote": "Save note",
+    "discountPlaceholder": "Discount code",
+    "discountApplied": "Discount applied successfully 🎉",
+    "discountInvalid": "Invalid discount code.",
+    "apply": "Apply",
+    "giftCardPlaceholder": "Gift card code",
+    "giftCardApplied": "Gift card applied successfully 🎉",
+    "giftCardInvalid": "Invalid gift card code.",
+    "redeem": "Redeem",
+    "close": "Close",
+    "orderSummary": "Order summary",
+    "discountTitle": "Apply a discount code"
+  },
+  "product": {
+    "inStock": "In stock",
+    "outOfStock": "Out of stock",
+    "price": "Price",
+    "compareAtPrice": "Was",
+    "saveAmount": "Save {{amount}}",
+    "selectOptions": "Select options",
+    "vendor": "Vendor",
+    "sku": "SKU",
+    "details": "Details",
+    "shipping": "Shipping",
+    "returns": "Returns",
+    "new": "New",
+    "add": "Add",
+    "metafield": {
+      "nicotine": "{{value}} mg/g",
+      "nicotine_pouch": "{{value}} mg/pouch",
+      "label": {
+        "brand": "Brand",
+        "strength": "Strength",
+        "nicotine": "Nicotine per gram",
+        "nicotine_pouch": "Nicotine per bag",
+        "aroma": "Aroma",
+        "format": "Format",
+        "flavor": "Flavor",
+        "bags_per_can": "Bags per can",
+        "weight_per_bag": "Weight per bag",
+        "subtitle": "Subtitle"
+      },
+      "format": {
+        "nicotine": "{{value}} mg/g",
+        "nicotine_pouch": "{{value}} mg/pouch",
+        "weight_per_bag": "{{value}} g"
+      }
+    },
+    "description": "Description"
+  },
+  "search": {
+    "title": "Predictive search",
+    "placeholder": "Search products...",
+    "noResults": "No results found for",
+    "results": "Results",
+    "viewAllResults": "View all results",
+    "products": "Products",
+    "collections": "Collections",
+    "pages": "Pages",
+    "suggestions": "Suggestions"
+  },
+  "account": {
+    "title": "Account",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "myAccount": "My Account",
+    "accountDetails": "Account Details",
+    "accountModal": "Account modal",
+    "closeModal": "Close account modal",
+    "signOut": "Sign out",
+    "welcome": "Welcome, {{name}}",
+    "personalInfo": "Personal Information",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email address",
+    "phone": "Phone number",
+    "updateProfile": "Update Profile",
+    "updating": "Updating...",
+    "editDetails": "Edit account details",
+    "na": "N/A",
+    "orders": {
+      "title": "Orders",
+      "detail": "Order Detail",
+      "returnToAccount": "Return to My Account",
+      "placedOn": "Placed on {{date}}",
+      "shippingAddress": "Shipping Address",
+      "noShippingAddress": "No shipping address defined",
+      "statusTitle": "Status",
+      "none": "You haven't placed any orders yet.",
+      "orderNo": "Order No.",
+      "orderDate": "Order Date",
+      "fulfillmentStatus": "Fulfillment Status",
+      "viewDetails": "View details",
+      "imageAlt": "Order image",
+      "status": {
+        "SUCCESS": "Success",
+        "PENDING": "Pending",
+        "OPEN": "Open",
+        "FAILURE": "Failure",
+        "ERROR": "Error",
+        "CANCELLED": "Cancelled"
+      }
+    },
+    "addresses": {
+      "title": "Address Book",
+      "none": "You haven't saved any addresses yet.",
+      "add": "Add an Address",
+      "default": "Default",
+      "edit": "Edit",
+      "remove": "Remove"
+    },
+    "featuredProducts": {
+      "title": "Featured products",
+      "error": "There was a problem loading featured products."
+    }
+  },
+  "forms": {
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "company": "Company",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "province": "Province",
+    "zip": "ZIP code",
+    "phone": "Phone",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "required": "Required"
+  },
+  "error": {
+    "generic": {
+      "heading": "Something went wrong",
+      "description": "We are sorry, but an unexpected error occurred.",
+      "homeButton": "Return to home"
+    },
+    "notFound": {
+      "heading": "We can't find the {{type}} you are looking for",
+      "description": "We checked the URL, but we couldn't find the {{type}} you are looking for.",
+      "actionsTitle": "Try one of the following:",
+      "shopProducts": "Shop products",
+      "or": "or",
+      "homeButton": "Return to home",
+      "featuredProducts": "Featured Products"
+    }
+  },
+  "errors": {
+    "pageNotFound": "Page not found",
+    "somethingWentWrong": "Something went wrong",
+    "goHome": "Go to homepage"
+  },
+  "filters": {
+    "filter": "Filter",
+    "sort": "Sort",
+    "price": "Price",
+    "availability": "Availability",
+    "clearAll": "Clear all",
+    "apply": "Apply"
+  },
+  "judgeme": {
+    "form": {
+      "ratingAlert": "Please select a rating",
+      "success": {
+        "title": "Review Submitted Successfully!",
+        "message": "Thank you for your feedback. Your review is being processed in the background, it will be published shortly in a few minutes.",
+        "writeAnother": "Write Another Review"
+      },
+      "error": {
+        "title": "Submission Failed",
+        "message": "There was an error submitting your review. Please try again.",
+        "tryAgain": "Try Again"
+      },
+      "writeReview": {
+        "title": "Write Your Review",
+        "subtitle": "Share your experience with other customers"
+      },
+      "fields": {
+        "rating": {
+          "label": "Rating"
+        },
+        "name": {
+          "label": "Your Name",
+          "placeholder": "Enter your name"
+        },
+        "email": {
+          "label": "Email Address",
+          "placeholder": "Enter your email"
+        },
+        "title": {
+          "label": "Review Title",
+          "placeholder": "Give your review a title"
+        },
+        "body": {
+          "label": "Your Review",
+          "placeholder": "Share your experience with this product"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "submit": "Submit Review",
+        "submitting": "Submitting..."
+      }
+    },
+    "item": {
+      "imageAlt": "Review image {{number}}",
+      "view": "View",
+      "galleryLabel": "Review image gallery",
+      "close": "Close image",
+      "prev": "Previous image",
+      "next": "Next image",
+      "mainImageAlt": "Review image"
+    }
+  },
+  "hotspots": {
+    "imageAlt": "Hotspots image"
+  }
+}

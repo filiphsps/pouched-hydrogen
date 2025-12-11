@@ -1,8 +1,7 @@
 import type { InitOptions } from "i18next";
+import commonDe from "~/locales/de/common.json";
+import commonEn from "~/locales/en/common.json";
 import { COUNTRIES } from "~/utils/const";
-
-import commonDe from "../public/locales/de/common.json";
-import commonEn from "../public/locales/en/common.json";
 
 export default {
     supportedLngs: Object.values(COUNTRIES).map((c) =>
