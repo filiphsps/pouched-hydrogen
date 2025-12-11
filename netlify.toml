@@ -1,7 +1,7 @@
 # Netlify configuration for Hydrogen deployment
 
 [build]
-  command = "DEPLOY_TARGET=netlify pnpm exec shopify hydrogen build --no-bundle-stats"
+  command = "DEPLOY_TARGET=netlify pnpm exec react-router build"
   publish = "dist/client"
 
 [dev]
