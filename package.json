@@ -19,7 +19,7 @@
   "scripts": {
     "clean": "rm -rf dist .react-router playwright-report test-results coverage",
     "build": "shopify hydrogen build --codegen",
-    "build:netlify": "DEPLOY_TARGET=netlify react-router build && DEPLOY_TARGET=netlify vite build --ssr app/entry.netlify.server.ts",
+    "build:netlify": "DEPLOY_TARGET=netlify react-router build && EDGE_BUNDLE=true DEPLOY_TARGET=netlify vite build --ssr app/entry.netlify.server.ts",
     "dev": "react-router typegen && shopify hydrogen dev --port 3456",
     "dev1": "react-router typegen && shopify hydrogen dev --codegen --port 3457",
     "dev:ca": "shopify hydrogen dev --codegen --port 3456 --customer-account-push",

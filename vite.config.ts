@@ -32,7 +32,7 @@ async function getDeploymentPlugin() {
 
 export default defineConfig(async ({ isSsrBuild }) => {
     const deploymentPlugin = await getDeploymentPlugin();
-    const isNetlifyEdgeBuild = isNetlify && isSsrBuild;
+    const isNetlifyEdgeBuild = process.env.EDGE_BUNDLE === "true";
 
     const config: UserConfig = {
         plugins: [
