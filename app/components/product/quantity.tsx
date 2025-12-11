@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { cn } from "~/utils/cn";
+import { Button } from "../button";
 
 /**
  * Props for the Quantity component.
@@ -25,6 +27,8 @@ interface QuantityProps {
  */
 export function Quantity(props: QuantityProps) {
     const { value, onChange, label, className } = props;
+
+    const { t } = useTranslation();
 
     // Local state for the input value while typing
     const [localValue, setLocalValue] = useState(String(value));
@@ -88,7 +92,7 @@ export function Quantity(props: QuantityProps) {
         <div className="space-y-1.5" data-motion="fade-up">
             {label !== false && (
                 <legend className="font-bold leading-tight">
-                    {label || "Quantity"}
+                    {label || t("cart.quantity")}
                 </legend>
             )}
             <div
@@ -97,16 +101,17 @@ export function Quantity(props: QuantityProps) {
                     className,
                 )}
             >
-                <button
+                <Button
+                    variant="outline"
                     type="button"
                     name="decrease-quantity"
-                    aria-label="Decrease quantity"
-                    className="h-10 w-10 shrink-0 transition disabled:opacity-50"
+                    aria-label={t("cart.decreaseQuantity")}
+                    className="h-10 w-10 shrink-0 border-none disabled:opacity-50"
                     disabled={value <= 1}
                     onClick={() => onChange(value - 1)}
                 >
                     <span>&#8722;</span>
-                </button>
+                </Button>
                 <input
                     className="min-w-0 flex-1 border-none bg-transparent px-1 py-2.5 text-center focus:outline-hidden focus:ring-0"
                     value={localValue}
@@ -114,15 +119,16 @@ export function Quantity(props: QuantityProps) {
                     onChange={(e) => setLocalValue(e.currentTarget.value)}
                     onBlur={commitValue}
                 />
-                <button
+                <Button
+                    variant="outline"
                     type="button"
-                    className="h-10 w-10 shrink-0 text-body transition hover:text-body"
+                    className="v h-10 w-10 shrink-0 border-none"
                     name="increase-quantity"
-                    aria-label="Increase quantity"
+                    aria-label={t("cart.increaseQuantity")}
                     onClick={() => onChange(value + 1)}
                 >
                     <span>&#43;</span>
-                </button>
+                </Button>
             </div>
         </div>
     );
