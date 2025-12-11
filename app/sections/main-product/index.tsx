@@ -121,12 +121,10 @@ export default function ProductInformation(
     });
 
     return (
-        <Section ref={ref} {...rest} overflow="unset">
+        <Section ref={ref} {...rest} overflow="unset" className="bg-gray-100">
             <div
                 className={clsx([
-                    "space-y-5 lg:grid lg:space-y-0",
-                    "lg:gap-[clamp(30px,5%,60px)]",
-                    "lg:grid-cols-[1fr_clamp(360px,45%,480px)]",
+                    "space-y-5 lg:grid lg:grid-cols-[1fr_clamp(360px,55%,550px)] lg:gap-[clamp(30px,5%,60px)] lg:space-y-0",
                 ])}
             >
                 {/* Left Column: Media + Below Content */}
@@ -166,7 +164,7 @@ export default function ProductInformation(
                 {/* Right Column: Sticky Details */}
                 <div>
                     <div
-                        className="sticky flex flex-col justify-start gap-5"
+                        className="sticky flex flex-col justify-start gap-5 rounded-2xl bg-background p-6 shadow-xs lg:p-8"
                         style={{ top: "calc(var(--height-nav) + 20px)" }}
                     >
                         {detailsChildren}

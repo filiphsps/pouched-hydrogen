@@ -56,12 +56,13 @@ export function QuantityBreakButton({
             {/* Discount badge positioned above the button */}
             {discountPercentage != null && discountPercentage > 0 && (
                 <span
-                    className="mb-1 whitespace-nowrap rounded-full bg-teal-400 px-2 py-0.5 font-medium text-white text-xs"
+                    className="mb-2 whitespace-nowrap rounded-full bg-teal-400 px-1.5 py-0.5 text-center font-semibold text-white text-xs"
                     data-testid={`discount-badge-${quantity}`}
                 >
                     -{discountPercentage}%
                 </span>
             )}
+
             <ToggleGroup.Item
                 value={value}
                 className={cn(
@@ -69,7 +70,9 @@ export function QuantityBreakButton({
                 )}
                 data-testid={`quantity-break-${quantity}`}
             >
-                <span>{quantity}x</span>
+                <div>
+                    <span>{quantity}x</span>
+                </div>
             </ToggleGroup.Item>
         </div>
     );

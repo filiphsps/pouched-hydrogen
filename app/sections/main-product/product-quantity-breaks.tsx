@@ -26,6 +26,8 @@ interface ProductQuantityBreaksProps extends HydrogenComponentProps {
     ref: React.Ref<HTMLDivElement>;
     /** Label text for the quantity selector */
     labelText: string;
+    /** Whether to show the label */
+    showLabel: boolean;
     /** Comma-separated quantities for break options */
     quantities: string;
     /** Whether to show the custom quantity input */
@@ -63,7 +65,8 @@ function parseQuantityBreaks(quantitiesStr: string): QuantityBreak[] {
 export default function ProductQuantityBreaks(
     props: ProductQuantityBreaksProps,
 ) {
-    const { ref, labelText, quantities, showCustomInput, ...rest } = props;
+    const { ref, labelText, showLabel, quantities, showCustomInput, ...rest } =
+        props;
 
     const { product } = useLoaderData<typeof productRouteLoader>();
     const { quantity, setQuantity } = useProductQtyStore();
@@ -84,7 +87,7 @@ export default function ProductQuantityBreaks(
                 selectedQuantity={quantity}
                 onQuantityChange={setQuantity}
                 showCustomInput={showCustomInput}
-                label={labelText}
+                label={showLabel ? labelText : false}
             />
         </div>
     );
@@ -107,6 +110,12 @@ export const schema = createSchema({
                     name: "labelText",
                     defaultValue: "Quantity",
                     placeholder: "Quantity",
+                },
+                {
+                    type: "switch",
+                    label: "Show label",
+                    name: "showLabel",
+                    defaultValue: true,
                 },
                 {
                     type: "text",

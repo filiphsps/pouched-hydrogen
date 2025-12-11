@@ -4,7 +4,6 @@ import {
     VideoCameraIcon,
 } from "@phosphor-icons/react";
 import { cva, type VariantProps } from "class-variance-authority";
-import clsx from "clsx";
 import { useEffect, useState } from "react";
 import type {
     Media_MediaImage_Fragment,
@@ -98,7 +97,7 @@ export function ProductMedia(props: ProductMediaProps) {
                         return (
                             <div
                                 key={med.id}
-                                className={clsx(
+                                className={cn(
                                     "group relative",
                                     gridSize === "mix" &&
                                         idx % 3 === 0 &&
@@ -131,7 +130,7 @@ export function ProductMedia(props: ProductMediaProps) {
                                 </div>
                                 {shouldShowButton && (
                                     <ZoomButton
-                                        className={clsx(
+                                        className={cn(
                                             "absolute top-2 right-2 md:top-4 md:right-4",
                                             zoomButtonVisibility === "hover" &&
                                                 "opacity-0 group-hover:opacity-100",
@@ -162,17 +161,15 @@ export function ProductMedia(props: ProductMediaProps) {
     return (
         <div className="product-media-slider overflow-hidden">
             <div
-                className={clsx(
+                className={cn(
                     "flex items-start gap-4 overflow-hidden [--thumbs-width:0px]",
                     showThumbnails && "md:[--thumbs-width:8rem]",
                 )}
             >
                 {showThumbnails && (
                     <div
-                        className={clsx(
-                            "hidden shrink-0 md:block",
-                            "h-[450px] w-[calc(var(--thumbs-width,0px)-1rem)]",
-                            "opacity-0 transition-opacity duration-300",
+                        className={cn(
+                            "hidden h-[450px] w-[calc(var(--thumbs-width,0px)-1rem)] shrink-0 opacity-0 transition-opacity duration-300 md:block",
                         )}
                     >
                         <Swiper
@@ -231,7 +228,7 @@ export function ProductMedia(props: ProductMediaProps) {
                         </Swiper>
                     </div>
                 )}
-                <div className="relative w-[calc(100%-var(--thumbs-width,0px))]">
+                <div className="relative w-[calc(100%-var(--thumbs-width,0px))] lg:p-12">
                     <Swiper
                         onSwiper={setSwiper}
                         thumbs={{ swiper: thumbsSwiper }}
@@ -249,10 +246,7 @@ export function ProductMedia(props: ProductMediaProps) {
                     >
                         {media.map((med, idx) => {
                             return (
-                                <SwiperSlide
-                                    key={med.id}
-                                    className="group rounded-2xl bg-gray-100"
-                                >
+                                <SwiperSlide key={med.id} className="group">
                                     <div
                                         onClick={
                                             canClickImage
@@ -280,7 +274,7 @@ export function ProductMedia(props: ProductMediaProps) {
                                     </div>
                                     {shouldShowButton && (
                                         <ZoomButton
-                                            className={clsx(
+                                            className={cn(
                                                 "absolute top-2 right-2 md:top-6 md:right-6",
                                                 zoomButtonVisibility ===
                                                     "hover" &&
@@ -299,13 +293,13 @@ export function ProductMedia(props: ProductMediaProps) {
                     <div className="absolute right-6 bottom-6 z-1 hidden items-center gap-2 md:flex">
                         <button
                             type="button"
-                            className="media_slider__prev left-6 rounded-full border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
+                            className="media_slider__prev left-6 rounded-full border border-transparent bg-background p-2 text-center text-gray-900 shadow-xs transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
                         >
                             <ArrowLeftIcon className="h-4.5 w-4.5" />
                         </button>
                         <button
                             type="button"
-                            className="media_slider__next right-6 rounded-full border border-transparent bg-white p-2 text-center text-gray-900 transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
+                            className="media_slider__next right-6 rounded-full border border-transparent bg-background p-2 text-center text-gray-900 shadow-xs transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
                         >
                             <ArrowRightIcon className="h-4.5 w-4.5" />
                         </button>
