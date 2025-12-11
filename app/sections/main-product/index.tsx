@@ -194,6 +194,7 @@ export const schema = createSchema({
         "mp--bundled-variants",
         "mp--variant-selector",
         "mp--quantity-selector",
+        "mp--selling-plan-selector",
         "mp--quantity-breaks",
         "mp--attribute-bar",
         "mp--facts",
@@ -348,6 +349,9 @@ export const schema = createSchema({
             },
             {
                 type: "mp--quantity-selector",
+            },
+            {
+                type: "mp--selling-plan-selector",
             },
             {
                 type: "mp--atc-buttons",

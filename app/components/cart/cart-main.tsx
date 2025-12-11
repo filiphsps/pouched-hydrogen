@@ -27,6 +27,7 @@ function CartEmpty({
     return (
         <div
             ref={scrollRef}
+            data-testid="cart-empty"
             className={clsx(
                 layout === "drawer" && [
                     "flex h-screen-dynamic flex-col content-start justify-center space-y-12 overflow-y-scroll px-5 pb-5 text-center transition",

@@ -2,6 +2,7 @@ import type { HydrogenComponent } from "@weaverse/hydrogen";
 import * as Heading from "~/components/heading";
 import * as Link from "~/components/link";
 import * as Paragraph from "~/components/paragraph";
+import * as ProductSellingPlanSelector from "~/components/product/selling-plan-selector";
 import * as SubHeading from "~/components/subheading";
 import * as AllProducts from "~/sections/all-products";
 import * as BlogPost from "~/sections/blog-post";
@@ -124,6 +125,7 @@ export const components: HydrogenComponent[] = [
     ProductDescription,
     ProductBundledVariants,
     ProductVariantSelector,
+    ProductSellingPlanSelector,
     ProductQuantitySelector,
     ProductQuantityBreaks,
     ProductAttributeBar,

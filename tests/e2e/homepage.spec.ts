@@ -11,6 +11,23 @@ test.describe("Homepage", () => {
         await expect(page.locator("header")).toBeVisible();
         await expect(page.locator("main")).toBeVisible();
         await expect(page.locator("footer")).toBeVisible();
+
+        // Check for SEO Organization schema (JsonLd)
+        // Debugging: verify what scripts are present
+        const scriptLocators = page.locator(
+            'script[type="application/ld+json"]',
+        );
+        const count = await scriptLocators.count();
+
+        let foundOrg = false;
+        for (let i = 0; i < count; i++) {
+            const text = await scriptLocators.nth(i).textContent();
+            if (text?.includes("Organization")) {
+                foundOrg = true;
+                break;
+            }
+        }
+        expect(foundOrg, "Organization schema should be present").toBe(true);
     });
 
     test("has working search functionality", async ({ page }) => {

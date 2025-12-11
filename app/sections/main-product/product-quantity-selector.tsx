@@ -7,10 +7,14 @@ import { isCombinedListing } from "~/utils/combined-listings";
 
 export const useProductQtyStore = create<{
     quantity: number;
+    sellingPlanId: string | undefined;
     setQuantity: (qty: number) => void;
+    setSellingPlanId: (id: string | undefined) => void;
 }>()((set) => ({
     quantity: 1,
+    sellingPlanId: undefined,
     setQuantity: (qty: number) => set({ quantity: qty }),
+    setSellingPlanId: (id: string | undefined) => set({ sellingPlanId: id }),
 }));
 
 interface ProductQuantitySelectorProps extends HydrogenComponentProps {

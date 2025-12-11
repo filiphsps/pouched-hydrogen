@@ -27,7 +27,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
         ...rest
     } = props;
     const { product, storeDomain } = useLoaderData<typeof productRouteLoader>();
-    const { quantity } = useProductQtyStore();
+    const { quantity, sellingPlanId } = useProductQtyStore();
 
     const selectedVariant = useOptimisticVariant(
         product?.selectedOrFirstAvailableVariant,
@@ -64,6 +64,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
                         merchandiseId: selectedVariant?.id,
                         quantity,
                         selectedVariant,
+                        sellingPlanId,
                     },
                 ]}
                 data-test="add-to-cart"

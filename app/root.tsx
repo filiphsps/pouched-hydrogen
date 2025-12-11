@@ -33,6 +33,7 @@ import {
     useShouldRenderNewsletterPopup,
 } from "./components/root/newsletter-popup";
 import { NotFound } from "./components/root/not-found";
+import { JsonLd } from "./components/seo/json-ld";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";
 import { GlobalStyle } from "./weaverse/style";
@@ -141,6 +142,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Meta />
                 <Links />
                 <GlobalStyle />
+                <JsonLd
+                    data={{
+                        "@context": "https://schema.org",
+                        "@type": "Organization",
+                        name: data?.layout?.shop?.name,
+                        url: data?.layout?.shop?.primaryDomain?.url,
+                    }}
+                />
             </head>
             <body
                 style={

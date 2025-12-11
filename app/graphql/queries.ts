@@ -85,6 +85,36 @@ export const PRODUCT_QUERY = `#graphql
             }
           }
       }
+      sellingPlanGroups(first: 10) {
+        nodes {
+          name
+          sellingPlans(first: 10) {
+            nodes {
+              id
+              name
+              description
+              options {
+                name
+                value
+              }
+              priceAdjustments {
+                adjustmentValue {
+                  ... on SellingPlanFixedAmountPriceAdjustment {
+                    adjustmentAmount {
+                      amount
+                      currencyCode
+                    }
+                  }
+                  ... on SellingPlanPercentagePriceAdjustment {
+                    adjustmentPercentage
+                  }
+                }
+                orderCount
+              }
+            }
+          }
+        }
+      }
       media(first: 50) {
         nodes {
           ...Media
