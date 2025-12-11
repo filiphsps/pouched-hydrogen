@@ -1,11 +1,22 @@
 # Netlify configuration for Hydrogen deployment
+# Uses a custom Edge Function for SSR with proper Hydrogen context
 
 [build]
   command = "DEPLOY_TARGET=netlify pnpm exec react-router build"
   publish = "dist/client"
+  # Edge Functions directory for our custom handler
+  edge_functions = "netlify/edge-functions"
 
 [dev]
   command = "pnpm run dev"
+
+# Edge Function configuration for SSR
+# This uses our custom handler that integrates Hydrogen context
+[[edge_functions]]
+  path = "/*"
+  function = "ssr"
+  # Exclude static assets and Netlify internal paths
+  excludedPath = ["/.netlify/*", "/assets/*", "/favicon.ico", "/robots.txt", "/sitemap.xml"]
 
 # Set immutable caching for static files
 [[headers]]
