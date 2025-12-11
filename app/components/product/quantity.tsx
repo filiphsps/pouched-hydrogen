@@ -106,7 +106,7 @@ export function Quantity(props: QuantityProps) {
                     type="button"
                     name="decrease-quantity"
                     aria-label={t("cart.decreaseQuantity")}
-                    className="h-10 w-10 shrink-0 border-none disabled:opacity-50"
+                    className="aspect-square h-full shrink-0 border-none"
                     disabled={value <= 1}
                     onClick={() => onChange(value - 1)}
                 >
@@ -122,7 +122,7 @@ export function Quantity(props: QuantityProps) {
                 <Button
                     variant="outline"
                     type="button"
-                    className="v h-10 w-10 shrink-0 border-none"
+                    className="aspect-square h-full shrink-0 border-none"
                     name="increase-quantity"
                     aria-label={t("cart.increaseQuantity")}
                     onClick={() => onChange(value + 1)}
