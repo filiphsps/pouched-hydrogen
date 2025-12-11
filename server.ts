@@ -10,8 +10,6 @@ import { storefrontRedirect } from "@shopify/hydrogen";
 import { createRequestHandler } from "@shopify/hydrogen/oxygen";
 import { createHydrogenRouterContext } from "~/.server/context";
 
-import { buildEnvFromNetlify } from "~/lib/env.server";
-
 /**
  * Oxygen deployment handler.
  * Export a fetch handler in module format for Cloudflare Workers.
@@ -23,41 +21,9 @@ export default {
         executionContext: ExecutionContext,
     ): Promise<Response> {
         try {
-            // Robust check: Netlify Edge Functions pass a Context object as the second argument,
-            // which has a 'next' function and 'cookies'. Cloudflare passes the Env object.
-            type NetlifyContext = {
-                next?: unknown;
-                cookies?: unknown;
-            };
-            const potentialContext = env as unknown as NetlifyContext;
-            const isNetlifyContext = Boolean(
-                potentialContext &&
-                    typeof potentialContext.next === "function" &&
-                    potentialContext.cookies,
-            );
-
-            // Fallback to global check if argument check is inconclusive but global exists
-            const isNetlifyGlobal = typeof globalThis.Netlify !== "undefined";
-
-            const isNetlify = isNetlifyContext || isNetlifyGlobal;
-            console.log(
-                `[Server] Environment Detection - Context: ${isNetlifyContext}, Global: ${isNetlifyGlobal}`,
-            );
-
-            let appEnv = env;
-            if (isNetlify) {
-                console.log("[Server] Building Env from Netlify global");
-                appEnv = buildEnvFromNetlify();
-            } else {
-                console.log(
-                    "[Server] Using passed env object. Keys:",
-                    Object.keys(env || {}),
-                );
-            }
-
             const hydrogenContext = await createHydrogenRouterContext(
                 request,
-                appEnv,
+                env,
                 executionContext,
             );
 

@@ -29,16 +29,16 @@ async function getDeploymentPlugin() {
     return oxygen();
 }
 
-export default defineConfig(async (): Promise<UserConfig> => {
+export default defineConfig(async ({ isSsrBuild }) => {
     const deploymentPlugin = await getDeploymentPlugin();
 
-    return {
+    const config: UserConfig = {
         plugins: [
             hydrogen(),
             deploymentPlugin,
             reactRouter(),
             tsconfigPaths() as any,
-            tailwindcss()
+            tailwindcss(),
         ].filter(Boolean),
         build: {
             // Allow a strict Content-Security-Policy
@@ -71,4 +71,26 @@ export default defineConfig(async (): Promise<UserConfig> => {
             },
         },
     };
+
+    if (isNetlify && isSsrBuild) {
+        config.ssr = {
+            ...config.ssr,
+            noExternal: true,
+            target: "webworker",
+        };
+        config.build = {
+            ...config.build,
+            outDir: "netlify/edge-functions",
+            emptyOutDir: true,
+            rollupOptions: {
+                input: "server.netlify.ts",
+                output: {
+                    entryFileNames: "ssr.js",
+                    format: "es",
+                },
+            },
+        };
+    }
+
+    return config;
 });
