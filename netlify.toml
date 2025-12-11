@@ -16,7 +16,7 @@
   path = "/*"
   function = "ssr"
   # Exclude static assets and Netlify internal paths
-  excludedPath = ["/.netlify/*", "/assets/*", "/favicon.ico", "/robots.txt", "/sitemap.xml"]
+  excludedPath = ["/.netlify/*", "/assets/*", "/favicon.ico"]
 
 # Set immutable caching for static files
 [[headers]]
