@@ -66,7 +66,10 @@ export function loadDeferredData({ context }: { context: AppLoadContext }) {
     const { cart, customerAccount } = context;
 
     return {
-        isLoggedIn: customerAccount.isLoggedIn(),
+        isLoggedIn:
+            (
+                customerAccount as typeof customerAccount | undefined
+            )?.isLoggedIn() ?? false,
         cart: cart.get(),
     };
 }
