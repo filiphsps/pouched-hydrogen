@@ -63,8 +63,6 @@ export const config = {
         "/.netlify/*",
         "/assets/*",
         "/favicon.ico",
-        "/robots.txt",
-        "/sitemap.xml",
         "/manifest.json",
     ],
 };
