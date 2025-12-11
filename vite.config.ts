@@ -30,19 +30,39 @@ async function getDeploymentPlugin() {
     return oxygen();
 }
 
-export default defineConfig(async ({ isSsrBuild }) => {
+export default defineConfig(async ({ isSsrBuild, mode }) => {
     const deploymentPlugin = await getDeploymentPlugin();
-    const isNetlifyEdgeBuild = process.env.EDGE_BUNDLE === "true";
+    const isNetlifyEdgeBuild = mode === "netlify-edge" || process.argv.includes("netlify-edge");
+    console.log(`[Vite] Building for mode: ${mode}, isNetlifyEdgeBuild: ${isNetlifyEdgeBuild}, process.argv: ${JSON.stringify(process.argv)}`);
 
     const config: UserConfig = {
         plugins: [
-            hydrogen(),
+            // Exclude hydrogen plugin for Edge build to prevent dist overwrite
+            !isNetlifyEdgeBuild ? hydrogen() : null,
             deploymentPlugin,
             // Only runs the React Router plugin if we are NOT manually building the Edge Function.
-            // For the Edge Function build, we use the pre-built manifest via alias.
             !isNetlifyEdgeBuild ? reactRouter() : null,
             tsconfigPaths() as any,
             tailwindcss(),
+            // Custom plugin to strip 'use client' directives for Edge build
+            ...(isNetlifyEdgeBuild
+                ? [
+                      {
+                          name: "strip-use-client",
+                          transform(code: string) {
+                              if (code.includes("use client")) {
+                                  return {
+                                      code: code.replace(
+                                          /["']use client["'];?/g,
+                                          "",
+                                      ),
+                                      map: null,
+                                  };
+                              }
+                          },
+                      },
+                  ]
+                : []),
         ].filter(Boolean),
         resolve: {
             alias: {
@@ -72,6 +92,7 @@ export default defineConfig(async ({ isSsrBuild }) => {
             // Allow a strict Content-Security-Policy
             // without inlining assets as base64:
             assetsInlineLimit: 0,
+            emptyOutDir: false, // Don't wipe 'dist' even if targeting it by mistake
         },
         server: {
             fs: {
@@ -117,32 +138,22 @@ export default defineConfig(async ({ isSsrBuild }) => {
         };
         config.build = {
             ...config.build,
-            outDir: "netlify/edge-functions",
-            emptyOutDir: true,
+            outDir: ".netlify/edge-functions",
+            emptyOutDir: false, // SAFEGUARD: Prevent accidental wipe
             rollupOptions: {
                 input: "app/entry.netlify.server.ts",
                 output: {
                     entryFileNames: "ssr.js",
                     format: "es",
                 },
-            },
-        };
-
-        // Add a custom plugin to strip 'use client' directives
-        config.plugins = [
-            ...(config.plugins || []),
-            {
-                name: "strip-use-client",
-                transform(code) {
-                    if (code.includes('use client')) {
-                        return {
-                            code: code.replace(/["']use client["'];?/g, ""),
-                            map: null,
-                        };
+                onwarn(warning, warn) {
+                    if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
+                        return;
                     }
+                    warn(warning);
                 },
             },
-        ];
+        };
     }
 
     return config;

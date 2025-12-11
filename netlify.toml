@@ -5,7 +5,7 @@
   command = "pnpm run build:netlify"
   publish = "dist/client"
   # Edge Functions directory for our custom handler
-  edge_functions = "netlify/edge-functions"
+  edge_functions = ".netlify/edge-functions"
 
 [dev]
   command = "pnpm run dev"
