@@ -1,12 +1,13 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import clsx from "clsx";
+
 import type { Ref } from "react";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useRouteLoaderData } from "react-router";
 import { Skeleton } from "~/components/skeleton";
 import { StarRating } from "~/components/star-rating";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import type { RootLoader } from "~/root";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import type { JudgemeStarsRatingData } from "~/types/judgeme";
 
@@ -17,6 +18,7 @@ interface JudgemeStarsRatingProps extends Partial<HydrogenComponentProps> {
     ratingText?: string;
     noReviewsText?: string;
     errorText?: string;
+    enabled?: boolean;
 }
 
 function formatRatingText(text: string, rating: number, totalReviews: number) {
@@ -25,7 +27,7 @@ function formatRatingText(text: string, rating: number, totalReviews: number) {
         .replace(/\{\{total_reviews\}\}/g, totalReviews.toString());
 }
 
-const JudgemeStarsRating = ({
+const JudgemeStarsRatingContent = ({
     ref,
     ...props
 }: JudgemeStarsRatingProps & { ref?: Ref<HTMLDivElement> }) => {
@@ -152,6 +154,22 @@ const JudgemeStarsRating = ({
             </div>
         </div>
     );
+};
+
+const JudgemeStarsRating = ({
+    ref,
+    ...props
+}: JudgemeStarsRatingProps & { ref?: Ref<HTMLDivElement> }) => {
+    const rootData = useRouteLoaderData<RootLoader>("root");
+    if (!rootData?.judgemeEnabled) {
+        console.warn(
+            "[JudgemeStarsRating]",
+            "Judgeme is not enabled, silently returning null!",
+        );
+        return null;
+    }
+
+    return <JudgemeStarsRatingContent ref={ref} {...props} />;
 };
 
 export default JudgemeStarsRating;

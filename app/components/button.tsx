@@ -21,7 +21,7 @@ export const variants = cva(
                     "bg-(--btn-primary-bg)",
                     "border-(--btn-primary-bg)",
                     "hover:text-(--btn-primary-bg)",
-                    "hover:bg-(--btn-primary-text)",
+                    "hover:bg-(--btn-primary-text) hover:opacity-75",
                     "hover:border-(--btn-primary-bg)",
                     "shadow-xs",
                 ],
@@ -139,7 +139,6 @@ export const Button = ({
             data-motion={animate ? "fade-up" : undefined}
             className={cn(variants({ variant, className }))}
             whileTap={{ scale: 0.98 }}
-            whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
             {loading && <Spinner />}

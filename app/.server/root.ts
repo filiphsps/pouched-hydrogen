@@ -54,6 +54,7 @@ export async function loadCriticalData({
         weaverseTheme,
         googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
         swatchesConfigs,
+        judgemeEnabled: Boolean(env.JUDGEME_PRIVATE_API_TOKEN),
     };
 }
 

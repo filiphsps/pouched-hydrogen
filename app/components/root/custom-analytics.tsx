@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noConsole: use console.log for debugging */
+/** biome-ignore-all lint/suspicious/noConsole: use console.debug for debugging */
 import {
     AnalyticsEvent,
     type CartUpdatePayload,
@@ -21,7 +21,7 @@ export function CustomAnalytics() {
     useEffect(() => {
         setTimeout(() => {
             const isTrackingAllowed = canTrack();
-            console.log(
+            console.debug(
                 "CustomAnalytics - isTrackingAllowed",
                 isTrackingAllowed,
             );
@@ -29,7 +29,7 @@ export function CustomAnalytics() {
         let dataToSentToGTM: any = {};
         // Standard events
         subscribe(AnalyticsEvent.PAGE_VIEWED, (data: PageViewPayload) => {
-            console.log("CustomAnalytics - Page viewed:", data);
+            console.debug("CustomAnalytics - Page viewed:", data);
             dataToSentToGTM = {
                 event: "page_viewed",
                 page_url: data.url,
@@ -37,7 +37,7 @@ export function CustomAnalytics() {
             window.dataLayer?.push(dataToSentToGTM);
         });
         subscribe(AnalyticsEvent.PRODUCT_VIEWED, (data: ProductViewPayload) => {
-            console.log("CustomAnalytics - Product viewed:", data);
+            console.debug("CustomAnalytics - Product viewed:", data);
             dataToSentToGTM = {
                 event: "product_viewed",
                 product_id: data.products?.[0]?.id,
@@ -48,13 +48,13 @@ export function CustomAnalytics() {
             window.dataLayer?.push(dataToSentToGTM);
         });
         subscribe(AnalyticsEvent.COLLECTION_VIEWED, (data) => {
-            console.log("CustomAnalytics - Collection viewed:", data);
+            console.debug("CustomAnalytics - Collection viewed:", data);
         });
         subscribe(AnalyticsEvent.CART_VIEWED, (data) => {
-            console.log("CustomAnalytics - Cart viewed:", data);
+            console.debug("CustomAnalytics - Cart viewed:", data);
         });
         subscribe(AnalyticsEvent.CART_UPDATED, (data: CartUpdatePayload) => {
-            console.log("CustomAnalytics - Cart updated:", data);
+            console.debug("CustomAnalytics - Cart updated:", data);
             dataToSentToGTM = {
                 event: "cart_updated",
                 cart_id: data.cart?.id,
@@ -64,18 +64,18 @@ export function CustomAnalytics() {
             window.dataLayer?.push(dataToSentToGTM);
         });
         subscribe(AnalyticsEvent.PRODUCT_ADD_TO_CART, (data) => {
-            console.log("CustomAnalytics - Product added to cart:", data);
+            console.debug("CustomAnalytics - Product added to cart:", data);
         });
         subscribe(AnalyticsEvent.PRODUCT_REMOVED_FROM_CART, (data) => {
-            console.log("CustomAnalytics - Product removed from cart:", data);
+            console.debug("CustomAnalytics - Product removed from cart:", data);
         });
         subscribe(AnalyticsEvent.SEARCH_VIEWED, (data) => {
-            console.log("CustomAnalytics - Search viewed:", data);
+            console.debug("CustomAnalytics - Search viewed:", data);
         });
 
         // Custom events
         subscribe(AnalyticsEvent.CUSTOM_EVENT, (data) => {
-            console.log("CustomAnalytics - CUSTOM_EVENT:", data);
+            console.debug("CustomAnalytics - CUSTOM_EVENT:", data);
         });
     }, []);
 
