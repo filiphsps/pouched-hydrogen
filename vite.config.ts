@@ -36,8 +36,8 @@ export default defineConfig(async (): Promise<UserConfig> => {
             deploymentPlugin,
             reactRouter(),
             tsconfigPaths() as any,
-            tailwindcss(),
-        ],
+            tailwindcss()
+        ].filter(Boolean),
         build: {
             // Allow a strict Content-Security-Policy
             // without inlining assets as base64:

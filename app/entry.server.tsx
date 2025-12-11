@@ -2,8 +2,7 @@
  * Hydrogen server entry point.
  * This file handles both Oxygen and Netlify Edge Functions deployments.
  *
- * For Netlify Edge Functions, we use @netlify/remix-edge-adapter which provides
- * createHydrogenAppLoadContext for proper Hydrogen integration.
+ * For Netlify Edge Functions, we handle context creation manually or via the Vite plugin.
  */
 import * as remixBuild from "virtual:react-router/server-build";
 import {
