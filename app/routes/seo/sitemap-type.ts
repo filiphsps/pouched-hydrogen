@@ -27,29 +27,13 @@ export async function loader({
                 break;
             }
             case "pages": {
-                // Pages usually don't have totalCount on index, might need to fetch all?
-                // Or assuming pages are few.
                 const data = await storefront.query(PAGES_QUERY);
-                count = data.pages.nodes.length; // Simplified for now
+                count = data.pages.nodes.length;
                 break;
             }
             case "blogs": {
-                // Blogs themselves or articles?
-                // Usually 'blogs' sitemap lists all blog articles?
-                // Or 'blogs' sitemap lists the blogs?
-                // Assuming articles.
-                // This is complex as there are multiple blogs.
-                // For now, let's assume we want to index ARTICLES.
-                // We need to loop through blogs and sum articles?
-                // Or just fetch all articles?
-                // Let's stick effectively to "Articles" via `blog` query?
-                // Actually, standard Hydrogen sitemap might handle 'blog-posts' vs 'blogs'.
-                // Let's assume we just want `sitemap/blogs.xml` to index the blogs themselves?
-                // Or usually it indexes articles.
-
-                // For simplicty in this iteration, let's fetch blogs count.
                 const data = await storefront.query(BLOGS_COUNT_QUERY);
-                count = data.blogs.totalCount;
+                count = data.blogs.nodes.length;
                 break;
             }
             default:
@@ -89,7 +73,7 @@ ${sitemapLines}
 
 const PRODUCTS_COUNT_QUERY = `#graphql
   query ProductsCount {
-    search(first: 0, types: PRODUCT) {
+    search(first: 0, query: "*", types: PRODUCT) {
       totalCount
     }
   }
@@ -115,8 +99,10 @@ const PAGES_QUERY = `#graphql
 
 const BLOGS_COUNT_QUERY = `#graphql
   query BlogsCount {
-     blogs(first: 0) {
-      totalCount
+     blogs(first: 50) {
+      nodes {
+        id
+      }
     }
   }
 ` as const;
