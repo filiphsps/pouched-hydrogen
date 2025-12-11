@@ -4,9 +4,6 @@
   command = "DEPLOY_TARGET=netlify pnpm exec react-router build"
   publish = "dist/client"
 
-[functions]
-  directory = ".netlify/v1/edge-functions"
-
 [dev]
   command = "pnpm run dev"
 

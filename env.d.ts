@@ -1,6 +1,36 @@
 /// <reference types="vite/client" />
 /// <reference types="@shopify/oxygen-workers-types" />
 
+/**
+ * TypeScript declaration for Netlify virtual server entry module.
+ * Used when deploying to Netlify Edge Functions with edge: true.
+ */
+declare module "virtual:netlify-server-entry" {
+    import type { ServerEntryModule } from "react-router";
+    const entry: ServerEntryModule;
+    export default entry;
+}
+
+/**
+ * TypeScript declaration for Netlify Edge Functions global.
+ */
+declare const Netlify:
+    | {
+          env: {
+              get(key: string): string | undefined;
+              has(key: string): boolean;
+              toObject(): Record<string, string>;
+          };
+          context: {
+              geo?: {
+                  city?: string;
+                  country?: { code?: string; name?: string };
+                  subdivision?: { code?: string; name?: string };
+              };
+          };
+      }
+    | undefined;
+
 // Enhance TypeScript's built-in typings.
 import "@total-typescript/ts-reset";
 import type { HydrogenEnv, HydrogenSessionData } from "@shopify/hydrogen";
@@ -25,6 +55,9 @@ declare global {
         KLAVIYO_PRIVATE_API_TOKEN: string;
         PUBLIC_SHOPIFY_INBOX_SHOP_ID: string;
         WEAVERSE_HOST?: string;
+        // Metaobject keys for color swatches
+        METAOBJECT_COLOR_NAME_KEY: string;
+        METAOBJECT_COLOR_VALUE_KEY: string;
     }
 }
 
