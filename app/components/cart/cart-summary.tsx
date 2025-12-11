@@ -53,7 +53,8 @@ export function CartSummary({
     return (
         <div
             className={cn(
-                layout === "drawer" && "grid border-line-subtle border-t pt-4",
+                layout === "drawer" &&
+                    "grid border-line-subtle border-t px-4 pt-4",
                 layout === "page" &&
                     "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
             )}

@@ -7,6 +7,7 @@ import {
     useOptimisticData,
 } from "@shopify/hydrogen";
 import clsx from "clsx";
+import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Image } from "~/components/image";
@@ -14,7 +15,9 @@ import { Link } from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
 import type { CartLayoutType } from "~/types/others";
+import { cn } from "~/utils/cn";
 import { calculateAspectRatio } from "~/utils/image";
+import { removeVendorFromTitle } from "~/utils/product";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
 import { useCartDrawerStore } from "./store";
 
@@ -70,9 +73,18 @@ export function CartLineItem({
         isDefaultVariant = name === "Title" && value === "Default Title";
     }
 
+    const productTitle: ReactNode = product?.title ? (
+        <span className="inline-flex gap-1">
+            <span className="inline-block font-medium text-body-subtle uppercase">
+                {product.vendor}
+            </span>
+            {removeVendorFromTitle(product.title, product.vendor, true)}
+        </span>
+    ) : null;
+
     return (
         <li
-            className="flex gap-4"
+            className="flex gap-4 border-line-subtle border-t pt-4"
             style={{
                 // Hide the line item if the optimistic data action is remove
                 // Do not remove the form from the DOM
@@ -85,13 +97,13 @@ export function CartLineItem({
                         width={250}
                         height={250}
                         data={image}
-                        className="h-auto w-24"
+                        className="aspect-square h-auto w-24 rounded-2xl bg-gray-100"
                         alt={title}
                         aspectRatio={calculateAspectRatio(image, "adapt")}
                     />
                 )}
             </div>
-            <div className="flex grow flex-col gap-3">
+            <div className="flex grow flex-col gap-3 gap-y-1">
                 <div className="flex justify-between gap-4">
                     <div>
                         <div>
@@ -102,11 +114,11 @@ export function CartLineItem({
                                     onClick={closeCartDrawer}
                                 >
                                     <RevealUnderline>
-                                        {product?.title || ""}
+                                        {productTitle}
                                     </RevealUnderline>
                                 </Link>
                             ) : (
-                                <p>{product?.title || ""}</p>
+                                <p>{productTitle}</p>
                             )}
                         </div>
                         {!isDefaultVariant && (
@@ -123,9 +135,10 @@ export function CartLineItem({
                     )}
                 </div>
                 <div
-                    className={clsx(
-                        "flex items-center gap-2",
-                        layout === "drawer" && "justify-between",
+                    className={cn(
+                        "flex w-full items-center gap-3",
+                        layout === "drawer" &&
+                            "flex-col items-start justify-start gap-1",
                     )}
                 >
                     <CartLineQuantityAdjust line={line} />
@@ -170,10 +183,12 @@ function CartLinePrice({
     line,
     priceType = "regular",
     isOptimistic,
+    className,
 }: {
     line: CartLine;
     priceType?: "regular" | "compareAt";
     isOptimistic?: boolean;
+    className?: string;
 }) {
     if (!(line?.cost?.amountPerQuantity && line?.cost?.totalAmount)) {
         return null;
@@ -189,14 +204,19 @@ function CartLinePrice({
     }
 
     if (isOptimistic) {
-        return <Skeleton as="span" className="ml-auto h-4 w-16 rounded" />;
+        return (
+            <Skeleton
+                as="span"
+                className={cn("ml-auto h-4 w-16 rounded", className)}
+            />
+        );
     }
     return (
         <Money
             withoutTrailingZeros
             as="span"
             data={moneyV2}
-            className="ml-auto"
+            className={cn("ml-auto", className)}
         />
     );
 }

@@ -11,6 +11,7 @@ export const variants = cva(
         "whitespace-nowrap font-normal text-base leading-tight",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50!",
         "transition-all duration-200",
+        "select-none",
     ],
     {
         variants: {

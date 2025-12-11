@@ -91,7 +91,7 @@ export function CartMain({
             <div
                 className={clsx(
                     layout === "drawer" &&
-                        "grid grow grid-cols-1 grid-rows-[1fr_auto] px-4",
+                        "grid grow grid-cols-1 grid-rows-[1fr_auto]",
                     layout === "page" && [
                         "mx-auto w-full max-w-(--page-width) pb-12",
                         "grid md:items-start lg:grid-cols-[1fr_480px]",
@@ -102,7 +102,7 @@ export function CartMain({
                 <div
                     ref={scrollRef}
                     className={clsx([
-                        "-mx-4 pb-4",
+                        "pb-4",
                         y > 0 ? "border-line-subtle border-t" : "",
                         layout === "page" && "grow md:translate-y-4",
                         layout === "drawer" && "transition",

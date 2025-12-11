@@ -274,9 +274,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
                     >
                         <RevealUnderline className="flex gap-1 bg-position-[left_calc(1em+3px)] leading-normal">
                             {pcardShowVendor && (
-                                <div className="inline-block text-body-subtle uppercase">
+                                <span className="inline-block font-medium text-body-subtle uppercase">
                                     {product.vendor}
-                                </div>
+                                </span>
                             )}
 
                             {removeVendorFromTitle(

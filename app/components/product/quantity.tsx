@@ -15,6 +15,9 @@ interface QuantityProps {
     label?: string | false;
     /** Additional CSS class names */
     className?: string;
+    inputClassName?: string;
+    /** Whether the input and buttons are disabled */
+    disabled?: boolean;
 }
 
 /**
@@ -26,7 +29,8 @@ interface QuantityProps {
  * @returns A quantity input with +/- buttons
  */
 export function Quantity(props: QuantityProps) {
-    const { value, onChange, label, className } = props;
+    const { value, onChange, label, className, inputClassName, disabled } =
+        props;
 
     const { t } = useTranslation();
 
@@ -98,6 +102,7 @@ export function Quantity(props: QuantityProps) {
             <div
                 className={cn(
                     "flex w-full items-center rounded-full border border-line",
+                    disabled && "bg-gray-100 opacity-50",
                     className,
                 )}
             >
@@ -106,26 +111,31 @@ export function Quantity(props: QuantityProps) {
                     type="button"
                     name="decrease-quantity"
                     aria-label={t("cart.decreaseQuantity")}
-                    className="aspect-square h-full shrink-0 border-none"
-                    disabled={value <= 1}
+                    className="aspect-square h-full shrink-0 border-none font-medium text-lg"
+                    disabled={value <= 1 || disabled}
                     onClick={() => onChange(value - 1)}
                 >
                     <span>&#8722;</span>
                 </Button>
                 <input
-                    className="min-w-0 flex-1 border-none bg-transparent px-1 py-2.5 text-center focus:outline-hidden focus:ring-0"
+                    className={cn(
+                        "min-w-16 flex-1 border-none bg-transparent py-2.5 text-center focus:outline-hidden focus:ring-0",
+                        inputClassName,
+                    )}
                     value={localValue}
                     onKeyDown={handleKeyDown}
                     onChange={(e) => setLocalValue(e.currentTarget.value)}
                     onBlur={commitValue}
+                    disabled={disabled}
                 />
                 <Button
                     variant="outline"
                     type="button"
-                    className="aspect-square h-full shrink-0 border-none"
+                    className="aspect-square h-full shrink-0 border-none font-medium text-lg"
                     name="increase-quantity"
                     aria-label={t("cart.increaseQuantity")}
                     onClick={() => onChange(value + 1)}
+                    disabled={disabled}
                 >
                     <span>&#43;</span>
                 </Button>
