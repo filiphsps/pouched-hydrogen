@@ -120,14 +120,19 @@ export function QuantityBreakSelector({
                 </div>
 
                 {/* Custom quantity input - grows to fill space, wraps with min-width */}
-                <div className="min-w-36 flex-1">
-                    <Quantity
-                        value={selectedQuantity}
-                        onChange={handleCustomQuantityChange}
-                        className="h-14 w-full"
-                        label={false}
-                    />
-                </div>
+                {showCustomInput && (
+                    <div
+                        className="min-w-36 flex-1"
+                        data-testid="quantity-break-custom"
+                    >
+                        <Quantity
+                            value={selectedQuantity}
+                            onChange={handleCustomQuantityChange}
+                            className="h-14 w-full"
+                            label={false}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );

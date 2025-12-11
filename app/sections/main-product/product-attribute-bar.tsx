@@ -102,7 +102,7 @@ export default function ProductAttributeBar(props: ProductAttributeBarProps) {
                     <div
                         key={attr.label}
                         className={cn(
-                            "flex flex-1 flex-col items-center justify-center px-4 py-4 text-center",
+                            "flex flex-1 flex-col items-center justify-center gap-0.5 p-3 text-center lg:p-4",
                             index === 0 && "rounded-l-lg",
                             index === attributes.length - 1 && "rounded-r-lg",
                         )}
@@ -110,7 +110,7 @@ export default function ProductAttributeBar(props: ProductAttributeBarProps) {
                         <span className="font-normal text-body-subtle text-sm">
                             {attr.label}
                         </span>
-                        <span className="mt-1 font-semibold text-base">
+                        <span className="font-semibold text-base">
                             {attr.value}
                         </span>
                     </div>
