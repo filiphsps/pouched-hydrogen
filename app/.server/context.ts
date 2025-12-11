@@ -86,9 +86,10 @@ export async function createHydrogenRouterContext(
     // This preserves the RouterContextProvider class instance
     Object.assign(hydrogenContext, { weaverse });
 
-    console.log("[Context] Weaverse assigned. Client:", weaverse);
-    if (!hydrogenContext.storefront)
+    if (!hydrogenContext.storefront) {
         console.error("[Context] Storefront missing in context!");
+        throw new Error("No storefront context found");
+    }
 
     return hydrogenContext as typeof hydrogenContext & {
         weaverse: WeaverseClient;

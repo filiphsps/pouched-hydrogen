@@ -1,5 +1,4 @@
 export function buildEnvFromNetlify(): Env {
-    console.log("[Env] buildEnvFromNetlify called");
     const netlifyEnv = globalThis.Netlify?.env;
 
     if (!netlifyEnv) {
@@ -8,8 +7,6 @@ export function buildEnvFromNetlify(): Env {
             "Netlify.env is not available. Are you running in Netlify Edge Functions?",
         );
     }
-
-    console.log("[Env] Netlify.env available. Getting keys...");
 
     return {
         SESSION_SECRET: netlifyEnv.get("SESSION_SECRET") || "",

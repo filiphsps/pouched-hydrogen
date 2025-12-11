@@ -33,7 +33,7 @@ async function getDeploymentPlugin() {
 export default defineConfig(async ({ isSsrBuild, mode }) => {
     const deploymentPlugin = await getDeploymentPlugin();
     const isNetlifyEdgeBuild = mode === "netlify-edge" || process.argv.includes("netlify-edge");
-    console.log(`[Vite] Building for mode: ${mode}, isNetlifyEdgeBuild: ${isNetlifyEdgeBuild}, process.argv: ${JSON.stringify(process.argv)}`);
+    console.log(`[Vite] Building for mode: ${mode}, isNetlifyEdgeBuild: ${isNetlifyEdgeBuild}`);
 
     const config: UserConfig = {
         plugins: [

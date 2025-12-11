@@ -37,22 +37,12 @@ export default async function handleRequest(
     reactRouterContext: EntryContext,
     context: AppLoadContext,
 ) {
-    console.log("[Entry] handleRequest called");
-
     // Cast to Hydrogen context type for proper typing
     const hydrogenContext = context as HydrogenRouterContextProvider;
 
-    console.log(
-        "[Entry] handleRequest context keys:",
-        Object.keys(context || {}),
-    );
-    if (hydrogenContext?.storefront) {
-        console.log(
-            "[Entry] handleRequest storefront.i18n:",
-            hydrogenContext.storefront.i18n,
-        );
-    } else {
-        console.error("[Entry] handleRequest MISSING STOREFRONT IN CONTEXT");
+    if (!hydrogenContext?.storefront) {
+        console.error("[Context] Storefront missing in context!");
+        throw new Error("No storefront context found");
     }
 
     const { nonce, header, NonceProvider } = createContentSecurityPolicy({
