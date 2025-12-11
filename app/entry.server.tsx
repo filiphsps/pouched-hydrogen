@@ -86,6 +86,8 @@ export async function netlifyEdgeHandler(request: Request): Promise<Response> {
     }
 }
 
+console.log("[Entry] module loaded");
+
 /**
  * Default export handles the actual rendering of the application.
  * This is called by both Oxygen and Netlify Edge Functions once the
@@ -98,6 +100,20 @@ export default async function handleRequest(
     reactRouterContext: EntryContext,
     context: HydrogenRouterContextProvider,
 ) {
+    console.log("[Entry] handleRequest called");
+    console.log(
+        "[Entry] handleRequest context keys:",
+        Object.keys(context || {}),
+    );
+    if (context?.storefront) {
+        console.log(
+            "[Entry] handleRequest storefront.i18n:",
+            context.storefront.i18n,
+        );
+    } else {
+        console.error("[Entry] handleRequest MISSING STOREFRONT IN CONTEXT");
+    }
+
     const { nonce, header, NonceProvider } = createContentSecurityPolicy({
         ...getWeaverseCsp(request, context),
         shop: {
