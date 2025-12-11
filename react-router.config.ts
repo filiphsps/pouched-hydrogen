@@ -9,10 +9,15 @@ const isNetlify = process.env.DEPLOY_TARGET === "netlify";
 
 export default {
     presets: [hydrogenPreset()],
+    future: {
+        unstable_optimizeDeps: true,
+    },
     appDirectory: "app",
     buildDirectory: "dist",
     ssr: true,
     // Netlify's vite-plugin-react-router expects server.js, not index.js
     // Oxygen uses the default index.js
     ...(isNetlify && { serverBuildFile: "server.js" }),
+    // @ts-expect-error - serverEntryFile might not be in the type definition yet
+    serverEntryFile: "./server.ts",
 } satisfies Config;
