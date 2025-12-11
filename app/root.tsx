@@ -68,12 +68,19 @@ export async function loader(args: Route.LoaderArgs) {
     return {
         ...deferredData,
         ...criticalData,
+        publicDoNotIndex: Boolean(context.env.PUBLIC_DO_NOT_INDEX),
     };
 }
 
 export const meta = ({ data }: MetaArgs<typeof loader>) => {
     const loaderData = data as Awaited<ReturnType<typeof loader>> | undefined;
-    return getSeoMeta(loaderData?.seo as SeoConfig);
+    const baseMeta = getSeoMeta(loaderData?.seo as SeoConfig);
+
+    if (loaderData?.publicDoNotIndex) {
+        return [...baseMeta, { name: "robots", content: "noindex, nofollow" }];
+    }
+
+    return baseMeta;
 };
 
 export function ErrorBoundary({ error }: { error: Error }) {

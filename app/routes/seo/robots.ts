@@ -5,7 +5,8 @@ export async function loader({ request, context }: Route.LoaderArgs) {
     const url = new URL(request.url);
     const { shop } = await context.storefront.query(ROBOTS_QUERY);
     const shopId = parseGid(shop.id).id;
-    const body = robotsTxtData({ url: url.origin, shopId });
+    const disallowAll = Boolean(context.env.PUBLIC_DO_NOT_INDEX);
+    const body = robotsTxtData({ url: url.origin, shopId, disallowAll });
 
     return new Response(body, {
         status: 200,
@@ -17,8 +18,23 @@ export async function loader({ request, context }: Route.LoaderArgs) {
     });
 }
 
-function robotsTxtData({ url, shopId }: { shopId?: string; url?: string }) {
+function robotsTxtData({
+    url,
+    shopId,
+    disallowAll,
+}: {
+    shopId?: string;
+    url?: string;
+    disallowAll?: boolean;
+}) {
     const sitemapUrl = url ? `${url}/sitemap.xml` : undefined;
+
+    if (disallowAll) {
+        return `
+User-agent: *
+Disallow: /
+    `.trim();
+    }
 
     return `
 User-agent: *

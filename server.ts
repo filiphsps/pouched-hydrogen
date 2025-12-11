@@ -5,7 +5,6 @@
  * For Netlify Edge, this exports the handler for virtual:netlify-server-entry.
  * For Oxygen, this exports a fetch handler in module format.
  */
-// @ts-expect-error
 import * as remixBuild from "virtual:react-router/server-build";
 import { storefrontRedirect } from "@shopify/hydrogen";
 import { createRequestHandler } from "@shopify/hydrogen/oxygen";

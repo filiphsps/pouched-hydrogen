@@ -58,6 +58,7 @@ declare global {
         // Metaobject keys for color swatches
         METAOBJECT_COLOR_NAME_KEY: string;
         METAOBJECT_COLOR_VALUE_KEY: string;
+        PUBLIC_DO_NOT_INDEX?: string;
     }
 }
 
