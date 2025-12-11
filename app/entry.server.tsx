@@ -27,11 +27,9 @@ import i18next from "./i18n.server";
  * Get load context for Netlify Edge Functions.
  * This function is called by the Edge Function handler to create
  * the Hydrogen router context for each request.
- *
- * @param request - The incoming request
- * @returns The Hydrogen router context for use in loaders/actions
  */
 export async function getLoadContext(request: Request) {
+    console.log("[Entry] getLoadContext called");
     const env = buildEnvFromNetlify();
     return createHydrogenRouterContext(request, env);
 }
@@ -42,7 +40,12 @@ export async function getLoadContext(request: Request) {
  */
 export async function netlifyEdgeHandler(request: Request): Promise<Response> {
     try {
+        console.log("[Entry] netlifyEdgeHandler starting");
         const hydrogenContext = await getLoadContext(request);
+        console.log(
+            "[Entry] Context created. Weaverse:",
+            Boolean(hydrogenContext.weaverse),
+        );
 
         // Import createRequestHandler from react-router for handling routes
         const { createRequestHandler } = await import("react-router");
