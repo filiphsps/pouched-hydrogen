@@ -22,10 +22,19 @@ declare global {
     interface HydrogenAdditionalContext extends AdditionalContextType {}
 }
 
+/**
+ * Creates the Hydrogen router context for both Oxygen and Netlify runtimes.
+ * ExecutionContext is optional to support Netlify Edge Functions which handle
+ * waitUntil differently.
+ *
+ * @param request - The incoming HTTP request
+ * @param env - Environment variables
+ * @param executionContext - Optional Cloudflare-style execution context (Oxygen)
+ */
 export async function createHydrogenRouterContext(
     request: Request,
     env: Env,
-    executionContext: ExecutionContext,
+    executionContext?: ExecutionContext,
 ) {
     if (!env?.SESSION_SECRET) {
         throw new Error("SESSION_SECRET environment variable is not set");
@@ -35,11 +44,20 @@ export async function createHydrogenRouterContext(
         throw new Error("WEAVERSE_PROJECT_ID environment variable is not set");
     }
 
-    const waitUntil = executionContext.waitUntil.bind(executionContext);
-    const [cache, session] = await Promise.all([
-        caches.open("hydrogen"),
-        AppSession.init(request, [env.SESSION_SECRET]),
-    ]);
+    // waitUntil is optional - Netlify handles background work differently
+    const waitUntil =
+        executionContext?.waitUntil?.bind(executionContext) ??
+        (() => {
+            /* no-op fallback for non-Oxygen runtimes */
+        });
+
+    // Cache API may not be available in all runtimes
+    const cache =
+        typeof caches !== "undefined"
+            ? await caches.open("hydrogen")
+            : undefined;
+
+    const session = await AppSession.init(request, [env.SESSION_SECRET]);
 
     const i18n = getLocaleFromRequest(request);
     const hydrogenContext = createHydrogenContext(

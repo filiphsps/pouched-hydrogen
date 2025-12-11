@@ -16,6 +16,8 @@ declare global {
 
     interface Env extends HydrogenEnv {
         // declare additional Env parameter use in the fetch handler and Remix loader context here
+        /** Deployment target: 'oxygen' (default) or 'netlify' */
+        DEPLOY_TARGET?: "oxygen" | "netlify";
         PUBLIC_GOOGLE_GTM_ID: string;
         JUDGEME_PRIVATE_API_TOKEN: string;
         CUSTOM_COLLECTION_BANNER_METAFIELD: string;

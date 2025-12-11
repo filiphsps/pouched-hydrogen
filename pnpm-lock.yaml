@@ -146,6 +146,9 @@ importers:
       '@biomejs/biome':
         specifier: ^2.3.8
         version: 2.3.8
+      '@netlify/vite-plugin-react-router':
+        specifier: ^2.1.2
+        version: 2.1.2(react-router@7.9.2(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(vite@6.3.5(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2))
       '@playwright/test':
         specifier: 1.57.0
         version: 1.57.0
@@ -1252,6 +1255,25 @@ packages:
     resolution: {integrity: sha512-2Z0FATFHaoYJ8b+Y4y4Hgfn3FRFwuU5zRrk+9dFWp4uGAdHGqVEdP7HP+gLA3X469KXHmfupJaUbKo1b/aDKIg==}
     peerDependencies:
       three: '>= 0.159.0'
+
+  '@netlify/edge-functions@3.0.3':
+    resolution: {integrity: sha512-grElRK+rTBdYrPsULPKrhcHhrW+fwpDRLPbGByqa6Xrz0fhzcFJ2D9ijxEQ/onFcSVPYHT1u1mI48GhS5bZ/Ag==}
+    engines: {node: '>=18.0.0'}
+
+  '@netlify/functions@5.1.1':
+    resolution: {integrity: sha512-64TvwQkAFpYb3QqYemPYDqWi1xMbYOBfg70bhy23iahWf+F9TJgOOnAVUOk5fMWGN/fk9bZG5ROc+cm32whh+g==}
+    engines: {node: '>=18.0.0'}
+
+  '@netlify/types@2.3.0':
+    resolution: {integrity: sha512-5gxMWh/S7wr0uHKSTbMv4bjWmWSpwpeLYvErWeVNAPll5/QNFo9aWimMAUuh8ReLY3/fg92XAroVVu7+z27Snw==}
+    engines: {node: ^18.14.0 || >=20}
+
+  '@netlify/vite-plugin-react-router@2.1.2':
+    resolution: {integrity: sha512-cPJiD6WbJuVAZwSEMS0A4F+ymnuyaw7ZzrYSD0X+WcTsxySX46l72u8r80wwjL/p3lpC7ZJoyqHnANpbxlLNVA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react-router: '>=7.9.0'
+      vite: 6.3.5
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -5770,6 +5792,25 @@ snapshots:
     dependencies:
       promise-worker-transferable: 1.0.4
       three: 0.172.0
+
+  '@netlify/edge-functions@3.0.3':
+    dependencies:
+      '@netlify/types': 2.3.0
+
+  '@netlify/functions@5.1.1':
+    dependencies:
+      '@netlify/types': 2.3.0
+
+  '@netlify/types@2.3.0': {}
+
+  '@netlify/vite-plugin-react-router@2.1.2(react-router@7.9.2(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(vite@6.3.5(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2))':
+    dependencies:
+      '@netlify/edge-functions': 3.0.3
+      '@netlify/functions': 5.1.1
+      isbot: 5.1.32
+      react-router: 7.9.2(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      tinyglobby: 0.2.15
+      vite: 6.3.5(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2)
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:

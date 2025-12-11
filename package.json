@@ -85,6 +85,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",
+    "@netlify/vite-plugin-react-router": "^2.1.2",
     "@playwright/test": "1.57.0",
     "@shopify/cli": "^3.88.0",
     "@shopify/hydrogen-codegen": "0.3.3",

@@ -5,6 +5,7 @@ node_modules
 /dist
 /public/build
 /.mf
+.netlify
 .env
 .idea
 .shopify

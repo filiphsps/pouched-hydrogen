@@ -1,0 +1,25 @@
+# Netlify configuration for Hydrogen deployment
+# This file configures the build and deployment settings for Netlify
+
+[build]
+  command = "DEPLOY_TARGET=netlify pnpm run build"
+  publish = "dist/client"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# Headers for static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
