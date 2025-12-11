@@ -44,13 +44,14 @@ export function CartLineQuantityAdjust({
         if (quantity === 0) {
             submit(
                 {
-                    lineIds: [lineId],
-                    action: CartForm.ACTIONS.LinesRemove,
+                    cartFormInput: JSON.stringify({
+                        action: CartForm.ACTIONS.LinesRemove,
+                        inputs: { lineIds: [lineId] },
+                    }),
                 },
                 {
                     action: "/cart",
                     method: "POST",
-                    encType: "application/json",
                     navigate: false,
                     fetcherKey: `navigate-cart-${lineId}`, // Match what CartForm would typically generate or use a unique key
                 },
@@ -58,13 +59,14 @@ export function CartLineQuantityAdjust({
         } else {
             submit(
                 {
-                    lines: [{ id: lineId, quantity }],
-                    action: CartForm.ACTIONS.LinesUpdate,
+                    cartFormInput: JSON.stringify({
+                        action: CartForm.ACTIONS.LinesUpdate,
+                        inputs: { lines: [{ id: lineId, quantity }] },
+                    }),
                 },
                 {
                     action: "/cart",
                     method: "POST",
-                    encType: "application/json",
                     navigate: false,
                     fetcherKey: `navigate-cart-${lineId}`,
                 },
