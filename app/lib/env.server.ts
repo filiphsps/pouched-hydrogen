@@ -9,6 +9,7 @@ export function buildEnvFromNetlify(): Env {
     }
 
     return {
+        PUBLIC_DO_NOT_INDEX: netlifyEnv.get("PUBLIC_DO_NOT_INDEX") || "",
         SESSION_SECRET: netlifyEnv.get("SESSION_SECRET") || "",
         PUBLIC_STOREFRONT_API_TOKEN:
             netlifyEnv.get("PUBLIC_STOREFRONT_API_TOKEN") || "",
