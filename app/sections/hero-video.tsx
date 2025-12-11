@@ -1,8 +1,4 @@
-import {
-    createSchema,
-    type HydrogenComponentProps,
-    isBrowser,
-} from "@weaverse/hydrogen";
+import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
@@ -70,7 +66,7 @@ const variants = cva(
 );
 
 function getPlayerSize(id: string) {
-    if (isBrowser) {
+    if (typeof document !== "undefined") {
         const section = document.querySelector(`[data-wv-id="${id}"]`);
         if (section) {
             const rect = section.getBoundingClientRect();
