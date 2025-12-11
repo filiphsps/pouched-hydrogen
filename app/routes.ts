@@ -10,7 +10,7 @@ import { hydrogenRoutes } from "@shopify/hydrogen";
 // Manual route definitions can be added to this array, in addition to or instead of using the `flatRoutes` file-based routing convention.
 // See https://remix.run/docs/en/main/guides/routing for more details
 export default hydrogenRoutes([
-    route("robots.txt", "routes/robots[.txt].ts"),
+    route("robots.txt", "routes/seo/robots.ts"),
     ...prefix(":locale?", [
         index("routes/home.tsx"),
         route("search", "routes/search/index.tsx"),
@@ -19,6 +19,7 @@ export default hydrogenRoutes([
             "routes/others/order-redirect.tsx",
         ),
         route("sitemap.xml", "routes/seo/sitemap.ts"),
+        route("sitemap/:type.xml", "routes/seo/sitemap-type.ts"),
         route("sitemap/:type/:page.xml", "routes/seo/sitemap-page.ts"),
         route("pages/:pageHandle", "routes/pages/regular-page.tsx"),
         route("discount/:code", "routes/others/discount-code.tsx"),

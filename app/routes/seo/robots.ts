@@ -1,5 +1,5 @@
 import { parseGid } from "@shopify/hydrogen";
-import type { Route } from "./+types/robots[.txt]";
+import type { Route } from "./+types/robots";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
     const url = new URL(request.url);
