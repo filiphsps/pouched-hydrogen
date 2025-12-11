@@ -1,19 +1,67 @@
+import { useEffect, useState } from "react";
 import { cn } from "~/utils/cn";
 
+/**
+ * Props for the Quantity component.
+ */
 interface QuantityProps {
+    /** The current quantity value */
     value: number;
+    /** Callback when quantity changes (fires on blur or Enter) */
     onChange: (value: number) => void;
-    label?: string;
+    /** Label for the quantity input, or false to hide it */
+    label?: string | false;
+    /** Additional CSS class names */
     className?: string;
 }
+
+/**
+ * A quantity input component with increment/decrement buttons.
+ * Only fires onChange on blur, Enter key, or button clicks to prevent
+ * intermediate state updates while typing.
+ *
+ * @param props - The component props
+ * @returns A quantity input with +/- buttons
+ */
 export function Quantity(props: QuantityProps) {
-    const { value, onChange, label = "Quantity", className } = props;
+    const { value, onChange, label, className } = props;
+
+    // Local state for the input value while typing
+    const [localValue, setLocalValue] = useState(String(value));
+
+    // Sync local value when prop value changes (e.g., from button clicks)
+    useEffect(() => {
+        setLocalValue(String(value));
+    }, [value]);
+
+    /**
+     * Commits the local value to the parent via onChange.
+     * Ensures the value is at least 1.
+     */
+    const commitValue = () => {
+        const numValue = Number(localValue);
+        if (!Number.isNaN(numValue) && numValue >= 1) {
+            onChange(numValue);
+        } else {
+            // Reset to current value if invalid
+            setLocalValue(String(value));
+        }
+    };
+
     /**
      * Handles keydown events on the quantity input.
      * Allows keyboard shortcuts (Cmd+A, Ctrl+C, etc.) while preventing
-     * non-numeric character entry.
+     * non-numeric character entry. Commits value on Enter.
      */
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        // Commit value on Enter
+        if (e.key === "Enter") {
+            e.preventDefault();
+            commitValue();
+            e.currentTarget.blur();
+            return;
+        }
+
         // Allow keyboard shortcuts (Cmd+A, Ctrl+C, etc.)
         if (e.metaKey || e.ctrlKey) {
             return;
@@ -35,9 +83,14 @@ export function Quantity(props: QuantityProps) {
             e.preventDefault();
         }
     };
+
     return (
         <div className="space-y-1.5" data-motion="fade-up">
-            <legend className="font-bold leading-tight">{label}</legend>
+            {label !== false && (
+                <legend className="font-bold leading-tight">
+                    {label || "Quantity"}
+                </legend>
+            )}
             <div
                 className={cn(
                     "flex w-full items-center rounded-xl border border-line",
@@ -56,9 +109,10 @@ export function Quantity(props: QuantityProps) {
                 </button>
                 <input
                     className="min-w-0 flex-1 border-none bg-transparent px-1 py-2.5 text-center focus:outline-hidden focus:ring-0"
-                    value={value}
+                    value={localValue}
                     onKeyDown={handleKeyDown}
-                    onChange={(e) => onChange(Number(e.currentTarget.value))}
+                    onChange={(e) => setLocalValue(e.currentTarget.value)}
+                    onBlur={commitValue}
                 />
                 <button
                     type="button"
