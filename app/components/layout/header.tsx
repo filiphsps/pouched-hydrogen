@@ -1,14 +1,13 @@
 import { MagnifyingGlassIcon, UserIcon } from "@phosphor-icons/react";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { cva } from "class-variance-authority";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
     Await,
     useLocation,
     useRouteError,
     useRouteLoaderData,
 } from "react-router";
-import useWindowScroll from "react-use/esm/useWindowScroll";
 import { CartDrawer } from "~/components/cart/cart-drawer";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
@@ -43,10 +42,25 @@ function useIsHomeCheck() {
 export function Header() {
     const { headerWidth } = useThemeSettings();
     const isHome = useIsHomeCheck();
-    const { y } = useWindowScroll();
+    // const { y } = useWindowScroll();
     const routeError = useRouteError();
+    const [scrolled, setScrolled] = useState(false);
 
-    const scrolled = y >= 50;
+    useEffect(() => {
+        let lastScrolled = window.scrollY >= 50;
+        setScrolled(lastScrolled);
+
+        const handleScroll = () => {
+            const isScrolled = window.scrollY >= 50;
+            if (isScrolled !== lastScrolled) {
+                setScrolled(isScrolled);
+                lastScrolled = isScrolled;
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     return (
         <header

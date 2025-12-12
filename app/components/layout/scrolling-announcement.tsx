@@ -14,23 +14,11 @@ export function ScrollingAnnouncement() {
         topbarScrollingSpeed,
     } = themeSettings;
 
-    function updateStyles() {
-        if (topbarText) {
-            document.body.style.setProperty(
-                "--topbar-height",
-                `${Math.max(topbarHeight - window.scrollY, 0)}px`,
-            );
-        } else {
-            document.body.style.setProperty("--topbar-height", "0px");
-        }
-    }
-
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
     useEffect(() => {
-        updateStyles();
-        window.addEventListener("scroll", updateStyles);
-        return () => window.removeEventListener("scroll", updateStyles);
-    }, [topbarText]);
+        // Initialize the variable once
+        document.body.style.setProperty("--topbar-height", `${topbarHeight}px`);
+    }, [topbarHeight, topbarText]);
 
     if (topbarText?.replace(/<[^>]*>/g, "").trim() === "") {
         return null;

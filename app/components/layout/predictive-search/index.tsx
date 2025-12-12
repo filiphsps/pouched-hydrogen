@@ -26,6 +26,21 @@ export function PredictiveSearchButton() {
         setOpen(false);
     }, [location]);
 
+    useEffect(() => {
+        if (open) {
+            const topbarHeightStr =
+                getComputedStyle(document.body).getPropertyValue(
+                    "--topbar-height",
+                ) || "0";
+            const topbarHeight = parseFloat(topbarHeightStr);
+            const visibleHeight = Math.max(topbarHeight - window.scrollY, 0);
+            document.documentElement.style.setProperty(
+                "--search-top-offset",
+                `${visibleHeight}px`,
+            );
+        }
+    }, [open]);
+
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger
@@ -57,7 +72,7 @@ export function PredictiveSearchButton() {
                     <VisuallyHidden.Root asChild>
                         <Dialog.Title>{t("search.title")}</Dialog.Title>
                     </VisuallyHidden.Root>
-                    <div className="relative pt-(--topbar-height)">
+                    <div className="relative pt-[var(--search-top-offset)]">
                         <PredictiveSearchForm>
                             {({ fetchResults, inputRef }) => (
                                 <div className="mx-auto w-[560px] max-w-[90vw] space-y-2 py-6">
