@@ -1,5 +1,5 @@
 import { createSchema, type WeaverseLoaderData } from "@weaverse/hydrogen";
-import React, { isValidElement, useMemo } from "react";
+import React, { isValidElement } from "react";
 import { useLoaderData } from "react-router";
 import {
     ProductMedia,
@@ -44,7 +44,7 @@ export default function ProductInformation(
 
     // Create a map of ID -> Type from the Weaverse data
     // This handles cases where items are stored in an array or indexed by number but referenced by UUID
-    const idToTypeMap = useMemo(() => {
+    const idToTypeMap = (() => {
         const map = new Map<string, string>();
         if (weaverseData?.page?.items) {
             // Iterate over values because keys might be numeric indices
@@ -62,7 +62,7 @@ export default function ProductInformation(
             }
         }
         return map;
-    }, [weaverseData]);
+    })();
 
     if (!product) {
         return (
