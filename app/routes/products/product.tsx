@@ -24,6 +24,7 @@ import {
     isCombinedListing,
 } from "~/utils/combined-listings";
 import { getWeaverseLocale } from "~/utils/locale";
+import { hasOnlyDefaultVariant } from "~/utils/product";
 import { generateProductSchema } from "~/utils/structured-data";
 import { WeaverseContent } from "~/weaverse";
 import type { Route } from "./+types/product";
@@ -124,7 +125,11 @@ export default function Product() {
     // Sets the search param to the selected variant without navigation
     // when no search params are set or when variant options don't match
     useEffect(() => {
-        if (!selectedVariant?.selectedOptions || combinedListing) {
+        if (
+            !selectedVariant?.selectedOptions ||
+            combinedListing ||
+            hasOnlyDefaultVariant(product.options as any)
+        ) {
             return;
         }
 
@@ -163,7 +168,7 @@ export default function Product() {
                 );
             }
         }
-    }, [selectedVariant?.selectedOptions, combinedListing]);
+    }, [selectedVariant?.selectedOptions, combinedListing, product.options]);
 
     const productSchema = generateProductSchema(product, selectedVariant, url);
 

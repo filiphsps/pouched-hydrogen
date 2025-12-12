@@ -92,7 +92,7 @@ export function CartMain({
             <div
                 className={cn(
                     layout === "drawer" &&
-                        "grid grow grid-cols-1 grid-rows-[1fr_auto]",
+                        "grid grow grid-cols-1 grid-rows-[minmax(0,1fr)_auto]",
                     layout === "page" && [
                         "mx-auto w-full max-w-(--page-width) pb-12",
                         "grid md:items-start lg:grid-cols-[1fr_480px]",
@@ -106,12 +106,13 @@ export function CartMain({
                         "pb-4",
                         y > 0 ? "border-line-subtle border-t" : "",
                         layout === "page" && "grow md:translate-y-4",
-                        layout === "drawer" && "transition",
+                        layout === "drawer" &&
+                            "flex h-full flex-col transition",
                     ])}
                 >
                     <ScrollArea
                         className={cn(
-                            layout === "drawer" && "max-h-[calc(100vh-312px)]",
+                            layout === "drawer" && "flex-1 overflow-hidden",
                         )}
                         size="sm"
                     >
