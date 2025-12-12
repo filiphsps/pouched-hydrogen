@@ -3,7 +3,6 @@ import {
     WeaverseHydrogenRoot,
     type WeaverseLoaderData,
 } from "@weaverse/hydrogen";
-import { usePresence } from "framer-motion";
 import { useEffect, useLayoutEffect } from "react";
 
 import { useLoaderData } from "react-router";
@@ -13,21 +12,20 @@ import { components } from "./components";
 const useIsomorphicLayoutEffect =
     typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
+/**
+ * Weaverse content component that renders the current page's Weaverse data.
+ * Previously used usePresence() to coordinate with AnimatePresence exit animations,
+ * but this was removed for performance reasons.
+ */
 export function WeaverseContent() {
     const data = useLoaderData<any>();
     const weaverse = useWeaverse();
 
-    const [isPresent] = usePresence();
-
     useIsomorphicLayoutEffect(() => {
-        if (data?.weaverseData && isPresent) {
+        if (data?.weaverseData) {
             (weaverse as any)?.setData?.(data.weaverseData);
         }
-    }, [data, weaverse, isPresent]);
-
-    if (!isPresent) {
-        return null;
-    }
+    }, [data, weaverse]);
 
     return (
         <WeaverseHydrogenRoot
