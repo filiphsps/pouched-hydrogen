@@ -43,7 +43,7 @@ export function BackgroundImage(props: BackgroundImageProps) {
             <Image
                 className={variants({ backgroundFit, backgroundPosition })}
                 data={data}
-                sizes="auto"
+                sizes="100vw"
             />
         );
     }
