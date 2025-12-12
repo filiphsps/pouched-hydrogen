@@ -7,6 +7,7 @@ import type { RefObject } from "react";
 import { useLoaderData } from "react-router";
 import { VariantPrices } from "~/components/product/variant-prices";
 import type { loader as productRouteLoader } from "~/routes/products/product";
+import { cn } from "~/utils/cn";
 import { isCombinedListing } from "~/utils/combined-listings";
 
 interface ProductPricesProps extends HydrogenComponentProps {
@@ -17,7 +18,7 @@ const ProductPrices = ({
     ref,
     ...props
 }: ProductPricesProps & { ref?: RefObject<HTMLDivElement | null> }) => {
-    const { showCompareAtPrice, ...rest } = props;
+    const { showCompareAtPrice, className, ...rest } = props;
     const { product } = useLoaderData<typeof productRouteLoader>();
 
     const selectedVariant = useOptimisticVariant(
@@ -32,7 +33,11 @@ const ProductPrices = ({
     }
 
     return (
-        <div ref={ref} {...rest}>
+        <div
+            ref={ref}
+            className={cn("mt-4 flex items-start justify-center", className)}
+            {...rest}
+        >
             {combinedListing ? (
                 <div className="flex gap-2 text-2xl/none">
                     <span className="flex gap-1">

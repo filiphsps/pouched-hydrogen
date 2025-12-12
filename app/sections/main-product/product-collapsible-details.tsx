@@ -67,8 +67,11 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
                             ])}
                         >
                             <span>{title}</span>
-                            <MinusIcon className="minus hidden h-4 w-4" />
-                            <PlusIcon className="plus h-4 w-4" />
+                            <MinusIcon
+                                className="minus hidden h-4 w-4"
+                                weight="bold"
+                            />
+                            <PlusIcon className="plus h-4 w-4" weight="bold" />
                         </Accordion.Trigger>
                         <Accordion.Content
                             className={cn([

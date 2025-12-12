@@ -198,7 +198,10 @@ export function ZoomModal({
                                     scrollToMedia(prevMedia.id);
                                 }}
                             >
-                                <ArrowLeftIcon className="h-4.5 w-4.5" />
+                                <ArrowLeftIcon
+                                    weight="bold"
+                                    className="siz-4.5"
+                                />
                             </Button>
                             <Button
                                 variant="secondary"
@@ -208,7 +211,10 @@ export function ZoomModal({
                                     scrollToMedia(nextMedia.id);
                                 }}
                             >
-                                <ArrowRightIcon className="h-4.5 w-4.5" />
+                                <ArrowRightIcon
+                                    weight="bold"
+                                    className="siz-4.5"
+                                />
                             </Button>
                         </div>
                     </div>

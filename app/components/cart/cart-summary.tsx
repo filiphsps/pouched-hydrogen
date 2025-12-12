@@ -76,7 +76,8 @@ export function CartSummary({
                                 className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
                             >
                                 <GiftIcon
-                                    className="h-4.5 w-4.5"
+                                    weight="bold"
+                                    className="size-4.5"
                                     aria-hidden="true"
                                 />
                                 <div className="flex items-center gap-1 leading-normal">
@@ -147,7 +148,8 @@ export function CartSummary({
                                     className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
                                 >
                                     <TagIcon
-                                        className="h-4.5 w-4.5"
+                                        weight="bold"
+                                        className="size-4.5"
                                         aria-hidden="true"
                                     />
                                     <span className="leading-normal">

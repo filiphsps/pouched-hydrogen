@@ -28,12 +28,13 @@ const ProductTitle = ({
 
     return (
         <div ref={ref} {...rest}>
-            {showVendor && (
-                <span className="mb-2 block font-medium text-body-subtle text-sm uppercase">
-                    {product.vendor}
-                </span>
-            )}
-            <Tag className="h3 tracking-tight!">
+            <Tag className="h3 flex items-center justify-start gap-2 leading-normal tracking-tight!">
+                {showVendor && (
+                    <span className="inline-block font-medium text-body-subtle">
+                        {product.vendor}
+                    </span>
+                )}
+
                 {removeVendorFromTitle(
                     product.title,
                     product.vendor,

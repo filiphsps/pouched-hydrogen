@@ -45,7 +45,11 @@ export function VariantPrices({
     if (price) {
         return (
             <div className={cn("flex items-center gap-2", className)}>
-                <Money withoutTrailingZeros data={price} />
+                <Money
+                    withoutTrailingZeros
+                    data={price}
+                    className="font-semibold leading-relaxed"
+                />
                 {showCompareAtPrice &&
                     compareAtPrice &&
                     compareAtPrice?.amount > price?.amount && (

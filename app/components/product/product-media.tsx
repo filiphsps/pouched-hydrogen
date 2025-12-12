@@ -299,13 +299,13 @@ export function ProductMedia(props: ProductMediaProps) {
                             type="button"
                             className="media_slider__prev left-6 rounded-full border border-transparent bg-background p-2 text-center text-gray-900 shadow-xs transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
                         >
-                            <ArrowLeftIcon className="h-4.5 w-4.5" />
+                            <ArrowLeftIcon weight="bold" className="siz-4.5" />
                         </button>
                         <button
                             type="button"
                             className="media_slider__next right-6 rounded-full border border-transparent bg-background p-2 text-center text-gray-900 shadow-xs transition-all duration-200 hover:bg-gray-800 hover:text-white disabled:cursor-not-allowed disabled:text-body-subtle"
                         >
-                            <ArrowRightIcon className="h-4.5 w-4.5" />
+                            <ArrowRightIcon weight="bold" className="siz-4.5" />
                         </button>
                     </div>
                 </div>
