@@ -77,7 +77,7 @@ export function CartDrawer() {
                             <Dialog.Content
                                 onCloseAutoFocus={(e) => e.preventDefault()}
                                 className={cn(
-                                    "fixed inset-y-0 right-0 z-10 w-screen max-w-[480px] bg-background py-4",
+                                    "fixed inset-y-0 right-0 z-10 w-screen max-w-[480px] bg-background pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]",
                                     "data-[state=open]:animate-[enter-from-right_200ms_ease-out]",
                                     "data-[state=closed]:animate-[exit-to-right_200ms_ease-in]",
                                 )}

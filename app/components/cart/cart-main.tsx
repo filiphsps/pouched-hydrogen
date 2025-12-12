@@ -92,7 +92,7 @@ export function CartMain({
             <div
                 className={cn(
                     layout === "drawer" &&
-                        "grid grow grid-cols-1 grid-rows-[minmax(0,1fr)_auto]",
+                        "grid min-h-0 grow grid-cols-1 grid-rows-[minmax(0,1fr)_auto]",
                     layout === "page" && [
                         "mx-auto w-full max-w-(--page-width) pb-12",
                         "grid md:items-start lg:grid-cols-[1fr_480px]",
@@ -111,7 +111,7 @@ export function CartMain({
                     ])}
                 >
                     <ScrollArea
-                        className={cn(
+                        rootClassName={cn(
                             layout === "drawer" && "flex-1 overflow-hidden",
                         )}
                         size="sm"
@@ -131,13 +131,13 @@ export function CartMain({
                                 />
                             ))}
                         </ul>
+                        {/* Dynamic cart upsells */}
+                        <CartUpsells
+                            cartLineItems={cart?.lines?.nodes ?? []}
+                            layout={layout}
+                            className="px-4"
+                        />
                     </ScrollArea>
-                    {/* Dynamic cart upsells */}
-                    <CartUpsells
-                        cartLineItems={cart?.lines?.nodes ?? []}
-                        layout={layout}
-                        className="px-4"
-                    />
                 </div>
                 {cartHasItems && <CartSummary cart={cart} layout={layout} />}
             </div>
