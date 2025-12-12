@@ -44,7 +44,7 @@ function calculateProgress(currentAmount: number, threshold: number): number {
  * @param {string} locale - Locale string for formatting (e.g., "de-DE")
  * @returns {string} Formatted currency string
  */
-function formatCurrency(
+export function formatCurrency(
     amount: number,
     currencyCode: string,
     locale: string,
@@ -134,7 +134,7 @@ export function FreeShippingProgress({
                 <div
                     className={cn(
                         "h-full rounded-full transition-all duration-500 ease-out",
-                        hasReachedThreshold ? "bg-green-500" : "bg-primary",
+                        hasReachedThreshold ? "bg-green-500" : "bg-body",
                     )}
                     style={{ width: `${progress}%` }}
                     role="progressbar"

@@ -21,7 +21,8 @@ const ProductTitle = ({
         removeVendorFromTitle: shouldRemoveVendor,
         ...rest
     } = props;
-    const { product } = useLoaderData<typeof productRouteLoader>();
+    const { product, vendorCollectionUrl } =
+        useLoaderData<typeof productRouteLoader>();
 
     if (!product) {
         return null;
@@ -33,6 +34,7 @@ const ProductTitle = ({
                 {showVendor && (
                     <VendorLink
                         vendor={product.vendor}
+                        href={vendorCollectionUrl}
                         className="pr-2 font-semibold"
                     />
                 )}

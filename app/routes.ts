@@ -27,6 +27,8 @@ export default hydrogenRoutes([
             route("countries", "routes/api/countries.ts"),
             route("customer", "routes/api/customer.ts"),
             route("featured-products", "routes/api/featured-products.ts"),
+            route("cart-upsells", "routes/api/cart-upsells.ts"),
+            route("recently-viewed", "routes/api/recently-viewed.ts"),
             route("klaviyo", "routes/api/klaviyo.ts"),
             route("predictive-search", "routes/api/predictive-search.ts"),
             route("products", "routes/api/products.ts"),

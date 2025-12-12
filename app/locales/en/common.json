@@ -90,7 +90,7 @@
       "estimatedDelivery": "Estimated delivery",
       "orderByShipsToday": "Order by {{hour}}:00 to ship today",
       "orderSoonShipsToday": "Order in the next {{hours}}h to ship today!",
-      "freeShippingNote": "Free shipping on orders over €75"
+      "freeShippingNote": "Free shipping on orders over {{amount}}"
     },
     "returns": "Returns",
     "new": "New",

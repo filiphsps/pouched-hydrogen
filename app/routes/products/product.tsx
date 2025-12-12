@@ -16,7 +16,7 @@ import {
 } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
 import { StructuredData } from "~/components/structured-data";
-import { PRODUCT_QUERY } from "~/graphql/queries";
+import { COLLECTION_EXISTS_QUERY, PRODUCT_QUERY } from "~/graphql/queries";
 import { getContext } from "~/types/context";
 import { routeHeaders } from "~/utils/cache";
 import {
@@ -57,12 +57,32 @@ export async function loader({
             handle,
             locale: getWeaverseLocale(storefront.i18n),
         }),
-        // Add other queries here, so that they are loaded in parallel
     ]);
 
     if (!product?.id) {
         throw new Response("product", { status: 404 });
     }
+
+    // Check if vendor collection exists (in parallel with redirect checks)
+    const vendorHandle = product.vendor
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+    const vendorCollectionResult = await storefront.query<{
+        collection: { id: string; handle: string } | null;
+    }>(COLLECTION_EXISTS_QUERY, {
+        variables: {
+            handle: vendorHandle,
+            country: storefront.i18n.country,
+            language: storefront.i18n.language,
+        },
+    });
+
+    const vendorCollectionUrl = vendorCollectionResult.collection
+        ? `/collections/${vendorCollectionResult.collection.handle}`
+        : `/collections/all?filter.p.vendor=${encodeURIComponent(product.vendor)}`;
     redirectIfHandleIsLocalized(request, { handle, data: product });
 
     if (COMBINED_LISTINGS_CONFIGS.redirectToFirstVariant) {
@@ -77,6 +97,7 @@ export async function loader({
         product,
         weaverseData,
         storeDomain: shop.primaryDomain.url,
+        vendorCollectionUrl,
         seo: seoPayload.product({ product, url: request.url }),
         recommended,
         selectedOptions,

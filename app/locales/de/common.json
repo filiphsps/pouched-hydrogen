@@ -90,7 +90,7 @@
       "estimatedDelivery": "Voraussichtliche Lieferung",
       "orderByShipsToday": "Bestellen Sie bis {{hour}}:00 Uhr für Versand heute",
       "orderSoonShipsToday": "Bestellen Sie in den nächsten {{hours}} Std. für Versand heute!",
-      "freeShippingNote": "Kostenloser Versand ab €75"
+      "freeShippingNote": "Kostenloser Versand ab {{amount}}"
     },
     "returns": "Rückgabe",
     "new": "Neu",

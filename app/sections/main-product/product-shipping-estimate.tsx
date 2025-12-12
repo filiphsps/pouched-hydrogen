@@ -6,9 +6,12 @@
 import { ClockIcon, PackageIcon, TruckIcon } from "@phosphor-icons/react";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useTranslation } from "react-i18next";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useRouteLoaderData } from "react-router";
+import { formatCurrency } from "~/components/cart/free-shipping-progress";
+import type { RootLoader } from "~/root";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
+import { DEFAULT_LOCALE } from "~/utils/const";
 
 interface ShippingEstimateProps extends HydrogenComponentProps {
     ref: React.Ref<HTMLDivElement>;
@@ -80,6 +83,8 @@ export default function ShippingEstimate(props: ShippingEstimateProps) {
     } = props;
     const { t } = useTranslation();
     const loaderData = useLoaderData<typeof productRouteLoader>();
+    const rootData = useRouteLoaderData<RootLoader>("root");
+    const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
 
     const product = loaderData?.product;
     const selectedVariant = product?.selectedOrFirstAvailableVariant;
@@ -91,7 +96,8 @@ export default function ShippingEstimate(props: ShippingEstimateProps) {
     }
 
     const now = new Date();
-    const locale = "de-DE";
+    // Get locale from root loader (e.g., "de-DE")
+    const locale = `${selectedLocale.language}-${selectedLocale.country}`;
     const hoursUntilCutoff = getHoursUntilCutoff(cutoffHour);
     const ordersTodayShipToday = hoursUntilCutoff > 0;
 
@@ -103,6 +109,9 @@ export default function ShippingEstimate(props: ShippingEstimateProps) {
 
     const minDateFormatted = formatDate(minDeliveryDate, locale);
     const maxDateFormatted = formatDate(maxDeliveryDate, locale);
+
+    // Get currency from product variant price
+    const currencyCode = selectedVariant?.price?.currencyCode || "EUR";
 
     return (
         <div
@@ -159,7 +168,11 @@ export default function ShippingEstimate(props: ShippingEstimateProps) {
                 />
                 <span>
                     {t("product.shippingEstimate.freeShippingNote", {
-                        amount: freeShippingThreshold,
+                        amount: formatCurrency(
+                            freeShippingThreshold,
+                            currencyCode,
+                            locale,
+                        ),
                     })}
                 </span>
             </div>

@@ -1,12 +1,14 @@
+/**
+ * Product ATC Buttons Weaverse Section.
+ * Uses the unified PaymentButtons component with Weaverse configuration.
+ */
 import {
     getAdjacentAndFirstAvailableVariants,
     useOptimisticVariant,
 } from "@shopify/hydrogen";
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
-import { useTranslation } from "react-i18next";
 import { useLoaderData } from "react-router";
-import { AddToCartButton } from "~/components/product/add-to-cart-button";
-import { StyledShopPayButton } from "~/components/product/styled-shop-pay-button";
+import { PaymentButtons } from "~/components/product/payment-buttons";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { isCombinedListing } from "~/utils/combined-listings";
 import { useProductQtyStore } from "./product-quantity-selector";
@@ -18,6 +20,9 @@ interface ProductATCButtonsProps extends HydrogenComponentProps {
     showShopPayButton: boolean;
 }
 
+/**
+ * Weaverse section wrapper for PaymentButtons.
+ */
 export default function ProductATCButtons(props: ProductATCButtonsProps) {
     const {
         ref,
@@ -37,55 +42,22 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
     const combinedListing = isCombinedListing(product);
     const isBundle = Boolean(product?.isBundle?.requiresComponents);
 
-    const { t } = useTranslation();
-
     if (!product || combinedListing) {
         return null;
     }
 
-    let atcButtonText: string;
-    if (selectedVariant.availableForSale) {
-        atcButtonText = isBundle ? addBundleToCartText : t("cart.addToCart");
-    } else {
-        atcButtonText = soldOutText;
-    }
-
     return (
-        <div
-            ref={ref}
-            {...rest}
-            id="atc-buttons"
-            style={{ "--shop-pay-button-height": "100%" }}
-            className="mb-8 flex flex-col gap-2 empty:hidden"
-        >
-            <AddToCartButton
-                disabled={!selectedVariant?.availableForSale}
-                lines={[
-                    {
-                        merchandiseId: selectedVariant?.id,
-                        quantity,
-                        selectedVariant,
-                        sellingPlanId,
-                    },
-                ]}
-                data-test="add-to-cart"
-                className="w-full"
-            >
-                {atcButtonText}
-            </AddToCartButton>
-
-            {showShopPayButton && selectedVariant?.availableForSale && (
-                <StyledShopPayButton
-                    width="100%"
-                    variantIdsAndQuantities={[
-                        {
-                            id: selectedVariant?.id,
-                            quantity,
-                        },
-                    ]}
-                    storeDomain={storeDomain}
-                />
-            )}
+        <div ref={ref} {...rest} id="atc-buttons" className="mb-8 empty:hidden">
+            <PaymentButtons
+                variant={selectedVariant}
+                quantity={quantity}
+                sellingPlanId={sellingPlanId}
+                storeDomain={storeDomain}
+                showShopPay={showShopPayButton}
+                bundleText={addBundleToCartText}
+                soldOutText={soldOutText}
+                isBundle={isBundle}
+            />
         </div>
     );
 }

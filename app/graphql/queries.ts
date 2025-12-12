@@ -143,3 +143,20 @@ export const PRODUCT_QUERY = `#graphql
   ${MEDIA_FRAGMENT}
   ${PRODUCT_OPTION_FRAGMENT}
 ` as const;
+
+/**
+ * Query to check if a collection exists by handle.
+ * Used for VendorLink to determine correct link destination.
+ */
+export const COLLECTION_EXISTS_QUERY = `#graphql
+  query CollectionExists(
+    $handle: String!
+    $country: CountryCode
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    collection(handle: $handle) {
+      id
+      handle
+    }
+  }
+` as const;
