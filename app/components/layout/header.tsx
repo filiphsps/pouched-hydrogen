@@ -73,7 +73,10 @@ export function Header() {
                     variants({ width: headerWidth }),
                 )}
             >
-                <MegaMenu />
+                <Suspense key="mega-menu">
+                    <MegaMenu />
+                </Suspense>
+
                 <Link to="/search" className="p-1.5 lg:hidden">
                     <MagnifyingGlassIcon className="h-5 w-5" />
                 </Link>

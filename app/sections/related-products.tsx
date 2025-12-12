@@ -27,7 +27,6 @@ export default function RelatedProducts(props: RelatedProductsProps) {
         desktopSize,
         color,
         weight,
-        letterSpacing,
         alignment,
         minSize,
         maxSize,
@@ -51,7 +50,6 @@ export default function RelatedProducts(props: RelatedProductsProps) {
                         minSize={minSize}
                         maxSize={maxSize}
                         weight={weight}
-                        letterSpacing={letterSpacing}
                         alignment={alignment}
                     />
                 )}

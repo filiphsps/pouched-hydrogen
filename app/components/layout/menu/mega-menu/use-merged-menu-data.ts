@@ -59,6 +59,7 @@ export function useMergedMenuData(): MergedMenuItem[] {
                 (section) => {
                     const linksRef = getReferenceList(section, "links");
                     const sectionTitle = getField(section, "title");
+                    const sectionLabel = getField(section, "label");
                     const description = normalizeTextEnding(
                         getField(section, "description"),
                         descriptionMode,
@@ -79,6 +80,7 @@ export function useMergedMenuData(): MergedMenuItem[] {
                                 menuLinkMetaobject,
                                 "title",
                             );
+                            const label = getField(menuLinkMetaobject, "label");
                             const productRef = getReference(
                                 menuLinkMetaobject,
                                 "product",
@@ -136,6 +138,7 @@ export function useMergedMenuData(): MergedMenuItem[] {
                             return {
                                 id: menuLinkMetaobject.id,
                                 title: title || "Untitled",
+                                label,
                                 to,
                                 product: productRef,
                                 collection: collectionRef,
@@ -151,6 +154,7 @@ export function useMergedMenuData(): MergedMenuItem[] {
                     return {
                         id: section.id,
                         title: sectionTitle,
+                        label: sectionLabel,
                         items: links,
                         displayStyle,
                         image: getReference(section, "image")?.image,

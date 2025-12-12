@@ -5,16 +5,22 @@ export function RevealUnderline({
     children,
     as: Component = "span",
     className,
+    enabled = true,
 }: {
     children: React.ReactNode;
     as?: ElementType;
     className?: string;
+    enabled?: boolean;
 }) {
+    if (!enabled) {
+        return <Component className={className}>{children}</Component>;
+    }
+
     return (
         <Component
             className={cn(
                 [
-                    "[--underline-color:var(--color-text)]",
+                    "[--underline-color:var(--color-text-subtitle)]",
                     "pb-[3px]",
                     "bg-size-[0%_1px]",
                     "inline bg-no-repeat",

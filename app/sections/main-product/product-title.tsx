@@ -28,9 +28,9 @@ const ProductTitle = ({
 
     return (
         <div ref={ref} {...rest}>
-            <Tag className="h3 flex items-center justify-start gap-2 leading-normal tracking-tight!">
+            <Tag className="h3 leading-normal tracking-tight">
                 {showVendor && (
-                    <span className="inline-block font-medium text-body-subtle">
+                    <span className="pr-2 font-semibold text-body-subtle">
                         {product.vendor}
                     </span>
                 )}

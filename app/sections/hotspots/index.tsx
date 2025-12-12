@@ -31,7 +31,6 @@ function Hotspots(props: HotspotsProps) {
         desktopSize,
         color,
         weight,
-        letterSpacing,
         alignment,
         minSize,
         maxSize,
@@ -61,7 +60,6 @@ function Hotspots(props: HotspotsProps) {
                     minSize={minSize}
                     maxSize={maxSize}
                     weight={weight}
-                    letterSpacing={letterSpacing}
                     alignment={alignment}
                 />
             )}

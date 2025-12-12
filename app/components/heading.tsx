@@ -61,14 +61,6 @@ const variants = cva("heading", {
             "800": "font-extrabold",
             "900": "font-black",
         },
-        letterSpacing: {
-            tighter: "tracking-tighter",
-            tight: "tracking-tight",
-            normal: "",
-            wide: "tracking-wide",
-            wider: "tracking-wider",
-            widest: "tracking-widest",
-        },
         alignment: {
             left: "text-left",
             center: "text-center",
@@ -78,7 +70,6 @@ const variants = cva("heading", {
     defaultVariants: {
         size: "default",
         weight: "400",
-        letterSpacing: "normal",
         alignment: "left",
     },
 });
@@ -107,7 +98,6 @@ function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
         color,
         backgroundColor,
         weight,
-        letterSpacing,
         alignment,
         minSize,
         maxSize,
@@ -136,7 +126,7 @@ function Heading(props: HeadingProps & Partial<HydrogenComponentProps>) {
             className={cn(
                 size === "custom" &&
                     fontSizeVariants({ mobileSize, desktopSize }),
-                variants({ size, weight, letterSpacing, alignment, className }),
+                variants({ size, weight, alignment, className }),
             )}
         >
             {content}
@@ -282,22 +272,6 @@ export const headingInputs: InspectorGroup["inputs"] = [
             ],
         },
         defaultValue: "400",
-    },
-    {
-        type: "select",
-        label: "Letter spacing",
-        name: "letterSpacing",
-        configs: {
-            options: [
-                { label: "Tighter (-0.05em)", value: "tighter" },
-                { label: "Tight (-0.025em)", value: "tight" },
-                { label: "Normal (Inherit)", value: "normal" },
-                { label: "Wide (0.025em)", value: "wide" },
-                { label: "Wider (0.05em)", value: "wider" },
-                { label: "Widest (0.1em)", value: "widest" },
-            ],
-        },
-        defaultValue: "normal",
     },
     {
         type: "toggle-group",

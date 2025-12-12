@@ -102,9 +102,7 @@ function CollectionItems(props: CollectionItemsData & HydrogenComponentProps) {
             {...rest}
             className={cn(
                 [
-                    "snap-x snap-mandatory",
-                    "hidden-scroll scroll-px-6 overflow-x-scroll md:overflow-x-hidden",
-                    "grid w-full grid-flow-col justify-start gap-2 md:grid-flow-row",
+                    "hidden-scroll grid w-full snap-x snap-mandatory scroll-px-6 grid-flow-col justify-start gap-2 overflow-x-scroll py-2 md:grid-flow-row md:overflow-x-hidden",
                 ],
                 variants({ gridSize, gap }),
             )}

@@ -1,6 +1,7 @@
 import { StrictMode, startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { HydratedRouter } from "react-router/dom";
+import { scan } from "react-scan";
 import "swiper/css";
 import "swiper/css/pagination";
 import i18next from "i18next";
@@ -14,6 +15,15 @@ import i18n from "./i18n";
  * to ensure hydration consistency.
  */
 async function hydrate() {
+    if (import.meta.env.DEV) {
+        scan({
+            enabled: true,
+            trackUnnecessaryRenders: true,
+            allowInIframe: true,
+            showToolbar: true,
+        });
+    }
+
     // Get the language synchronously from the HTML lang attribute
     // This MUST match what the server rendered to avoid hydration mismatch
     const lang = document.documentElement.lang || i18n.fallbackLng;

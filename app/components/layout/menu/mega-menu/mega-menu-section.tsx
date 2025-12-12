@@ -5,13 +5,14 @@ import { Title } from "~/components/title";
 import { cn } from "~/utils/cn";
 import { MegaMenuItem } from "./mega-menu-item";
 import type { MegaMenuSection as MegaMenuSectionType } from "./types";
+import { getResource, resolveUrlFromResource } from "./utils";
 
 const itemsContainerVariants = cva("", {
     variants: {
         displayStyle: {
-            list: "flex flex-col gap-3",
-            grid: "grid grid-cols-2 gap-1.5",
-            promo: "flex flex-col gap-3",
+            list: "flex flex-col gap-5",
+            grid: "grid grid-cols-2 gap-3",
+            promo: "flex flex-col gap-5",
         },
     },
     defaultVariants: {
@@ -25,7 +26,7 @@ const itemsContainerVariants = cva("", {
  */
 export function MegaMenuSection({ section }: { section: MegaMenuSectionType }) {
     const {
-        title,
+        label,
         items,
         image,
         description,
@@ -33,33 +34,60 @@ export function MegaMenuSection({ section }: { section: MegaMenuSectionType }) {
         displayStyle,
     } = section;
 
+    // If we're a promo, try to get a link from the first item.
+    const to: string | undefined =
+        isPromo(section) && items[0]
+            ? items[0].to || resolveUrlFromResource(getResource(items[0]))
+            : undefined;
+
     return (
-        <div className="flex flex-col gap-2.5">
-            <div className="flex flex-col gap-0.5">
-                {title && (
+        <div
+            className={cn(
+                "flex h-full flex-col gap-2.5",
+                isPromo(section) &&
+                    cn(
+                        "overflow-hidden rounded-2xl",
+                        Boolean(to) &&
+                            "ring-0 ring-line transition-all duration-200 hover:ring-2 hover:ring-offset-2",
+                    ),
+            )}
+        >
+            <div
+                className={cn(
+                    "flex flex-col gap-0.5",
+                    isPromo(section) && "h-full",
+                )}
+            >
+                {label && (
                     <Title
                         as="div"
                         variant="muted"
-                        size="xs"
+                        size="lg"
                         uppercase={true}
-                        className="text-body uppercase leading-snug tracking-wider"
+                        className="font-medium text-border leading-tight tracking-tight"
                     >
-                        {title}
+                        {label}
                     </Title>
                 )}
 
                 {image && (
-                    <div className="aspect-4/3 w-full overflow-hidden rounded-lg bg-gray-100">
+                    <div
+                        className={cn(
+                            "w-full",
+                            isPromo(section)
+                                ? "flex-1"
+                                : "overflow-hidden rounded-lg",
+                        )}
+                    >
                         <ShopifyImage
                             data={image}
-                            aspectRatio="4/3"
-                            className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                            className="h-full min-h-full w-full bg-gray-100 object-cover object-center transition-transform duration-500 hover:scale-105"
                         />
                     </div>
                 )}
 
                 {description && (
-                    <p className="line-clamp-2 text-body-subtle text-xs leading-snug">
+                    <p className="line-clamp-2 font-normal text-muted-foreground text-xs leading-snug">
                         {description}
                     </p>
                 )}

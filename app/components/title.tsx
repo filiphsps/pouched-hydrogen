@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type { ElementType, HTMLAttributes, Ref } from "react";
 import { cn } from "~/utils/cn";
 
-const titleVariants = cva("mb-0 font-bold font-semibold tracking-tight", {
+const titleVariants = cva("mb-0 font-normal tracking-tight", {
     variants: {
         size: {
             xs: "text-xs",

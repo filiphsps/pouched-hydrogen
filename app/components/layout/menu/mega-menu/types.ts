@@ -37,6 +37,7 @@ export type ShopifyResource =
 export type MegaMenuLink = {
     id: string;
     title: string;
+    label?: string;
     to?: string;
     product?: Partial<Product>;
     collection?: Partial<Collection>;
@@ -53,6 +54,7 @@ export type MegaMenuLink = {
 export type MegaMenuSection = {
     id: string;
     title?: string;
+    label?: string;
     items: MegaMenuLink[];
     displayStyle?: "list" | "grid" | "promo";
     image?: any;

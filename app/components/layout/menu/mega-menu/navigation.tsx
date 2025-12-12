@@ -1,4 +1,4 @@
-import { CaretDown as CaretDownIcon, X as XIcon } from "@phosphor-icons/react";
+import { CaretDownIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { AnimatePresence, motion } from "framer-motion";
@@ -61,7 +61,7 @@ export function Navigation({ children }: { children: ReactNode }) {
                                                 stiffness: 200,
                                             }}
                                             className={cn(
-                                                "fixed inset-y-0 left-0 z-50 w-full max-w-xs",
+                                                "fixed inset-y-0 left-0 z-50 w-full",
                                                 "border-line-subtle border-r bg-(--color-header-bg) shadow-xl",
                                                 "focus:outline-hidden",
                                             )}
@@ -169,8 +169,8 @@ export function Navigation({ children }: { children: ReactNode }) {
                 <NavigationMenu.Root
                     value={menuId}
                     onValueChange={setMenuId}
-                    delayDuration={0}
-                    skipDelayDuration={600}
+                    delayDuration={200}
+                    skipDelayDuration={1500}
                     className="lg:-translate-x-1/2 relative z-50 lg:absolute lg:left-1/2"
                 >
                     <NavigationMenu.List className="z-50 hidden h-full gap-2 lg:flex">
@@ -185,7 +185,7 @@ export function Navigation({ children }: { children: ReactNode }) {
                                 <NavigationMenu.Item key={id} value={id}>
                                     <NavigationMenu.Trigger
                                         className={cn(
-                                            "group flex select-none items-center justify-between gap-1 rounded-full px-4 py-2 font-medium text-sm leading-none outline-none transition-colors",
+                                            "group flex select-none items-center justify-between gap-1 rounded-full px-3 py-2 font-medium text-sm leading-none outline-none transition-colors",
                                             "hover:bg-gray-100/50 focus:bg-gray-100/50",
                                             "data-[state=open]:bg-gray-100",
                                             "text-body",
@@ -193,16 +193,19 @@ export function Navigation({ children }: { children: ReactNode }) {
                                     >
                                         {hasSubmenu ? (
                                             <>
-                                                <span>{title}</span>
+                                                <span className="font-medium">
+                                                    {title}
+                                                </span>
                                                 <CaretDownIcon
                                                     className="relative top-px h-3 w-3 transition-transform duration-200 group-data-[state=open]:rotate-180"
                                                     aria-hidden="true"
+                                                    weight="bold"
                                                 />
                                             </>
                                         ) : (
                                             <Link
                                                 to={to}
-                                                className="transition-none"
+                                                className="font-medium transition-none"
                                             >
                                                 {title}
                                             </Link>
@@ -214,7 +217,7 @@ export function Navigation({ children }: { children: ReactNode }) {
                                             className={cn(
                                                 "fade-in-80 zoom-in-95 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 absolute top-0 left-0 w-max animate-in data-[state=closed]:animate-out",
                                                 "rounded-xl border border-line-subtle bg-white shadow-xl",
-                                                "max-w-[min(90vw,1200px)]",
+                                                "max-w-[min(90vw,1500px)]",
                                             )}
                                         >
                                             <MegaMenuContent
@@ -238,7 +241,7 @@ export function Navigation({ children }: { children: ReactNode }) {
                         })}
                     </NavigationMenu.List>
 
-                    <div className="perspective-[2000px] -translate-x-1/2 absolute top-full left-1/2 flex w-screen justify-center">
+                    <div className="perspective-[2500px] -translate-x-1/2 absolute top-full left-1/2 flex w-screen justify-center">
                         <NavigationMenu.Viewport
                             className={cn(
                                 "relative mt-2 h-(--radix-navigation-menu-viewport-height) w-full origin-[top_center] overflow-hidden rounded-xl border border-line-subtle bg-white shadow-xl transition-[width,height] duration-300 data-[state=closed]:animate-scale-out data-[state=open]:animate-scale-in sm:w-(--radix-navigation-menu-viewport-width)",

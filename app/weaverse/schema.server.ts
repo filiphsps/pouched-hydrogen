@@ -170,6 +170,34 @@ export const themeSchema: HydrogenThemeSchema = {
                     },
                     defaultValue: 150,
                 },
+                {
+                    type: "heading",
+                    label: "Mega menu",
+                },
+                {
+                    type: "select",
+                    label: "Description punctuation",
+                    name: "menuDescriptionMode",
+                    configs: {
+                        options: [
+                            { value: "as_is", label: "As is" },
+                            {
+                                value: "force_punctuation",
+                                label: "Force ending",
+                            },
+                            { value: "remove_period", label: "Remove period" },
+                        ],
+                    },
+                    defaultValue: "as_is",
+                },
+                {
+                    type: "text",
+                    label: "Preferred ending",
+                    name: "menuDescriptionEnding",
+                    defaultValue: ".",
+                    helpText:
+                        "Used when 'Force ending' is selected. e.g. '.' or '!'",
+                },
             ],
         },
         {
@@ -222,6 +250,12 @@ export const themeSchema: HydrogenThemeSchema = {
                     defaultValue: "#888888",
                 },
                 {
+                    type: "color",
+                    label: "Link",
+                    name: "colorLink",
+                    defaultValue: "#0c39ff",
+                },
+                {
                     type: "heading",
                     label: "Announcement bar",
                 },
@@ -251,30 +285,7 @@ export const themeSchema: HydrogenThemeSchema = {
                     type: "heading",
                     label: "Mega Menu",
                 },
-                {
-                    type: "select",
-                    label: "Description punctuation",
-                    name: "menuDescriptionMode",
-                    configs: {
-                        options: [
-                            { value: "as_is", label: "As is" },
-                            {
-                                value: "force_punctuation",
-                                label: "Force ending",
-                            },
-                            { value: "remove_period", label: "Remove period" },
-                        ],
-                    },
-                    defaultValue: "as_is",
-                },
-                {
-                    type: "text",
-                    label: "Preferred ending",
-                    name: "menuDescriptionEnding",
-                    defaultValue: ".",
-                    helpText:
-                        "Used when 'Force ending' is selected. e.g. '.' or '!'",
-                },
+
                 {
                     type: "color",
                     label: "Header text",

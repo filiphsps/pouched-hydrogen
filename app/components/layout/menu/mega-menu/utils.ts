@@ -1,4 +1,4 @@
-import type { MegaMenuMetaobject } from "./types";
+import type { MegaMenuLink, MegaMenuMetaobject } from "./types";
 
 /**
  * Retrieves a field value from a Shopify Metaobject
@@ -35,6 +35,47 @@ export function getReferenceList(
 ): MegaMenuMetaobject[] {
     return (node?.fields?.find((f) => f.key === key)?.references?.nodes ||
         []) as MegaMenuMetaobject[];
+}
+
+/**
+ * Get Shopify resource from a MegaMenuLink.
+ * @param link - The MegaMenuLink object
+ * @returns The Shopify resource object or null
+ */
+export function getResource({
+    product,
+    collection,
+    page,
+}: Pick<MegaMenuLink, "product" | "collection" | "page">) {
+    if (product) {
+        return {
+            __typename: "Product",
+            ...product,
+        };
+    }
+
+    if (collection) {
+        return {
+            __typename: "Collection",
+            ...collection,
+        };
+    }
+
+    if (page) {
+        return {
+            __typename: "Page",
+            ...page,
+        };
+    }
+
+    /*if (article) {
+        return {
+            __typename: "Article",
+            ...article,
+        };
+    }*/
+
+    return null;
 }
 
 /**

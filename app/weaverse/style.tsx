@@ -15,6 +15,7 @@ export function GlobalStyle() {
             colorLine,
             colorLineSubtle,
             colorMutedForeground,
+            colorLink,
             topbarTextColor,
             topbarBgColor,
             headerBgColor,
@@ -64,6 +65,7 @@ export function GlobalStyle() {
               --color-line: ${colorLine};
               --color-line-subtle: ${colorLineSubtle};
               --color-muted-foreground: ${colorMutedForeground};
+              --color-link: ${colorLink};
 
               /* Colors (header & footer) */
               --color-topbar-text: ${topbarTextColor};

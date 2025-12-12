@@ -1,5 +1,6 @@
-import { Heart } from "@phosphor-icons/react";
+import { HeartIcon } from "@phosphor-icons/react";
 import { useState } from "react";
+import { Button } from "~/components/button";
 import { cn } from "~/utils/cn";
 
 /**
@@ -47,14 +48,15 @@ export function WishlistButton({
     };
 
     return (
-        <button
+        <Button
+            variant="custom"
             type="button"
             onClick={handleClick}
             className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-full shadow-md outline-none transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2",
+                "group/wishlist flex h-10 w-10 items-center justify-center rounded-full border-0 p-0 shadow-xs outline-none ring-0 ring-line transition-all duration-200 hover:ring-2 hover:ring-offset-2",
                 isWishlisted
-                    ? "bg-red-500 text-white hover:bg-red-600"
-                    : "bg-white text-gray-700 hover:bg-gray-50",
+                    ? "bg-red-500 text-white hover:bg-background"
+                    : "bg-background text-gray-700 hover:bg-background",
                 className,
             )}
             aria-label={
@@ -62,7 +64,16 @@ export function WishlistButton({
             }
             aria-pressed={isWishlisted}
         >
-            <Heart size={20} weight={isWishlisted ? "fill" : "regular"} />
-        </button>
+            <HeartIcon
+                size={20}
+                weight={isWishlisted ? "fill" : "regular"}
+                className={cn(
+                    "transition-colors duration-200",
+                    isWishlisted
+                        ? "text-white group-hover/wishlist:text-body"
+                        : "text-body group-hover/wishlist:text-red-500",
+                )}
+            />
+        </Button>
     );
 }

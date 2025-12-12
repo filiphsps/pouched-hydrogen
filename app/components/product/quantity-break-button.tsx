@@ -12,7 +12,7 @@ const quantityBreakButtonVariants = cva(
         variants: {
             selected: {
                 true: "border-body bg-body text-background",
-                false: "border-line bg-transparent text-body hover:border-body",
+                false: "border-line bg-transparent text-body",
             },
         },
         defaultVariants: {
@@ -66,6 +66,7 @@ export function QuantityBreakButton({
             <ToggleGroup.Item
                 value={value}
                 className={cn(
+                    "ring-0 ring-line hover:ring-2 hover:ring-offset-2",
                     quantityBreakButtonVariants({ selected, className }),
                 )}
                 data-testid={`quantity-break-${quantity}`}

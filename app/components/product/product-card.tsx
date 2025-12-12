@@ -114,7 +114,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
     return (
         <div
             className={cn(
-                "group/card group flex flex-col overflow-hidden rounded-(--pcard-radius) bg-gray-150",
+                "group/card group flex flex-col overflow-hidden rounded-(--pcard-radius) bg-gray-150 ring-0 ring-line transition-all duration-200 hover:ring-2 hover:ring-offset-2",
                 className,
             )}
             style={
@@ -128,9 +128,56 @@ export function ProductCard({ product, className }: ProductCardProps) {
             }
         >
             {/* Image section with overlaid badges */}
-            <div className="group relative overflow-hidden p-2">
+            <div className="relative overflow-hidden p-2">
                 {image && (
-                    <div className="group relative rounded-(--pcard-radius) rounded-t-(--pcard-radius) bg-transparent transition-colors duration-300 group-hover/card:bg-background">
+                    <div className="relative rounded-(--pcard-radius) rounded-t-(--pcard-radius) bg-transparent transition-colors duration-300 group-hover/card:bg-background">
+                        <Link
+                            to={`/products/${product.handle}?${params.toString()}`}
+                            prefetch="intent"
+                            className="group/media block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius)"
+                        >
+                            {/* Loading skeleton overlay */}
+                            {isImageLoading && <Spinner />}
+
+                            <Image
+                                className={cn([
+                                    "absolute inset-0 size-fit scale-100 object-contain duration-300 lg:inset-3",
+                                    pcardShowImageOnHover &&
+                                        secondImage &&
+                                        "transition-opacity group-hover:opacity-50",
+                                    !pcardShowImageOnHover &&
+                                        "group-hover/media:scale-110",
+                                    isTransitioning &&
+                                        "[&_img]:[view-transition-name:image-expand]",
+                                ])}
+                                sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
+                                data={image}
+                                width={700}
+                                alt={
+                                    image.altText ||
+                                    `Picture of ${product.title}`
+                                }
+                                loading="lazy" // TODO: Load with `eager` if the image is within the expected initial viewport.
+                                onLoad={() => setIsImageLoading(false)}
+                            />
+                            {pcardShowImageOnHover && secondImage && (
+                                <Image
+                                    className={cn([
+                                        "absolute inset-0 size-fit scale-100 object-contain lg:inset-3",
+                                        "opacity-0 transition-opacity duration-300 group-hover:opacity-100",
+                                    ])}
+                                    sizes="auto"
+                                    width={700}
+                                    data={secondImage}
+                                    alt={
+                                        secondImage.altText ||
+                                        `Second picture of ${product.title}`
+                                    }
+                                    loading="lazy"
+                                />
+                            )}
+                        </Link>
+
                         {/* Sale badge - top left */}
                         <div className="absolute top-2 left-2 flex gap-1">
                             {isBundle && pcardShowBundleBadge && (
@@ -148,7 +195,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
                         {/* Wishlist button - top right */}
                         {pcardShowWishlist && (
-                            <div className="absolute top-2 right-2">
+                            <div className="absolute top-2 right-2 z-5">
                                 <WishlistButton
                                     productId={product.id}
                                     className="group-hover/card:bg-gray-150"
@@ -172,52 +219,6 @@ export function ProductCard({ product, className }: ProductCardProps) {
                                 <SoldOutBadge />
                             </div>
                         )}
-
-                        <Link
-                            to={`/products/${product.handle}?${params.toString()}`}
-                            prefetch="intent"
-                            className="block aspect-(--pcard-image-ratio) overflow-hidden rounded-t-(--pcard-radius)"
-                        >
-                            {/* Loading skeleton overlay */}
-                            {isImageLoading && <Spinner />}
-                            <Image
-                                className={cn([
-                                    "absolute inset-0 scale-105 duration-300",
-                                    pcardShowImageOnHover &&
-                                        secondImage &&
-                                        "transition-opacity group-hover:opacity-50",
-                                    !pcardShowImageOnHover &&
-                                        "group-hover:scale-110",
-                                    isTransitioning &&
-                                        "[&_img]:[view-transition-name:image-expand]",
-                                ])}
-                                sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 45vw"
-                                data={image}
-                                width={700}
-                                alt={
-                                    image.altText ||
-                                    `Picture of ${product.title}`
-                                }
-                                loading="lazy"
-                                onLoad={() => setIsImageLoading(false)}
-                            />
-                            {pcardShowImageOnHover && secondImage && (
-                                <Image
-                                    className={cn([
-                                        "absolute inset-0 scale-105",
-                                        "opacity-0 transition-opacity duration-300 group-hover:opacity-100",
-                                    ])}
-                                    sizes="auto"
-                                    width={700}
-                                    data={secondImage}
-                                    alt={
-                                        secondImage.altText ||
-                                        `Second picture of ${product.title}`
-                                    }
-                                    loading="lazy"
-                                />
-                            )}
-                        </Link>
                     </div>
                 )}
             </div>
@@ -271,9 +272,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
                         prefetch="intent"
                         className="inline-block font-bold"
                     >
-                        <RevealUnderline className="flex gap-1 bg-position-[left_calc(1em+3px)] leading-normal">
+                        <RevealUnderline className="bg-position-[left_calc(1em+3px)] leading-normal tracking-tight">
                             {pcardShowVendor && (
-                                <span className="inline-block font-medium text-body-subtle uppercase">
+                                <span className="pr-1 font-semibold text-body-subtle">
                                     {product.vendor}
                                 </span>
                             )}
