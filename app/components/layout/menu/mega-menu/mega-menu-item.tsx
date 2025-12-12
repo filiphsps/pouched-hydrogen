@@ -63,9 +63,9 @@ export function MegaMenuItem({
                 <div className="relative z-10 mt-0.5 shrink-0 rounded-md bg-gray-100">
                     <ShopifyImage
                         data={displayImage}
-                        width={40}
-                        height={40}
-                        className="h-10 w-10 object-contain"
+                        width={64}
+                        height={64}
+                        className="size-12 object-contain object-center"
                     />
                 </div>
             )}
