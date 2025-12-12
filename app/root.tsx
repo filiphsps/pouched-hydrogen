@@ -4,7 +4,7 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { SeoConfig } from "@shopify/hydrogen";
 import { Analytics, getSeoMeta, useNonce } from "@shopify/hydrogen";
 import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
-import { AnimatePresence, motion } from "framer-motion";
+
 import type { CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
 import type { AppLoadContext, LinksFunction, MetaArgs } from "react-router";
@@ -205,22 +205,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
     );
 }
 
+/**
+ * App component that renders the current route.
+ * Previously wrapped in AnimatePresence for page transitions, but this caused
+ * significant performance overhead (~160ms DOM mutation time on route changes).
+ * Removed animation for better performance - navigation is now instant.
+ */
 function App() {
-    const location = useLocation();
-
-    return (
-        <AnimatePresence mode="sync" initial={true}>
-            <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20, pointerEvents: "none" }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-                <Outlet />
-            </motion.div>
-        </AnimatePresence>
-    );
+    return <Outlet />;
 }
 
 export default withWeaverse(App);
