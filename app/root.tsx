@@ -22,6 +22,7 @@ import {
 import { useChangeLanguage } from "remix-i18next/react";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
 import type { Route } from "./+types/root";
+import { AgeVerificationGate } from "./components/compliance/age-verification-gate";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
@@ -198,6 +199,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     children
                 )}
                 <GlobalLoading />
+                {/* Age verification gate - blocks all content until verified */}
+                <AgeVerificationGate />
                 <ScrollRestoration nonce={nonce} />
                 <Scripts nonce={nonce} />
             </body>

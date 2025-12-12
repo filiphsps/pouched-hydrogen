@@ -18,6 +18,7 @@ import {
     GiftCardDialog,
     NoteDialog,
 } from "./cart-summary-actions";
+import { FreeShippingProgress } from "./free-shipping-progress";
 
 export function CartSummary({
     cart,
@@ -63,6 +64,8 @@ export function CartSummary({
             <Title as="h2" id="summary-heading" className="sr-only">
                 {t("cart.orderSummary")}
             </Title>
+            {/* Free shipping progress bar */}
+            <FreeShippingProgress cartCost={cost} className="mb-4" />
             {appliedGiftCards?.length > 0 && (
                 <div className="mb-4 flex flex-wrap justify-end gap-2">
                     {appliedGiftCards.map((giftCard) => {

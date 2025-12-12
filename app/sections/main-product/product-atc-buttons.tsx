@@ -56,7 +56,7 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
             {...rest}
             id="atc-buttons"
             style={{ "--shop-pay-button-height": "100%" }}
-            className="mb-8 space-y-2 empty:hidden"
+            className="mb-8 flex flex-col gap-2 empty:hidden"
         >
             <AddToCartButton
                 disabled={!selectedVariant?.availableForSale}
@@ -69,10 +69,11 @@ export default function ProductATCButtons(props: ProductATCButtonsProps) {
                     },
                 ]}
                 data-test="add-to-cart"
-                className="h-14 w-full uppercase"
+                className="w-full"
             >
                 {atcButtonText}
             </AddToCartButton>
+
             {showShopPayButton && selectedVariant?.availableForSale && (
                 <StyledShopPayButton
                     width="100%"

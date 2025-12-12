@@ -65,7 +65,15 @@
     "redeem": "Einlösen",
     "close": "Schließen",
     "orderSummary": "Bestellübersicht",
-    "discountTitle": "Rabattcode anwenden"
+    "discountTitle": "Rabattcode anwenden",
+    "freeShipping": {
+      "success": "🎉 Sie haben kostenlosen Versand freigeschaltet!",
+      "remaining": "Noch {{amount}} für kostenlosen Versand",
+      "progressLabel": "{{progress}}% zum kostenlosen Versand"
+    },
+    "upsells": {
+      "heading": "Passt gut dazu"
+    }
   },
   "product": {
     "inStock": "Auf Lager",
@@ -78,8 +86,18 @@
     "sku": "SKU",
     "details": "Details",
     "shipping": "Versand",
+    "shippingEstimate": {
+      "estimatedDelivery": "Voraussichtliche Lieferung",
+      "orderByShipsToday": "Bestellen Sie bis {{hour}}:00 Uhr für Versand heute",
+      "orderSoonShipsToday": "Bestellen Sie in den nächsten {{hours}} Std. für Versand heute!",
+      "freeShippingNote": "Kostenloser Versand ab €75"
+    },
     "returns": "Rückgabe",
     "new": "Neu",
+    "lowStock": "Nur noch wenige",
+    "onlyXLeft": "Nur noch {{count}} auf Lager",
+    "onlyXLeft_one": "Nur noch 1 auf Lager!",
+    "onlyXLeft_other": "Nur noch {{count}} auf Lager",
     "add": "Korb",
     "metafield": {
       "nicotine": "{{value}} mg/g",
@@ -270,5 +288,14 @@
   },
   "hotspots": {
     "imageAlt": "Hotspots Bild"
+  },
+  "ageVerification": {
+    "accessibleTitle": "Altersverifikation erforderlich",
+    "overlay": "Altersverifikations-Overlay",
+    "heading": "Sind Sie 18 Jahre oder älter?",
+    "description": "Diese Website verkauft nikotinhaltige Produkte. Sie müssen mindestens 18 Jahre alt sein, um diese Website zu betreten.",
+    "confirm": "Ja, ich bin 18+",
+    "deny": "Nein, ich bin unter 18",
+    "disclaimer": "Mit dem Betreten bestätigen Sie, dass Sie in Ihrem Land das gesetzliche Mindestalter für den Kauf von Nikotinprodukten erreicht haben."
   }
 }

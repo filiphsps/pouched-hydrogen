@@ -11,6 +11,7 @@ import { cn } from "~/utils/cn";
 import { CartBestSellers } from "./cart-best-sellers";
 import { CartLineItem } from "./cart-line-item";
 import { CartSummary } from "./cart-summary";
+import { CartUpsells } from "./cart-upsells";
 
 function CartEmpty({
     hidden = false,
@@ -130,6 +131,12 @@ export function CartMain({
                             ))}
                         </ul>
                     </ScrollArea>
+                    {/* Dynamic cart upsells */}
+                    <CartUpsells
+                        cartLineItems={cart?.lines?.nodes ?? []}
+                        layout={layout}
+                        className="px-4"
+                    />
                 </div>
                 {cartHasItems && <CartSummary cart={cart} layout={layout} />}
             </div>

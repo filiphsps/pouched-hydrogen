@@ -59,6 +59,7 @@ export const variants = cva(
                     "after:origin-right after:scale-x-100 after:transition-transform",
                     "hover:after:origin-left hover:after:animate-underline-toggle",
                 ],
+                blank: [],
             },
         },
         defaultVariants: {

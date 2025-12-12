@@ -200,6 +200,7 @@ export const schema = createSchema({
         "mp--atc-buttons",
         "mp--collapsible-details",
         "mp--media-below",
+        "mp--shipping-estimate",
     ],
     limit: 1,
     enabledOn: {

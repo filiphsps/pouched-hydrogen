@@ -4,6 +4,7 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useTranslation } from "react-i18next";
 import { Link, useLoaderData } from "react-router";
 import Paragraph from "~/components/paragraph";
+import { Title } from "~/components/title";
 import type { loader as productLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
 
@@ -63,10 +64,17 @@ export default function CollapsibleDetails(props: CollapsibleDetailsProps) {
                     <Accordion.Item key={title} value={title}>
                         <Accordion.Trigger
                             className={cn([
-                                "flex w-full justify-between border-line-subtle border-b py-4 font-bold data-[state=open]:[&>.minus]:inline-block data-[state=open]:[&>.plus]:hidden",
+                                "flex w-full justify-between border-line-subtle border-b py-4 font-medium text-body-subtle data-[state=open]:[&>.minus]:inline-block data-[state=open]:[&>.plus]:hidden",
                             ])}
                         >
-                            <span>{title}</span>
+                            <Title
+                                as="h3"
+                                variant="muted"
+                                data-testid="facts-title"
+                            >
+                                {title}
+                            </Title>
+
                             <MinusIcon
                                 className="minus hidden h-4 w-4"
                                 weight="bold"
@@ -116,12 +124,6 @@ export const schema = createSchema({
         {
             group: "General",
             inputs: [
-                {
-                    type: "switch",
-                    label: "Show shipping policy",
-                    name: "showShippingPolicy",
-                    defaultValue: true,
-                },
                 {
                     type: "switch",
                     label: "Show refund policy",

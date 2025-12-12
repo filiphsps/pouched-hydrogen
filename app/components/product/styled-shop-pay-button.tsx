@@ -26,7 +26,7 @@ export function StyledShopPayButton({
         <ShopPayButton
             {...props}
             className={cn(
-                "h-14 overflow-hidden rounded-full shadow-xs",
+                "h-12 overflow-hidden rounded-full shadow-xs",
                 className,
             )}
         />

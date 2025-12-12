@@ -45,15 +45,11 @@ export function ProductFactsTable({
             data-testid="product-facts-table"
         >
             {title && (
-                <Title
-                    as="h3"
-                    size="sm"
-                    className="font-medium text-body-subtle"
-                    data-testid="facts-title"
-                >
+                <Title as="h3" variant="muted" data-testid="facts-title">
                     {title}
                 </Title>
             )}
+
             <div className="divide-y divide-line">
                 {facts.map((fact) => (
                     <div

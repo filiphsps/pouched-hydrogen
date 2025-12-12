@@ -46,6 +46,7 @@ import * as ProductMediaBelow from "~/sections/main-product/product-media-below"
 import * as ProductPrices from "~/sections/main-product/product-prices";
 import * as ProductQuantityBreaks from "~/sections/main-product/product-quantity-breaks";
 import * as ProductQuantitySelector from "~/sections/main-product/product-quantity-selector";
+import * as ProductShippingEstimate from "~/sections/main-product/product-shipping-estimate";
 import * as ProductSummary from "~/sections/main-product/product-summary";
 import * as ProductTitle from "~/sections/main-product/product-title";
 import * as ProductVariantSelector from "~/sections/main-product/product-variant-selector";
@@ -59,6 +60,7 @@ import * as Page from "~/sections/page";
 import * as PromotionGrid from "~/sections/promotion-grid";
 import * as PromotionGridButtons from "~/sections/promotion-grid/buttons";
 import * as PromotionGridItem from "~/sections/promotion-grid/item";
+import * as RecentlyViewed from "~/sections/recently-viewed";
 import * as RelatedArticles from "~/sections/related-articles";
 import * as RelatedProducts from "~/sections/related-products";
 import * as SingleProduct from "~/sections/single-product";
@@ -131,9 +133,11 @@ export const components: HydrogenComponent[] = [
     ProductAttributeBar,
     ProductMediaBelow,
     ProductFacts,
+    ProductShippingEstimate,
     ProductATCButtons,
     ProductCollapsibleDetails,
     RelatedProducts,
+    RecentlyViewed,
     RelatedArticles,
     CollectionFilters,
     CollectionList,

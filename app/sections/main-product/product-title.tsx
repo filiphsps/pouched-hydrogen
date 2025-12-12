@@ -1,6 +1,7 @@
 import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { RefObject } from "react";
 import { useLoaderData } from "react-router";
+import { VendorLink } from "~/components/product/vendor-link";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { removeVendorFromTitle } from "~/utils/product";
 
@@ -30,9 +31,10 @@ const ProductTitle = ({
         <div ref={ref} {...rest}>
             <Tag className="h3 leading-normal tracking-tight">
                 {showVendor && (
-                    <span className="pr-2 font-semibold text-body-subtle">
-                        {product.vendor}
-                    </span>
+                    <VendorLink
+                        vendor={product.vendor}
+                        className="pr-2 font-semibold"
+                    />
                 )}
 
                 {removeVendorFromTitle(

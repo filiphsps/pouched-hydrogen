@@ -36,6 +36,7 @@ export const schema = createSchema({
         "mp--facts",
         "mp--description",
         "mp--collapsible-details",
+        "mp--shipping-estimate",
         "judgeme-stars-rating",
     ],
 });

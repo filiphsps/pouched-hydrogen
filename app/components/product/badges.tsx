@@ -130,6 +130,59 @@ export function SaleBadge({
     return null;
 }
 
+/**
+ * Low Stock Badge.
+ * Displays urgency message when inventory is running low.
+ * Shows "Only X left" or "Low stock" based on threshold settings.
+ */
+export function LowStockBadge({
+    quantityAvailable,
+    className,
+}: {
+    quantityAvailable: number | null | undefined;
+    className?: string;
+}) {
+    const { t } = useTranslation();
+    const {
+        lowStockBadgeEnabled = true,
+        lowStockThreshold = 10,
+        lowStockBadgeColor = "#FEF3C7", // amber-100
+    } = useThemeSettings();
+
+    // Don't show if disabled or no quantity info
+    if (
+        !lowStockBadgeEnabled ||
+        quantityAvailable === null ||
+        quantityAvailable === undefined
+    ) {
+        return null;
+    }
+
+    // Don't show if sold out (SoldOutBadge handles that)
+    if (quantityAvailable <= 0) {
+        return null;
+    }
+
+    // Only show if below threshold
+    if (quantityAvailable > lowStockThreshold) {
+        return null;
+    }
+
+    // Show specific quantity for very low stock (1-3 items)
+    const text =
+        quantityAvailable <= 3
+            ? t("product.onlyXLeft", { count: quantityAvailable })
+            : t("product.lowStock");
+
+    return (
+        <Badge
+            text={text}
+            backgroundColor={lowStockBadgeColor}
+            className={cn("low-stock-badge", className)}
+        />
+    );
+}
+
 function calculateDiscount(price: MoneyV2, compareAtPrice: MoneyV2) {
     if (price?.amount && compareAtPrice?.amount) {
         const priceNumber = Number(price.amount);
@@ -196,6 +249,9 @@ export function ProductBadges({
                         compareAtPrice={
                             selectedVariant.compareAtPrice as MoneyV2
                         }
+                    />
+                    <LowStockBadge
+                        quantityAvailable={selectedVariant.quantityAvailable}
                     />
                     <NewBadge
                         publishedAt={publishedAt}

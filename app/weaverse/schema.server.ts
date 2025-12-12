@@ -1021,19 +1021,159 @@ export const themeSchema: HydrogenThemeSchema = {
                     name: "enableCartNote",
                     defaultValue: true,
                 },
-
                 {
                     type: "switch",
                     label: "Enable discount code",
                     name: "enableDiscountCode",
                     defaultValue: true,
                 },
-
                 {
                     type: "switch",
                     label: "Enable gift card",
                     name: "enableGiftCard",
                     defaultValue: true,
+                },
+                {
+                    type: "heading",
+                    label: "Free shipping progress",
+                },
+                {
+                    type: "switch",
+                    label: "Enable free shipping bar",
+                    name: "freeShippingEnabled",
+                    defaultValue: true,
+                },
+                {
+                    type: "range",
+                    label: "Free shipping threshold",
+                    name: "freeShippingThreshold",
+                    configs: {
+                        min: 0,
+                        max: 500,
+                        step: 5,
+                        unit: "€",
+                    },
+                    defaultValue: 75,
+                    condition: (theme: Record<string, any>) =>
+                        theme.freeShippingEnabled === true,
+                },
+                {
+                    type: "text",
+                    label: "Currency symbol",
+                    name: "freeShippingCurrency",
+                    defaultValue: "€",
+                    placeholder: "€",
+                    condition: (theme: Record<string, any>) =>
+                        theme.freeShippingEnabled === true,
+                },
+                {
+                    type: "heading",
+                    label: "Cart upsells",
+                },
+                {
+                    type: "switch",
+                    label: "Enable cart upsells",
+                    name: "cartUpsellsEnabled",
+                    defaultValue: true,
+                },
+                {
+                    type: "text",
+                    label: "Upsells heading",
+                    name: "cartUpsellsHeading",
+                    defaultValue: "Pairs well with",
+                    placeholder: "Pairs well with",
+                    condition: (theme: Record<string, any>) =>
+                        theme.cartUpsellsEnabled === true,
+                },
+            ],
+        },
+        {
+            group: "Product page",
+            inputs: [
+                {
+                    type: "heading",
+                    label: "Shipping estimates",
+                },
+                {
+                    type: "switch",
+                    label: "Enable shipping estimates",
+                    name: "shippingEstimateEnabled",
+                    defaultValue: true,
+                },
+                {
+                    type: "range",
+                    label: "Minimum delivery days",
+                    name: "shippingEstimateMinDays",
+                    configs: {
+                        min: 1,
+                        max: 14,
+                        step: 1,
+                        unit: "days",
+                    },
+                    defaultValue: 2,
+                    condition: (theme: Record<string, any>) =>
+                        theme.shippingEstimateEnabled === true,
+                },
+                {
+                    type: "range",
+                    label: "Maximum delivery days",
+                    name: "shippingEstimateMaxDays",
+                    configs: {
+                        min: 1,
+                        max: 14,
+                        step: 1,
+                        unit: "days",
+                    },
+                    defaultValue: 4,
+                    condition: (theme: Record<string, any>) =>
+                        theme.shippingEstimateEnabled === true,
+                },
+                {
+                    type: "range",
+                    label: "Same-day shipping cutoff",
+                    name: "shippingCutoffHour",
+                    configs: {
+                        min: 8,
+                        max: 20,
+                        step: 1,
+                        unit: ":00",
+                    },
+                    defaultValue: 14,
+                    helpText: "Orders before this hour ship same day",
+                    condition: (theme: Record<string, any>) =>
+                        theme.shippingEstimateEnabled === true,
+                },
+                {
+                    type: "heading",
+                    label: "Stock urgency",
+                },
+                {
+                    type: "switch",
+                    label: "Enable low stock badge",
+                    name: "lowStockBadgeEnabled",
+                    defaultValue: true,
+                },
+                {
+                    type: "range",
+                    label: "Low stock threshold",
+                    name: "lowStockThreshold",
+                    configs: {
+                        min: 1,
+                        max: 50,
+                        step: 1,
+                        unit: "items",
+                    },
+                    defaultValue: 10,
+                    condition: (theme: Record<string, any>) =>
+                        theme.lowStockBadgeEnabled === true,
+                },
+                {
+                    type: "color",
+                    label: "Low stock badge color",
+                    name: "lowStockBadgeColor",
+                    defaultValue: "#FEF3C7",
+                    condition: (theme: Record<string, any>) =>
+                        theme.lowStockBadgeEnabled === true,
                 },
             ],
         },
