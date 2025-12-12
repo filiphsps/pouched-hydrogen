@@ -43,7 +43,7 @@ export function GenericError({
                     }}
                 />
             )}
-            <Link variant="outline" to="/" className="w-fit">
+            <Link variant="outline" to="/" className="w-fit rounded-full">
                 {t("error.generic.homeButton")}
             </Link>
         </Section>
