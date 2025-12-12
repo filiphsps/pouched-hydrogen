@@ -72,7 +72,7 @@ export const action: ActionFunction = async ({
     );
 };
 
-export type CustomerApiPlayLoad = {
+export type CustomerApiPayload = {
     ok: boolean;
     customer?:
         | NonNullable<CustomerCreateMutation["customerCreate"]>["customer"]

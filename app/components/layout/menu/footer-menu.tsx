@@ -3,12 +3,12 @@ import * as Accordion from "@radix-ui/react-accordion";
 import Link from "~/components/link";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { useShopMenu } from "~/hooks/use-shop-menu";
-import type { SingleMenuItem } from "~/types/menu";
+
 import { cn } from "~/utils/cn";
 
 export function FooterMenu() {
     const { footerMenu } = useShopMenu();
-    const items = footerMenu.items as unknown as SingleMenuItem[];
+    const items = footerMenu?.items || [];
     return (
         <Accordion.Root
             type="multiple"

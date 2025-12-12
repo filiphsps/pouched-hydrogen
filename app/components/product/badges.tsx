@@ -35,7 +35,7 @@ function Badge({
                 textTransform: badgeTextTransform,
             }}
             className={cn(
-                "pointer-events-none select-none bg-(--bg-color) px-2 py-1 text-xs uppercase transition-colors duration-300",
+                "pointer-events-none select-none bg-[var(--bg-color)] px-2 py-1 text-xs uppercase shadow-xs transition-colors duration-300",
                 className,
             )}
         >
@@ -197,7 +197,10 @@ export function ProductBadges({
                             selectedVariant.compareAtPrice as MoneyV2
                         }
                     />
-                    <NewBadge publishedAt={publishedAt} />
+                    <NewBadge
+                        publishedAt={publishedAt}
+                        className="bg-gray-100"
+                    />
                     {isBestSellerProduct && <BestSellerBadge />}
                 </>
             ) : (

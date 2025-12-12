@@ -101,7 +101,7 @@ export default function Search() {
             <h4 className="mt-4 mb-2.5 text-center font-medium">Search</h4>
             <Form
                 method="get"
-                className="mx-auto mt-6 mb-4 flex w-[700px] max-w-[90vw] items-center gap-3 border border-line px-3"
+                className="mx-auto mt-6 mb-4 flex w-[700px] max-w-[90vw] items-center gap-3 rounded-full border border-line px-3"
             >
                 <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
                 <input

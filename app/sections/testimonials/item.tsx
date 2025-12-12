@@ -36,7 +36,7 @@ export default function TestimonialItem(props: TestimonialItemProps) {
             data-motion="slide-in"
             className={cn(hideOnMobile && "hidden sm:block")}
         >
-            <figure className="rounded-sm bg-gray-50 p-6">
+            <figure className="rounded-sm bg-gray-100 p-6">
                 <blockquote>
                     <div className="text-xl md:text-2xl">{heading}</div>
                     <p

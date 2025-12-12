@@ -12,9 +12,11 @@ export function useShopMenu() {
     const shopName = data?.layout?.shop?.name;
     const headerMenu = data?.layout?.headerMenu as EnhancedMenu;
     const footerMenu = data?.layout?.footerMenu as EnhancedMenu;
+    const megaMenu = data?.layout?.megaMenu;
     return {
         shopName,
         headerMenu,
         footerMenu,
+        megaMenu,
     };
 }

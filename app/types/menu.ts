@@ -13,10 +13,10 @@ type EnhancedMenuItemProps = {
 export type ChildEnhancedMenuItem = ChildMenuItemFragment &
     EnhancedMenuItemProps;
 
-export type ParentEnhancedMenuItem = (ParentMenuItemFragment &
-    EnhancedMenuItemProps) & {
-    items: ChildEnhancedMenuItem[];
-};
+export type ParentEnhancedMenuItem = Omit<ParentMenuItemFragment, "items"> &
+    EnhancedMenuItemProps & {
+        items: ChildEnhancedMenuItem[];
+    };
 
 export type EnhancedMenu = Pick<MenuFragment, "id"> & {
     items: ParentEnhancedMenuItem[];

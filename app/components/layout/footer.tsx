@@ -161,20 +161,21 @@ export function Footer() {
                                     method="POST"
                                     encType="multipart/form-data"
                                 >
-                                    <div className="flex">
+                                    <div className="flex h-12 w-full items-center gap-1 rounded-full border border-line-subtle px-3 opacity-40 transition-color duration-300 focus-within:border-line focus-within:opacity-100 hover:opacity-60 focus-within:hover:border-line focus-within:hover:opacity-100">
                                         <input
                                             name="email"
                                             type="email"
                                             required
                                             placeholder={newsletterPlaceholder}
-                                            className="grow border border-gray-100 px-3 focus-visible:outline-hidden"
+                                            className="flex-1 border-none bg-transparent px-2.5 focus:outline-hidden focus:ring-0"
                                         />
                                         <Button
-                                            variant="custom"
+                                            variant="outline"
                                             type="submit"
                                             loading={
                                                 fetcher.state === "submitting"
                                             }
+                                            className="h-full shrink-0 border-none font-medium text-(--color-footer-text) text-lg"
                                         >
                                             {newsletterButtonText}
                                         </Button>

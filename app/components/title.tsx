@@ -23,7 +23,7 @@ const titleVariants = cva("font-bold font-semibold tracking-tight", {
             default: "text-body-primary",
             primary: "text-primary",
             secondary: "text-secondary",
-            muted: "font-extrabold text-muted-foreground",
+            muted: "font-bold text-muted-foreground uppercase",
         },
     },
     defaultVariants: {
@@ -37,6 +37,7 @@ export interface TitleProps
         VariantProps<typeof titleVariants> {
     as?: ElementType;
     ref?: Ref<HTMLHeadingElement>;
+    uppercase?: boolean;
 }
 
 export function Title({
@@ -46,12 +47,17 @@ export function Title({
     variant,
     ref,
     children,
+    uppercase = false,
     ...props
 }: TitleProps) {
     return (
         <Tag
             ref={ref}
-            className={cn(titleVariants({ size, variant, className }))}
+            className={cn(
+                titleVariants({ size, variant }),
+                uppercase && "uppercase",
+                className,
+            )}
             {...props}
         >
             {children}

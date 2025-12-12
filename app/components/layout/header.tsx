@@ -15,8 +15,7 @@ import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 import { Logo } from "./logo";
-import { DesktopMenu } from "./menu/desktop-menu";
-import { MobileMenu } from "./menu/mobile-menu";
+import { MegaMenu } from "./menu/mega-menu";
 import { PredictiveSearchButton } from "./predictive-search";
 
 const variants = cva("", {
@@ -74,12 +73,11 @@ export function Header() {
                     variants({ width: headerWidth }),
                 )}
             >
-                <MobileMenu />
+                <MegaMenu />
                 <Link to="/search" className="p-1.5 lg:hidden">
                     <MagnifyingGlassIcon className="h-5 w-5" />
                 </Link>
                 <Logo />
-                <DesktopMenu />
                 <div className="z-1 flex items-center gap-1">
                     <PredictiveSearchButton />
                     <AccountLink className="relative flex h-8 w-8 items-center justify-center" />
@@ -90,7 +88,7 @@ export function Header() {
     );
 }
 
-function AccountLink({ className }: { className?: string }) {
+export function AccountLink({ className }: { className?: string }) {
     const rootData = useRouteLoaderData<RootLoader>("root");
     const isLoggedIn = rootData?.isLoggedIn;
 

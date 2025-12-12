@@ -13,9 +13,10 @@ import {
 } from "react-router";
 import type { RootLoader } from "~/root";
 import type { I18nLocale, Localizations } from "~/types/others";
+import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
-export function CountrySelector() {
+export function CountrySelector({ className }: { className?: string }) {
     const fetcher = useFetcher();
     const submit = useSubmit();
     const rootData = useRouteLoaderData<RootLoader>("root");
@@ -76,7 +77,7 @@ export function CountrySelector() {
     }
 
     return (
-        <div ref={observerRef} className="grid w-80 gap-4">
+        <div ref={observerRef} className={cn("grid w-80 gap-4", className)}>
             <Popover.Root>
                 <Popover.Trigger asChild>
                     <button

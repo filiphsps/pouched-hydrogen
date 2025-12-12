@@ -248,6 +248,34 @@ export const themeSchema: HydrogenThemeSchema = {
                     defaultValue: "#FAFAFA",
                 },
                 {
+                    type: "heading",
+                    label: "Mega Menu",
+                },
+                {
+                    type: "select",
+                    label: "Description punctuation",
+                    name: "menuDescriptionMode",
+                    configs: {
+                        options: [
+                            { value: "as_is", label: "As is" },
+                            {
+                                value: "force_punctuation",
+                                label: "Force ending",
+                            },
+                            { value: "remove_period", label: "Remove period" },
+                        ],
+                    },
+                    defaultValue: "as_is",
+                },
+                {
+                    type: "text",
+                    label: "Preferred ending",
+                    name: "menuDescriptionEnding",
+                    defaultValue: ".",
+                    helpText:
+                        "Used when 'Force ending' is selected. e.g. '.' or '!'",
+                },
+                {
                     type: "color",
                     label: "Header text",
                     name: "headerText",

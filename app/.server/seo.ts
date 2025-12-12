@@ -20,8 +20,13 @@ function root({
     shop: ShopFragment;
     url: Request["url"];
 }): SeoConfig {
+    if (!shop) {
+        console.error("[SEO]", "Shop not found");
+        return {};
+    }
+
     return {
-        title: shop?.name,
+        title: shop.name,
         titleTemplate: `%s | ${shop.name}`,
         description: truncate(shop?.description ?? ""),
         handle: "@weaverse",

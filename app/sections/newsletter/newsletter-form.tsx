@@ -3,7 +3,7 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useFetcher } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
-import type { CustomerApiPlayLoad } from "~/routes/api/customer";
+import type { CustomerApiPayload } from "~/routes/api/customer";
 
 interface NewsLetterInputProps extends HydrogenComponentProps {
     width: number;
@@ -26,7 +26,7 @@ function NewsLetterForm(props: NewsLetterInputProps) {
     } = props;
     const fetcher = useFetcher();
     const { state, Form } = fetcher;
-    const data = fetcher.data as CustomerApiPlayLoad;
+    const data = fetcher.data as CustomerApiPayload;
     const submitted = state === "idle" && data;
     const { ok, errorMessage } = data || {};
 

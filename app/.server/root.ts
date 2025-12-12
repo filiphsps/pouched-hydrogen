@@ -85,8 +85,11 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
             },
         })
         .catch(console.error);
-
     invariant(data, "No data returned from Shopify API");
+    invariant(
+        (data.errors || []).length <= 0,
+        data.errors?.join("\n") || "Unknown error",
+    );
 
     /*
       Modify specific links/routes (optional)
@@ -106,7 +109,6 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
               customPrefixes,
           )
         : undefined;
-
     const footerMenu = data?.footerMenu
         ? parseMenu(
               data.footerMenu,
@@ -116,7 +118,7 @@ async function getLayoutData({ storefront, env }: AppLoadContext) {
           )
         : undefined;
 
-    return { shop: data.shop, headerMenu, footerMenu };
+    return { shop: data.shop, headerMenu, footerMenu, megaMenu: data.megaMenu };
 }
 
 type Swatch = {
@@ -303,109 +305,224 @@ function resolveToFromType(
 }
 
 const LAYOUT_QUERY = `#graphql
-  query layout(
+query layout(
     $language: LanguageCode
     $headerMenuHandle: String!
     $footerMenuHandle: String!
-  ) @inContext(language: $language) {
+) @inContext(language: $language) {
     shop {
-      ...Shop
+        ...Shop
     }
     headerMenu: menu(handle: $headerMenuHandle) {
-      ...Menu
+        ...Menu
     }
     footerMenu: menu(handle: $footerMenuHandle) {
-      ...Menu
+        ...Menu
     }
-  }
-  fragment Shop on Shop {
+    # Mega Menu Metaobject Query
+    megaMenu: metaobjects(type: "mega_menu", first: 1) {
+        nodes {
+            ...MegaMenu
+        }
+    }
+}
+fragment MegaMenu on Metaobject {
+    id
+    fields {
+        key
+        value
+        reference {
+            ... on MediaImage {
+                image {
+                    url
+                    altText
+                    width
+                    height
+                }
+            }
+        }
+        references(first: 20) {
+            nodes {
+                ... on Metaobject {
+                    # Mega Menu Item
+                    id
+                    type
+                    handle
+                    fields {
+                        key
+                        value
+                        reference {
+                            ... on MediaImage {
+                                image {
+                                    url
+                                    altText
+                                    width
+                                    height
+                                }
+                            }
+                        }
+                        references(first: 20) {
+                            nodes {
+                                ... on Metaobject {
+                                    # Mega Menu Section
+                                    id
+                                    type
+                                    handle
+                                    fields {
+                                        key
+                                        value
+                                        reference {
+                                            ... on MediaImage {
+                                                image {
+                                                    url
+                                                    altText
+                                                    width
+                                                    height
+                                                }
+                                            }
+                                        }
+
+                                        references(first: 50) {
+                                            nodes {
+                                                ... on Metaobject {
+                                                    # Menu Link Wrapper
+                                                    id
+                                                    type
+                                                    handle
+                                                    fields {
+                                                        key
+                                                        value
+                                                        reference {
+                                                            ... on Product {
+                                                                handle
+                                                                title
+                                                                featuredImage {
+                                                                    id
+                                                                    altText
+                                                                    url
+                                                                    width
+                                                                    height
+                                                                }
+                                                            }
+                                                            ... on Collection {
+                                                                handle
+                                                                title
+                                                                image {
+                                                                    id
+                                                                    altText
+                                                                    url
+                                                                    width
+                                                                    height
+                                                                }
+                                                            }
+                                                            ... on Page {
+                                                                handle
+                                                                title
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+fragment Shop on Shop {
     id
     name
     description
     primaryDomain {
-      url
+        url
     }
     brand {
-      logo {
-        image {
-          url
+        logo {
+            image {
+                url
+            }
         }
-      }
     }
-  }
-  fragment MenuItem on MenuItem {
+}
+fragment MenuItem on MenuItem {
     id
     resourceId
     resource {
-      ... on Collection {
-        image {
-          altText
-          height
-          id
-          url
-          width
+        ... on Product {
+            image: featuredImage {
+                altText
+                height
+                id
+                url
+                width
+            }
         }
-      }
-      ... on Product {
-        image: featuredImage {
-          altText
-          height
-          id
-          url
-          width
+        ... on Collection {
+            image {
+                altText
+                height
+                id
+                url
+                width
+            }
         }
-      }
     }
     tags
     title
     type
     url
-  }
+}
 
-  fragment ChildMenuItem on MenuItem {
+fragment ChildMenuItem on MenuItem {
     ...MenuItem
-  }
-  fragment ParentMenuItem2 on MenuItem {
-    ...MenuItem
-    items {
-      ...ChildMenuItem
-    }
-  }
-  fragment ParentMenuItem on MenuItem {
+}
+fragment ParentMenuItem2 on MenuItem {
     ...MenuItem
     items {
-      ...ParentMenuItem2
+        ...ChildMenuItem
     }
-  }
-  fragment Menu on Menu {
+}
+fragment ParentMenuItem on MenuItem {
+    ...MenuItem
+    items {
+        ...ParentMenuItem2
+    }
+}
+fragment Menu on Menu {
     id
     items {
-      ...ParentMenuItem
+        ...ParentMenuItem
     }
-  }
+}
 ` as const;
 
 const SWATCHES_QUERY = `#graphql
-  query swatches($type: String!) {
+query swatches($type: String!) {
     metaobjects(first: 250, type: $type) {
-      nodes {
-        id
-        fields {
-          key
-          value
-          reference {
-            ... on MediaImage {
-              image {
-                id
-                altText
-                url: url(transform: { maxWidth: 300 })
-                width
-                height
-              }
+        nodes {
+            id
+            fields {
+                key
+                value
+                reference {
+                    ... on MediaImage {
+                        image {
+                            id
+                            altText
+                            url: url(transform: { maxWidth: 300 })
+                            width
+                            height
+                        }
+                    }
+                }
             }
-          }
         }
-      }
     }
-  }
+}
+
 ` as const;

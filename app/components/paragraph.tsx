@@ -14,7 +14,7 @@ export interface ParagraphProps
 
 const variants = cva("paragraph", {
     variants: {
-        textSize: {
+        size: {
             xs: "text-xs",
             sm: "text-sm",
             base: "",
@@ -41,7 +41,7 @@ const variants = cva("paragraph", {
     },
     defaultVariants: {
         width: "full",
-        textSize: "base",
+        size: "base",
     },
 });
 
@@ -59,7 +59,7 @@ function Paragraph(props: ParagraphProps) {
         as: Tag = "p",
         width,
         content,
-        textSize,
+        size,
         color,
         alignment,
         className,
@@ -86,7 +86,7 @@ function Paragraph(props: ParagraphProps) {
             data-motion="fade-up"
             {...rest}
             style={{ color }}
-            className={cn(variants({ textSize, width, alignment, className }))}
+            className={cn(variants({ size, width, alignment, className }))}
             suppressHydrationWarning={true}
             dangerouslySetInnerHTML={{ __html: content }}
         />
@@ -130,7 +130,7 @@ export const schema = createSchema({
                 },
                 {
                     type: "select",
-                    name: "textSize",
+                    name: "size",
                     label: "Text size",
                     configs: {
                         options: [
