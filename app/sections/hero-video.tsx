@@ -2,8 +2,16 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import type { CSSProperties } from "react";
-import { lazy, Suspense, useEffect, useState } from "react";
+import {
+    lazy,
+    Suspense,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { useInView } from "react-intersection-observer";
+import { Image } from "~/components/image";
 import type { OverlayProps } from "~/components/overlay";
 import { Overlay, overlayInputs } from "~/components/overlay";
 import { useAnimation } from "~/hooks/use-animation";
@@ -27,6 +35,13 @@ const SECTION_HEIGHTS = {
 
 interface HeroVideoData extends OverlayProps, VariantProps<typeof variants> {
     videoURL: string;
+    poster?: {
+        id: string;
+        url: string;
+        altText: string;
+        width: number;
+        height: number;
+    };
     height: "small" | "medium" | "large" | "custom";
     heightOnDesktop: number;
     heightOnMobile: number;
@@ -65,26 +80,13 @@ const variants = cva(
     },
 );
 
-function getPlayerSize(id: string) {
-    if (typeof document !== "undefined") {
-        const section = document.querySelector(`[data-wv-id="${id}"]`);
-        if (section) {
-            const rect = section.getBoundingClientRect();
-            const aspectRatio = rect.width / rect.height;
-            if (aspectRatio < 16 / 9) {
-                return { width: "auto", height: "100%" };
-            }
-        }
-    }
-    return { width: "100%", height: "auto" };
-}
-
 const ReactPlayer = lazy(() => import("react-player/lazy"));
 
 export default function HeroVideo(props: HeroVideoProps) {
     const {
         ref,
         videoURL,
+        poster,
         gap,
         height,
         heightOnDesktop,
@@ -98,7 +100,12 @@ export default function HeroVideo(props: HeroVideoProps) {
     } = props;
 
     const id = rest["data-wv-id"];
-    const [size, setSize] = useState(() => getPlayerSize(id));
+    const sectionRef = useRef<HTMLElement | null>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [size, setSize] = useState<{
+        width: string | number;
+        height: string | number;
+    }>({ width: "100%", height: "auto" });
 
     const desktopHeight =
         SECTION_HEIGHTS[height]?.desktop || `${heightOnDesktop}px`;
@@ -113,29 +120,56 @@ export default function HeroVideo(props: HeroVideoProps) {
         triggerOnce: true,
     });
 
-    function setRefs(node: HTMLElement) {
-        // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
-        inViewRef(node);
-        // Handle ref prop
-        if (typeof ref === "function") {
-            ref(node);
-        } else if (ref && "current" in ref) {
-            ref.current = node;
-        }
-    }
+    const setRefs = useCallback(
+        (node: HTMLElement | null) => {
+            // Callback refs, like the one from `useInView`, is a function that takes the node as an argument
+            inViewRef(node);
+            sectionRef.current = node;
 
-    function handleResize() {
-        setSize(getPlayerSize(id));
-    }
+            // Handle ref prop
+            if (typeof ref === "function") {
+                ref(node);
+            } else if (ref && "current" in ref) {
+                ref.current = node;
+            }
+        },
+        [inViewRef, ref],
+    );
+
+    const calculateSize = useCallback(() => {
+        const section = sectionRef.current;
+        if (section) {
+            const rect = section.getBoundingClientRect();
+            const aspectRatio = rect.width / rect.height;
+            if (aspectRatio < 16 / 9) {
+                setSize({ width: "auto", height: "100%" });
+                return;
+            }
+        }
+        setSize({ width: "100%", height: "auto" });
+    }, []);
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation> --- IGNORE ---
     useEffect(() => {
-        handleResize();
-        window.addEventListener("resize", handleResize);
+        const section = sectionRef.current;
+        if (!section) return;
+
+        // Initial calculation
+        calculateSize();
+
+        const observer = new ResizeObserver(() => {
+            // Wrap in requestAnimationFrame to avoid "ResizeObserver loop limit exceeded"
+            requestAnimationFrame(() => {
+                calculateSize();
+            });
+        });
+
+        observer.observe(section);
+
         return () => {
-            window.removeEventListener("resize", handleResize);
+            observer.disconnect();
         };
-    }, [inView, height, heightOnDesktop, heightOnMobile]);
+    }, [inView, height, heightOnDesktop, heightOnMobile, calculateSize]);
 
     const [scope] = useAnimation();
 
@@ -155,6 +189,20 @@ export default function HeroVideo(props: HeroVideoProps) {
                     "sm:translate-x-[min(0px,calc((var(--desktop-height)/9*16-100vw)/-2))]",
                 )}
             >
+                {poster && (
+                    <Image
+                        data={poster}
+                        alt={poster.altText || "Video poster"}
+                        width={poster.width}
+                        height={poster.height}
+                        className={cn(
+                            "absolute inset-0 h-full w-full object-cover transition-opacity duration-500",
+                            { "opacity-0": isPlaying },
+                        )}
+                        loading="eager"
+                        sizes="100vw"
+                    />
+                )}
                 {inView && (
                     <Suspense fallback={null}>
                         <ReactPlayer
@@ -166,6 +214,7 @@ export default function HeroVideo(props: HeroVideoProps) {
                             height={size.height}
                             controls={false}
                             className="aspect-video"
+                            onStart={() => setIsPlaying(true)}
                         />
                     </Suspense>
                 )}
@@ -203,6 +252,12 @@ export const schema = createSchema({
                     placeholder: "https://www.youtube.com/watch?v=Su-x4Mo5xmU",
                     helpText:
                         "Support YouTube, Vimeo, MP4, WebM, and HLS streams.",
+                },
+                {
+                    type: "image",
+                    name: "poster",
+                    label: "Poster image",
+                    helpText: "Displayed while the video is loading.",
                 },
                 {
                     type: "heading",
