@@ -1,10 +1,17 @@
 /**
  * Shipping Estimate Weaverse Section.
  * Displays estimated delivery date range based on current day and configured
- * shipping times. Shows urgency messaging for same-day shipping cutoffs.
+ * shipping times from theme settings. Shows urgency messaging for same-day shipping cutoffs.
+ *
+ * Uses centralized theme settings (schema.server.ts) for shipping configuration,
+ * ensuring consistency with cart drawer shipping estimates.
  */
 import { ClockIcon, PackageIcon, TruckIcon } from "@phosphor-icons/react";
-import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
+import {
+    createSchema,
+    type HydrogenComponentProps,
+    useThemeSettings,
+} from "@weaverse/hydrogen";
 import { useTranslation } from "react-i18next";
 import { useLoaderData, useRouteLoaderData } from "react-router";
 import { formatCurrency } from "~/components/cart/free-shipping-progress";
@@ -12,103 +19,64 @@ import type { RootLoader } from "~/root";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
+import {
+    addBusinessDays,
+    formatShortDate,
+    getHoursUntilCutoff,
+} from "~/utils/date";
 
 interface ShippingEstimateProps extends HydrogenComponentProps {
     ref: React.Ref<HTMLDivElement>;
-    /** Minimum shipping days */
-    minDays: number;
-    /** Maximum shipping days */
-    maxDays: number;
-    /** Same-day shipping cutoff hour (24h format) */
-    cutoffHour: number;
-    /** Free shipping threshold amount */
-    freeShippingThreshold: number;
-}
-
-/**
- * Formats a date as a localized string (e.g., "Mon, Dec 16").
- */
-function formatDate(date: Date, locale: string): string {
-    return date.toLocaleDateString(locale, {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-    });
-}
-
-/**
- * Adds business days to a date, skipping weekends.
- */
-function addBusinessDays(startDate: Date, days: number): Date {
-    const result = new Date(startDate);
-    let addedDays = 0;
-
-    while (addedDays < days) {
-        result.setDate(result.getDate() + 1);
-        const dayOfWeek = result.getDay();
-        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            addedDays++;
-        }
-    }
-
-    return result;
-}
-
-/**
- * Calculates hours remaining until a cutoff time.
- */
-function getHoursUntilCutoff(cutoffHour: number): number {
-    const now = new Date();
-    const cutoff = new Date();
-    cutoff.setHours(cutoffHour, 0, 0, 0);
-
-    if (now >= cutoff) {
-        return 0;
-    }
-
-    return Math.ceil((cutoff.getTime() - now.getTime()) / (1000 * 60 * 60));
 }
 
 /**
  * Weaverse section for shipping estimate display.
+ * Reads configuration from centralized theme settings.
  */
 export default function ShippingEstimate(props: ShippingEstimateProps) {
-    const {
-        ref,
-        minDays = 2,
-        maxDays = 4,
-        cutoffHour = 14,
-        freeShippingThreshold = 75,
-        ...rest
-    } = props;
+    const { ref, ...rest } = props;
     const { t } = useTranslation();
     const loaderData = useLoaderData<typeof productRouteLoader>();
     const rootData = useRouteLoaderData<RootLoader>("root");
     const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
 
+    // Read from centralized theme settings (same as cart drawer)
+    const {
+        shippingEstimateEnabled = true,
+        shippingEstimateMinDays = 2,
+        shippingEstimateMaxDays = 4,
+        shippingCutoffHour = 14,
+        freeShippingThreshold = 75,
+    } = useThemeSettings();
+
     const product = loaderData?.product;
     const selectedVariant = product?.selectedOrFirstAvailableVariant;
     const availableForSale = selectedVariant?.availableForSale;
 
-    // Don't render if product is out of stock
-    if (!availableForSale) {
+    // Don't render if disabled or product is out of stock
+    if (!shippingEstimateEnabled || !availableForSale) {
         return null;
     }
 
     const now = new Date();
-    // Get locale from root loader (e.g., "de-DE")
     const locale = `${selectedLocale.language}-${selectedLocale.country}`;
-    const hoursUntilCutoff = getHoursUntilCutoff(cutoffHour);
+    const hoursUntilCutoff = getHoursUntilCutoff(shippingCutoffHour);
     const ordersTodayShipToday = hoursUntilCutoff > 0;
 
     const shippingStartDate = ordersTodayShipToday
         ? now
         : addBusinessDays(now, 1);
-    const minDeliveryDate = addBusinessDays(shippingStartDate, minDays);
-    const maxDeliveryDate = addBusinessDays(shippingStartDate, maxDays);
+    const minDeliveryDate = addBusinessDays(
+        shippingStartDate,
+        shippingEstimateMinDays,
+    );
+    const maxDeliveryDate = addBusinessDays(
+        shippingStartDate,
+        shippingEstimateMaxDays,
+    );
 
-    const minDateFormatted = formatDate(minDeliveryDate, locale);
-    const maxDateFormatted = formatDate(maxDeliveryDate, locale);
+    const minDateFormatted = formatShortDate(minDeliveryDate, locale);
+    const maxDateFormatted = formatShortDate(maxDeliveryDate, locale);
 
     // Get currency from product variant price
     const currencyCode = selectedVariant?.price?.currencyCode || "EUR";
@@ -153,7 +121,7 @@ export default function ShippingEstimate(props: ShippingEstimateProps) {
                                   },
                               )
                             : t("product.shippingEstimate.orderByShipsToday", {
-                                  hour: cutoffHour,
+                                  hour: shippingCutoffHour,
                               })}
                     </span>
                 </div>
@@ -187,61 +155,6 @@ export const schema = createSchema({
     enabledOn: {
         pages: ["PRODUCT"],
     },
-    settings: [
-        {
-            group: "Shipping",
-            inputs: [
-                {
-                    type: "range",
-                    label: "Minimum delivery days",
-                    name: "minDays",
-                    defaultValue: 2,
-                    configs: {
-                        min: 1,
-                        max: 14,
-                        step: 1,
-                        unit: "days",
-                    },
-                },
-                {
-                    type: "range",
-                    label: "Maximum delivery days",
-                    name: "maxDays",
-                    defaultValue: 4,
-                    configs: {
-                        min: 1,
-                        max: 14,
-                        step: 1,
-                        unit: "days",
-                    },
-                },
-                {
-                    type: "range",
-                    label: "Same-day shipping cutoff",
-                    name: "cutoffHour",
-                    defaultValue: 14,
-                    configs: {
-                        min: 8,
-                        max: 20,
-                        step: 1,
-                        unit: ":00",
-                    },
-                    helpText:
-                        "Orders placed before this hour can ship the same day",
-                },
-                {
-                    type: "range",
-                    label: "Free shipping threshold",
-                    name: "freeShippingThreshold",
-                    defaultValue: 75,
-                    configs: {
-                        min: 0,
-                        max: 200,
-                        step: 5,
-                        unit: "€",
-                    },
-                },
-            ],
-        },
-    ],
+    // No settings needed - reads from centralized theme settings
+    settings: [],
 });
