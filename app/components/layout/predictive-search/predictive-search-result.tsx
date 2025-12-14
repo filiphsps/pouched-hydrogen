@@ -1,7 +1,7 @@
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import type { ProductVariantFragment } from "storefront-api.generated";
-import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { ProductImage } from "~/components/product/product-image";
 import { VariantPrices } from "~/components/product/variant-prices";
 import { RevealUnderline } from "~/components/reveal-underline";
 import type {
@@ -78,10 +78,12 @@ function SearchResultItem({
                 {__typename === "Product" && (
                     <div className="h-20 w-20 shrink-0">
                         {image?.url && (
-                            <Image
-                                alt={image.altText ?? ""}
-                                src={image.url}
-                                width={200}
+                            <ProductImage
+                                image={{
+                                    url: image.url,
+                                    altText: image.altText,
+                                }}
+                                size="small"
                                 aspectRatio="1/1"
                             />
                         )}

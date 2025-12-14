@@ -1,7 +1,7 @@
 import { TagIcon } from "@phosphor-icons/react";
 import { Money } from "@shopify/hydrogen";
 import type { OrderLineItemFullFragment } from "customer-account-api.generated";
-import { Image } from "~/components/image";
+import { ProductImage } from "~/components/product/product-image";
 
 export function OrderLineItem({
     lineItem,
@@ -16,7 +16,11 @@ export function OrderLineItem({
         <div className="flex gap-4" key={lineItem.id}>
             {lineItem?.image && (
                 <div className="h-auto w-[120px] shrink-0">
-                    <Image data={lineItem.image} width={500} height={500} />
+                    <ProductImage
+                        image={lineItem.image}
+                        size="medium"
+                        aspectRatio="1/1"
+                    />
                 </div>
             )}
             <dl className="flex flex-col">

@@ -2,6 +2,7 @@ import { Money, mapSelectedProductOptionToObject } from "@shopify/hydrogen";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useViewTransitionState } from "react-router";
 import type {
     ProductCardFragment,
@@ -51,7 +52,6 @@ interface ProductCardProps {
 export function ProductCard({ product, className }: ProductCardProps) {
     const {
         pcardBorderRadius,
-        pcardShowImageOnHover,
         pcardImageRatio,
         pcardTitlePricesAlignment,
         pcardAlignment,
@@ -61,9 +61,6 @@ export function ProductCard({ product, className }: ProductCardProps) {
         pcardShowLowestPrice,
         pcardShowSalePrice,
         pcardEnableQuickShop,
-        pcardShowQuickShopOnHover,
-        pcardQuickShopButtonType,
-        pcardQuickShopButtonText,
         pcardQuickShopPanelType,
         pcardShowSaleBadge,
         pcardShowBundleBadge,
@@ -82,6 +79,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
         `/products/${product.handle}`,
     );
     const isTransitioning = useViewTransitionState(productPageHref);
+    const { t } = useTranslation();
 
     const { images, badges, priceRange } = product;
     const { minVariantPrice, maxVariantPrice } = priceRange;
@@ -99,16 +97,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
         .some(({ key, value }) => key === "best_seller" && value === "true");
     const isBundle = Boolean(product?.isBundle?.requiresComponents);
 
-    let [image, secondImage] = images.nodes;
+    let [image] = images.nodes;
     if (selectedVariant?.image) {
         image = selectedVariant.image;
-        const imageUrl = image.url;
-        const imageIndex = images.nodes.findIndex(
-            ({ url }) => url === imageUrl,
-        );
-        if (imageIndex > 0 && imageIndex < images.nodes.length - 1) {
-            secondImage = images.nodes[imageIndex + 1];
-        }
     }
 
     return (
@@ -141,12 +132,8 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
                             <Image
                                 className={cn([
-                                    "absolute inset-0 size-fit scale-100 object-contain duration-300 lg:inset-3",
-                                    pcardShowImageOnHover &&
-                                        secondImage &&
-                                        "transition-opacity group-hover:opacity-50",
-                                    !pcardShowImageOnHover &&
-                                        "group-hover/media:scale-110",
+                                    "h-full w-full object-contain p-4",
+                                    "transition-transform duration-300 group-hover/media:scale-105",
                                     isTransitioning &&
                                         "[&_img]:[view-transition-name:image-expand]",
                                 ])}
@@ -157,25 +144,9 @@ export function ProductCard({ product, className }: ProductCardProps) {
                                     image.altText ||
                                     `Picture of ${product.title}`
                                 }
-                                loading="lazy" // TODO: Load with `eager` if the image is within the expected initial viewport.
+                                loading="lazy"
                                 onLoad={() => setIsImageLoading(false)}
                             />
-                            {pcardShowImageOnHover && secondImage && (
-                                <Image
-                                    className={cn([
-                                        "absolute inset-0 size-fit scale-100 object-contain lg:inset-3",
-                                        "opacity-0 transition-opacity duration-300 group-hover:opacity-100",
-                                    ])}
-                                    sizes="auto"
-                                    width={700}
-                                    data={secondImage}
-                                    alt={
-                                        secondImage.altText ||
-                                        `Second picture of ${product.title}`
-                                    }
-                                    loading="lazy"
-                                />
-                            )}
                         </Link>
 
                         {/* Sale badge - top left */}
@@ -329,12 +300,13 @@ export function ProductCard({ product, className }: ProductCardProps) {
                             />
                         )}
 
+                        {/* Quick shop button - next to price */}
                         {pcardEnableQuickShop && (
                             <QuickShopTrigger
                                 productHandle={product.handle}
-                                showOnHover={pcardShowQuickShopOnHover}
-                                buttonType={pcardQuickShopButtonType}
-                                buttonText={pcardQuickShopButtonText}
+                                showOnHover={false}
+                                buttonType="icon"
+                                buttonText={t("cart.addToCart")}
                                 panelType={pcardQuickShopPanelType}
                             />
                         )}
@@ -346,7 +318,6 @@ export function ProductCard({ product, className }: ProductCardProps) {
                     product={product}
                     selectedVariant={selectedVariant}
                     setSelectedVariant={(variant: ProductVariantFragment) => {
-                        // Only show loading if variant has a different image
                         if (
                             variant.image?.url !== selectedVariant?.image?.url
                         ) {

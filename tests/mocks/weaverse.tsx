@@ -1,8 +1,7 @@
 import type React from "react";
 
-export const useThemeSettings = () => ({
-    pcardBorderRadius: 8,
-    pcardShowImageOnHover: true,
+const defaultThemeSettings = {
+    pcardBorderRadius: 0,
     pcardImageRatio: "square",
     pcardTitlePricesAlignment: "vertical",
     pcardAlignment: "left",
@@ -24,8 +23,9 @@ export const useThemeSettings = () => ({
     pcardShowWishlist: true,
     pcardShowSubtitle: true,
     pcardShowAttributePills: true,
-});
+};
 
+export const useThemeSettings = () => defaultThemeSettings;
 export const createSchema = (schema: any) => schema;
 export const useWeaverse = () => ({});
 export const WeaverseHydrogenRoot = ({

@@ -167,10 +167,10 @@ export function QuickShopTrigger({
                     animate={false}
                     variant="secondary"
                     className={cn(
-                        "group/quick-shop absolute inset-y-0 right-0 h-10.5 p-3 leading-4",
+                        "justify-center p-3 leading-4",
                         buttonType === "icon"
-                            ? "rounded-full shadow-xl"
-                            : "shadow-xs",
+                            ? "rounded-full"
+                            : "w-full shadow-xs",
                         showOnHover &&
                             "opacity-0 transition-opacity group-hover:opacity-100",
                     )}

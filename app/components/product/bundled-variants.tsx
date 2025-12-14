@@ -1,9 +1,6 @@
-import type {
-    ProductVariantComponent,
-    Image as ShopifyImage,
-} from "@shopify/hydrogen/storefront-api-types";
-import { Image } from "~/components/image";
+import type { ProductVariantComponent } from "@shopify/hydrogen/storefront-api-types";
 import Link from "~/components/link";
+import { ProductImage } from "~/components/product/product-image";
 
 export function BundledVariants({
     variants,
@@ -17,13 +14,11 @@ export function BundledVariants({
                     const url = `/products/${bundledVariant.product.handle}`;
                     return (
                         <Link to={url} key={bundledVariant.id}>
-                            <Image
-                                alt={bundledVariant.title}
+                            <ProductImage
+                                image={bundledVariant.image}
+                                size="thumbnail"
                                 aspectRatio="1/1"
-                                height={60}
-                                loading="lazy"
-                                width={60}
-                                data={bundledVariant.image as ShopifyImage}
+                                alt={bundledVariant.title}
                                 className="h-15 w-15"
                             />
                             <div className="flex flex-col pl-3">

@@ -9,13 +9,12 @@ import {
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import type { CartApiQueryFragment } from "storefront-api.generated";
-import { Image } from "~/components/image";
 import { Link } from "~/components/link";
+import { ProductImage } from "~/components/product/product-image";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
 import type { CartLayoutType } from "~/types/others";
 import { cn } from "~/utils/cn";
-import { calculateAspectRatio } from "~/utils/image";
 import { removeVendorFromTitle } from "~/utils/product";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
 import { useCartDrawerStore } from "./store";
@@ -92,13 +91,12 @@ export function CartLineItem({
         >
             <div className="relative shrink-0">
                 {image && (
-                    <Image
-                        width={250}
-                        height={250}
-                        data={image}
-                        className="aspect-square h-auto w-24 rounded-2xl bg-gray-100 object-contain p-2"
+                    <ProductImage
+                        image={image}
+                        size="small"
+                        aspectRatio="1/1"
                         alt={title}
-                        aspectRatio={calculateAspectRatio(image, "adapt")}
+                        className="h-24 w-24 rounded-2xl bg-gray-100 p-2"
                     />
                 )}
             </div>

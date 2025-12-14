@@ -1,8 +1,8 @@
 import { Money, useOptimisticVariant } from "@shopify/hydrogen";
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
-import { Image } from "~/components/image";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
+import { ProductImage } from "~/components/product/product-image";
 import { Title } from "~/components/title";
 import type { loader as productRouteLoader } from "~/routes/products/product";
 import { cn } from "~/utils/cn";
@@ -60,11 +60,11 @@ export function StickyAddToCart() {
                 <div className="hidden items-center gap-4 md:flex">
                     {image && (
                         <div className="h-12 w-12 shrink-0 overflow-hidden rounded-sm border border-line-subtle">
-                            <Image
-                                data={image}
-                                width={48}
-                                height={48}
-                                className="h-full w-full object-cover"
+                            <ProductImage
+                                image={image}
+                                size="thumbnail"
+                                aspectRatio="1/1"
+                                className="h-full w-full"
                             />
                         </div>
                     )}

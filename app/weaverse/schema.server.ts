@@ -590,12 +590,6 @@ export const themeSchema: HydrogenThemeSchema = {
                     label: "Image",
                 },
                 {
-                    type: "switch",
-                    name: "pcardShowImageOnHover",
-                    label: "Show second image on hover",
-                    defaultValue: true,
-                },
-                {
                     type: "select",
                     name: "pcardImageRatio",
                     label: "Image aspect ratio",
