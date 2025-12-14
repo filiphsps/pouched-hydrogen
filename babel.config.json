@@ -1,19 +1,19 @@
 {
-  "presets": [
-    [
-      "@babel/preset-react",
-      {
-        "runtime": "automatic"
-      }
+    "presets": [
+        [
+            "@babel/preset-react",
+            {
+                "runtime": "automatic"
+            }
+        ],
+        "@babel/preset-typescript"
     ],
-    "@babel/preset-typescript"
-  ],
-  "plugins": [
-    [
-      "babel-plugin-react-compiler",
-      {
-        "target": "19"
-      }
+    "plugins": [
+        [
+            "babel-plugin-react-compiler",
+            {
+                "target": "19"
+            }
+        ]
     ]
-  ]
 }

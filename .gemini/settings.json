@@ -1,62 +1,62 @@
 {
-  "$schema": "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/schemas/settings.schema.json",
-  "mcpServers": {
-    "desktop-commander": {
-      "command": "pnpx",
-      "args": ["@wonderwhy-er/desktop-commander@latest"],
-      "excludeTools": [
-        "give_feedback_to_desktop_commander",
-        "get_usage_stats",
-        "set_config_value",
-        "get_config",
-        "get_prompts"
-      ]
+    "$schema": "https://raw.githubusercontent.com/google-gemini/gemini-cli/main/schemas/settings.schema.json",
+    "mcpServers": {
+        "desktop-commander": {
+            "command": "pnpx",
+            "args": ["@wonderwhy-er/desktop-commander@latest"],
+            "excludeTools": [
+                "give_feedback_to_desktop_commander",
+                "get_usage_stats",
+                "set_config_value",
+                "get_config",
+                "get_prompts"
+            ]
+        },
+        "radix-ui": {
+            "command": "pnpx",
+            "args": ["@gianpieropuleo/radix-mcp-server@latest"],
+            "env": {
+                "GITHUB_PERSONAL_ACCESS_TOKEN": "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",
+                "LOG_LEVEL": "error"
+            }
+        },
+        "sequential-thinking": {
+            "command": "npx",
+            "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+            "env": {}
+        },
+        "memory-bank": {
+            "command": "pnpx",
+            "args": ["@gianpieropuleo/radix-mcp-server@latest"],
+            "env": {
+                "MEMORY_BANK_ROOT": "~/memory-bank"
+            }
+        },
+        "gh-grep": {
+            "httpUrl": "https://mcp.grep.app"
+        }
     },
-    "radix-ui": {
-      "command": "pnpx",
-      "args": ["@gianpieropuleo/radix-mcp-server@latest"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "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",
-        "LOG_LEVEL": "error"
-      }
+    "tools": {
+        "autoAccept": true,
+        "shell": {
+            "showColor": true
+        },
+        "enableMessageBusIntegration": true
     },
-    "sequential-thinking": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
-      "env": {}
+    "general": {
+        "previewFeatures": true,
+        "enablePromptCompletion": true,
+        "sessionRetention": {
+            "enabled": true
+        }
     },
-    "memory-bank": {
-      "command": "pnpx",
-      "args": ["@gianpieropuleo/radix-mcp-server@latest"],
-      "env": {
-        "MEMORY_BANK_ROOT": "~/memory-bank"
-      }
+    "ui": {
+        "showStatusInTitle": true,
+        "hideBanner": true,
+        "showMemoryUsage": true,
+        "showCitations": true
     },
-    "gh-grep": {
-      "httpUrl": "https://mcp.grep.app"
+    "output": {
+        "format": "json"
     }
-  },
-  "tools": {
-    "autoAccept": true,
-    "shell": {
-      "showColor": true
-    },
-    "enableMessageBusIntegration": true
-  },
-  "general": {
-    "previewFeatures": true,
-    "enablePromptCompletion": true,
-    "sessionRetention": {
-      "enabled": true
-    }
-  },
-  "ui": {
-    "showStatusInTitle": true,
-    "hideBanner": true,
-    "showMemoryUsage": true,
-    "showCitations": true
-  },
-  "output": {
-    "format": "json"
-  }
 }
