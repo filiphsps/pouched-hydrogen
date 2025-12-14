@@ -57,6 +57,8 @@ export function CartSummary({
             className={cn(
                 layout === "drawer" &&
                     "grid border-line-subtle border-t px-4 pt-4",
+                layout === "modal" &&
+                    "grid border-line-subtle border-t px-6 py-4",
                 layout === "page" &&
                     "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
             )}
@@ -275,7 +277,7 @@ export function CartSummary({
                         </Button>
                     </a>
                     {/* @todo: <CartShopPayButton cart={cart} /> */}
-                    {layout === "drawer" && (
+                    {(layout === "drawer" || layout === "modal") && (
                         <Link
                             variant="underline"
                             to="/cart"

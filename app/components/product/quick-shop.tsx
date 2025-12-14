@@ -2,10 +2,8 @@ import {
     HandbagSimpleIcon,
     ImageIcon,
     ShoppingCartIcon,
-    XIcon,
 } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
@@ -15,6 +13,7 @@ import type {
 } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
+import { ModalContainer } from "~/components/modal";
 import { AddToCartButton } from "~/components/product/add-to-cart-button";
 import { ProductMedia } from "~/components/product/product-media";
 import { Quantity } from "~/components/product/quantity";
@@ -32,6 +31,13 @@ interface QuickViewData {
     storeDomain: string;
 }
 
+/**
+ * Quick shop content displayed inside the modal.
+ * Shows product details, variant selection, and add to cart.
+ *
+ * @param data - Product data and store domain
+ * @param panelType - Layout type (modal or drawer)
+ */
 export function QuickShop({
     data,
     panelType = "modal",
@@ -135,6 +141,56 @@ export function QuickShop({
     );
 }
 
+/**
+ * Loading skeleton displayed while product data is loading.
+ *
+ * @param panelType - Layout type affecting skeleton grid layout
+ */
+function QuickShopSkeleton({
+    panelType = "modal",
+}: {
+    panelType?: "modal" | "drawer";
+}) {
+    return (
+        <div
+            className={cn(
+                "grid grid-cols-1 items-start gap-5",
+                panelType === "modal" ? "lg:grid-cols-2" : "grid-cols-1",
+            )}
+        >
+            <Skeleton className="flex h-183 items-center justify-center">
+                <ImageIcon className="h-16 w-16 text-body-subtle" />
+            </Skeleton>
+            <div className="flex flex-col justify-start gap-5 py-6 pr-5">
+                <div className="flex gap-2">
+                    <Skeleton className="h-5 w-16" />
+                    <Skeleton className="h-5 w-16" />
+                    <Skeleton className="h-5 w-16" />
+                </div>
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-6 w-1/3" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="flex h-10 w-1/2 items-center justify-center">
+                    <ShoppingCartIcon className="h-5 w-5 text-body-subtle" />
+                </Skeleton>
+            </div>
+        </div>
+    );
+}
+
+/**
+ * Trigger button and modal for quick shop functionality.
+ * Opens a modal/drawer with product details and add to cart.
+ *
+ * @param productHandle - Handle of the product to display
+ * @param showOnHover - Whether to show trigger only on hover
+ * @param buttonType - Button style (icon or text)
+ * @param buttonText - Text for text-style button
+ * @param panelType - Modal or drawer panel type
+ */
 export function QuickShopTrigger({
     productHandle,
     showOnHover = true,
@@ -150,9 +206,9 @@ export function QuickShopTrigger({
 }) {
     const [open, setOpen] = useState(false);
     const { load, data } = useFetcher<{ product: ProductQuery["product"] }>();
-
     const { t } = useTranslation();
 
+    // Fetch product data when modal opens
     // biome-ignore lint/correctness/useExhaustiveDependencies: open and state are intentionally excluded
     useEffect(() => {
         if (open && !data) {
@@ -161,113 +217,58 @@ export function QuickShopTrigger({
     }, [open]);
 
     return (
-        <Dialog.Root open={open} onOpenChange={setOpen}>
-            <Dialog.Trigger asChild>
-                <Button
-                    animate={false}
-                    variant="secondary"
-                    className={cn(
-                        "justify-center p-3 leading-4",
-                        buttonType === "icon"
-                            ? "rounded-full"
-                            : "w-full shadow-xs",
-                        showOnHover &&
-                            "opacity-0 transition-opacity group-hover:opacity-100",
-                    )}
-                    title={t("cart.addToCart")}
-                >
-                    {buttonType === "icon" ? (
-                        <>
-                            <HandbagSimpleIcon size={16} className="h-4 w-4" />
-                            <span className="w-0 overflow-hidden pl-0 text-right text-base transition-all group-hover/quick-shop:w-11 group-hover/quick-shop:pl-2">
-                                {t("product.add")}
-                            </span>
-                        </>
-                    ) : (
-                        <span className="px-2">{buttonText}</span>
-                    )}
-                </Button>
-            </Dialog.Trigger>
-            <Dialog.Portal>
-                <Dialog.Overlay className="fixed inset-0 z-10 bg-gray-900/50 data-[state=open]:animate-fade-in" />
-                <Dialog.Content
-                    onCloseAutoFocus={(e) => e.preventDefault()}
-                    className={cn(
-                        "quick-shop-dialog-content",
-                        "fixed inset-0 z-10 flex items-center overflow-x-hidden px-4",
-                        "backdrop-blur-xs",
-                        "[--slide-up-from:20px]",
-                        "data-[state=open]:animate-slide-up",
-                    )}
-                    onClick={(e) => {
-                        const target = e.target as HTMLElement;
-                        if (
-                            target.classList.contains(
-                                "quick-shop-dialog-content",
-                            )
-                        ) {
-                            setOpen(false);
-                        }
-                    }}
-                    aria-describedby={undefined}
-                >
-                    <Dialog.Close asChild>
-                        <Button
-                            className="absolute top-3 right-3 rounded-full p-2"
-                            variant="secondary"
-                        >
-                            <XIcon size={18} />
-                        </Button>
-                    </Dialog.Close>
-                    <div
-                        style={{ maxHeight: "90vh" }}
+        <>
+            <Dialog.Root open={open} onOpenChange={setOpen}>
+                <Dialog.Trigger asChild>
+                    <Button
+                        animate={false}
+                        variant="secondary"
                         className={cn(
-                            "relative mx-auto h-auto w-full max-w-(--breakpoint-xl) animate-slide-up overflow-hidden rounded-2xl bg-white shadow-sm",
-                            panelType === "drawer" &&
-                                "mr-0 ml-auto min-h-screen max-w-md p-4",
+                            "justify-center p-3 leading-4",
+                            buttonType === "icon"
+                                ? "rounded-full"
+                                : "w-full shadow-xs",
+                            showOnHover &&
+                                "opacity-0 transition-opacity group-hover:opacity-100",
                         )}
+                        title={t("cart.addToCart")}
                     >
-                        <VisuallyHidden.Root asChild>
-                            <Dialog.Title>Quick shop modal</Dialog.Title>
-                        </VisuallyHidden.Root>
-                        {data?.product ? (
-                            <QuickShop
-                                data={data as QuickViewData}
-                                panelType={panelType}
-                            />
+                        {buttonType === "icon" ? (
+                            <>
+                                <HandbagSimpleIcon
+                                    size={16}
+                                    className="h-4 w-4"
+                                />
+                                <span className="w-0 overflow-hidden pl-0 text-right text-base transition-all group-hover/quick-shop:w-11 group-hover/quick-shop:pl-2">
+                                    {t("product.add")}
+                                </span>
+                            </>
                         ) : (
-                            <div
-                                className={cn(
-                                    "grid grid-cols-1 items-start gap-5",
-                                    panelType === "modal"
-                                        ? "lg:grid-cols-2"
-                                        : "grid-cols-1",
-                                )}
-                            >
-                                <Skeleton className="flex h-183 items-center justify-center">
-                                    <ImageIcon className="h-16 w-16 text-body-subtle" />
-                                </Skeleton>
-                                <div className="flex flex-col justify-start gap-5 py-6 pr-5">
-                                    <div className="flex gap-2">
-                                        <Skeleton className="h-5 w-16" />
-                                        <Skeleton className="h-5 w-16" />
-                                        <Skeleton className="h-5 w-16" />
-                                    </div>
-                                    <Skeleton className="h-12 w-full" />
-                                    <Skeleton className="h-6 w-1/3" />
-                                    <Skeleton className="h-4 w-full" />
-                                    <Skeleton className="h-4 w-full" />
-                                    <Skeleton className="h-4 w-full" />
-                                    <Skeleton className="h-4 w-full" />
-                                    <Skeleton className="flex h-10 w-1/2 items-center justify-center">
-                                        <ShoppingCartIcon className="h-5 w-5 text-body-subtle" />
-                                    </Skeleton>
-                                </div>
-                            </div>
+                            <span className="px-2">{buttonText}</span>
                         )}
-                    </div>
-                </Dialog.Content>
-            </Dialog.Portal>
-        </Dialog.Root>
+                    </Button>
+                </Dialog.Trigger>
+            </Dialog.Root>
+            <ModalContainer
+                open={open}
+                onOpenChange={setOpen}
+                title="Quick shop modal"
+                maxWidth={panelType === "drawer" ? 448 : "var(--breakpoint-xl)"}
+                maxHeight="90vh"
+                className={cn(
+                    panelType === "drawer" && "mr-0 ml-auto min-h-screen p-4",
+                )}
+                showCloseButton={true}
+            >
+                {data?.product ? (
+                    <QuickShop
+                        data={data as QuickViewData}
+                        panelType={panelType}
+                    />
+                ) : (
+                    <QuickShopSkeleton panelType={panelType} />
+                )}
+            </ModalContainer>
+        </>
     );
 }

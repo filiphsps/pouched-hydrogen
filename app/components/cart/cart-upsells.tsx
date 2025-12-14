@@ -18,6 +18,7 @@ import { ProductCard } from "~/components/product/product-card";
 import { Skeleton } from "~/components/skeleton";
 import { Title } from "~/components/title";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import type { CartLayoutType } from "~/types/others";
 import { cn } from "~/utils/cn";
 
 interface CartUpsellsProps {
@@ -32,7 +33,7 @@ interface CartUpsellsProps {
     /** Number of upsell products to display */
     count?: number;
     /** Layout variant */
-    layout?: "drawer" | "page";
+    layout?: CartLayoutType;
     /** Optional additional CSS classes */
     className?: string;
 }
@@ -103,20 +104,26 @@ export function CartUpsells({
             <div
                 className={cn(
                     "grid gap-3",
-                    layout === "drawer"
-                        ? "grid-cols-2"
-                        : "grid-cols-2 sm:grid-cols-4",
+                    layout === "drawer" || layout === "modal"
+                        ? "grid-cols-1"
+                        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
                 )}
             >
                 {isLoading ? (
                     <CartUpsellsSkeleton count={Math.min(count, 2)} />
                 ) : (
                     products
-                        .slice(0, layout === "drawer" ? 2 : count)
+                        .slice(
+                            0,
+                            layout === "drawer" || layout === "modal"
+                                ? 2
+                                : count,
+                        )
                         .map((product) => (
                             <ProductCard
                                 key={product.id}
                                 product={product}
+                                variant="list"
                                 className="[&_.best-seller-badge,&_.bundle-badge,&_.new-badge]:hidden"
                             />
                         ))
@@ -135,10 +142,15 @@ function CartUpsellsSkeleton({ count = 2 }: { count?: number }) {
     return (
         <>
             {Array.from({ length: count }).map((_, i) => (
-                <div key={`${id}-${i}`} className="grid gap-2">
-                    <Skeleton className="aspect-square" />
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-4 w-16" />
+                <div key={`${id}-${i}`} className="flex gap-4 p-4">
+                    <Skeleton className="h-20 w-20 shrink-0 rounded-xl" />
+                    <div className="flex flex-1 flex-col gap-2">
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-4 w-1/2" />
+                        <div className="mt-auto flex justify-between">
+                            <Skeleton className="h-4 w-16" />
+                        </div>
+                    </div>
                 </div>
             ))}
         </>

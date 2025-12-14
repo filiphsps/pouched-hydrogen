@@ -1112,6 +1112,61 @@ export const themeSchema: HydrogenThemeSchema = {
                     condition: (theme: Record<string, any>) =>
                         theme.cartUpsellsEnabled === true,
                 },
+                {
+                    type: "heading",
+                    label: "Cart display",
+                },
+                {
+                    type: "switch",
+                    label: "Use modal on desktop",
+                    name: "cartModalEnabled",
+                    helpText:
+                        "When enabled, cart displays as a centered modal on desktop screens (≥768px)",
+                    defaultValue: true,
+                },
+                {
+                    type: "range",
+                    label: "Modal max width",
+                    name: "cartModalMaxWidth",
+                    configs: {
+                        min: 480,
+                        max: 1024,
+                        step: 40,
+                        unit: "px",
+                    },
+                    defaultValue: 768,
+                    condition: (theme: Record<string, any>) =>
+                        theme.cartModalEnabled === true,
+                },
+                {
+                    type: "select",
+                    label: "Modal animation",
+                    name: "cartModalAnimation",
+                    configs: {
+                        options: [
+                            { value: "slide-up", label: "Slide up" },
+                            { value: "scale", label: "Scale" },
+                            { value: "fade", label: "Fade" },
+                        ],
+                    },
+                    defaultValue: "slide-up",
+                    condition: (theme: Record<string, any>) =>
+                        theme.cartModalEnabled === true,
+                },
+                {
+                    type: "range",
+                    label: "Drawer width",
+                    name: "cartDrawerWidth",
+                    helpText:
+                        "Width of the cart drawer on mobile and when modal is disabled",
+                    configs: {
+                        min: 320,
+                        max: 600,
+                        step: 20,
+                        unit: "px",
+                    },
+                    defaultValue: 480,
+                },
             ],
         },
         {

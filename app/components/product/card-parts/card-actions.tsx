@@ -1,13 +1,27 @@
+import { cva, type VariantProps } from "class-variance-authority";
 import { useTranslation } from "react-i18next";
 import { Button } from "~/components/button";
 import { cn } from "~/utils/cn";
 import { QuickShopTrigger } from "../quick-shop";
 import { WishlistButton } from "../wishlist-button";
 
+const variants = cva("", {
+    variants: {
+        layout: {
+            inline: "flex items-center gap-2",
+            overlay: "flex flex-col gap-2",
+            stacked: "flex w-full flex-col gap-2",
+        },
+    },
+    defaultVariants: {
+        layout: "inline",
+    },
+});
+
 /**
  * Props for the CardActions component.
  */
-export interface CardActionsProps {
+export interface CardActionsProps extends VariantProps<typeof variants> {
     /** Product handle for quick shop */
     productHandle: string;
     /** Product ID for wishlist */
@@ -22,8 +36,6 @@ export interface CardActionsProps {
     buttonType?: "icon" | "text";
     /** Quick shop panel type */
     quickShopPanelType?: "modal" | "drawer";
-    /** Layout style */
-    layout?: "inline" | "overlay" | "stacked";
     /** Additional CSS classes */
     className?: string;
     /** Callback when add to cart is clicked */
@@ -51,14 +63,8 @@ export function CardActions({
 }: CardActionsProps) {
     const { t } = useTranslation();
 
-    const layoutClasses = {
-        inline: "flex items-center gap-2",
-        overlay: "flex flex-col gap-2",
-        stacked: "flex flex-col gap-2 w-full",
-    };
-
     return (
-        <div className={cn(layoutClasses[layout], className)}>
+        <div className={cn(variants({ layout }), className)}>
             {showQuickAdd && (
                 <QuickShopTrigger
                     productHandle={productHandle}
@@ -74,7 +80,10 @@ export function CardActions({
             {showAddToCart && (
                 <Button
                     variant="primary"
-                    className={cn(layout === "stacked" && "w-full")}
+                    className={cn(
+                        layout === "stacked" && "w-full",
+                        layout === "inline" && "aspect-square h-full w-auto",
+                    )}
                     onClick={onAddToCart}
                 >
                     {t("cart.addToCart")}

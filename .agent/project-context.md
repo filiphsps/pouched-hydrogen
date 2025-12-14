@@ -9,6 +9,9 @@ This document provides essential context for the `pouched-hydrogen` project.
 > *   **MUST always implement and fix things properly**, no shortcuts, hard-coding, or lazy solutions.
 > *   **Tailwind:** When using the `cn` util, don't create multiple rows of strings when they can be combined into one long string.
 
+> [!IMPORTANT]
+> **You MUST read and follow `.agent/rules/*.md`**
+
 ## Project Overview
 
 `pouched-hydrogen` is an innovative Shopify theme named "Gothenburg," built with Shopify Hydrogen, React Router 7, and Weaverse. It's designed to create high-performance, lightning-fast storefronts for Shopify. The project emphasizes a streamlined development experience by integrating a powerful suite of tools and features.

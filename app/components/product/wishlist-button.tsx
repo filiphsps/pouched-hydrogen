@@ -1,7 +1,7 @@
 import { HeartIcon } from "@phosphor-icons/react";
-import { useState } from "react";
 import { Button } from "~/components/button";
 import { cn } from "~/utils/cn";
+import { useWishlistStore } from "./wishlist-store";
 
 /**
  * Props for the WishlistButton component.
@@ -9,8 +9,6 @@ import { cn } from "~/utils/cn";
 interface WishlistButtonProps {
     /** The unique identifier of the product. */
     productId: string;
-    /** Whether the product is initially wishlisted. */
-    initialWishlisted?: boolean;
     /** Additional CSS class names for styling. */
     className?: string;
 }
@@ -23,12 +21,11 @@ interface WishlistButtonProps {
  * @param props - The component props
  * @returns A button element with a heart icon
  */
-export function WishlistButton({
-    productId,
-    initialWishlisted = false,
-    className,
-}: WishlistButtonProps) {
-    const [isWishlisted, setIsWishlisted] = useState(initialWishlisted);
+export function WishlistButton({ productId, className }: WishlistButtonProps) {
+    const isWishlisted = useWishlistStore((state) =>
+        state.items.includes(productId),
+    );
+    const toggleItem = useWishlistStore((state) => state.toggleItem);
 
     /**
      * Handles the click event on the wishlist button.
@@ -39,12 +36,7 @@ export function WishlistButton({
     const handleClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        setIsWishlisted(!isWishlisted);
-        // TODO: Implement wishlist backend integration
-        // This could call a wishlist API or update local storage
-        console.log(
-            `Wishlist ${isWishlisted ? "removed" : "added"} for product: ${productId}`,
-        );
+        toggleItem(productId);
     };
 
     return (

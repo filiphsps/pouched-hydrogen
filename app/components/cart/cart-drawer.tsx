@@ -1,27 +1,37 @@
-import { HandbagIcon, XIcon } from "@phosphor-icons/react";
+import { HandbagIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { type CartReturn, useAnalytics } from "@shopify/hydrogen";
+import { useThemeSettings } from "@weaverse/hydrogen";
 import { Suspense, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { Await, useLocation, useRouteLoaderData } from "react-router";
-import { CartMain } from "~/components/cart/cart-main";
 import Link from "~/components/link";
-import { Title } from "~/components/title";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
+import { CartContent } from "./cart-content";
 import { useCartDrawerStore } from "./store";
 
+/**
+ * Cart drawer component for mobile screens.
+ * Displays the cart as a slide-in drawer from the right side.
+ *
+ * @example
+ * ```tsx
+ * // Used internally by CartContainer
+ * <CartDrawer />
+ * ```
+ */
 export function CartDrawer() {
     const rootData = useRouteLoaderData<RootLoader>("root");
     const { publish } = useAnalytics();
-    const { t } = useTranslation();
     const {
         isOpen,
         close: closeCartDrawer,
         toggle: toggleCartDrawer,
     } = useCartDrawerStore();
     const location = useLocation();
+    const { cartDrawerWidth = 480 } = useThemeSettings();
 
+    // Close on any route change
     // biome-ignore lint/correctness/useExhaustiveDependencies: close on any route change (including same page)
     useEffect(() => {
         closeCartDrawer();
@@ -77,50 +87,19 @@ export function CartDrawer() {
                             <Dialog.Content
                                 onCloseAutoFocus={(e) => e.preventDefault()}
                                 className={cn(
-                                    "fixed inset-y-0 right-0 z-10 w-screen max-w-[480px] bg-background pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]",
+                                    "fixed inset-y-0 right-0 z-10 w-screen bg-background pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]",
                                     "data-[state=open]:animate-[enter-from-right_200ms_ease-out]",
                                     "data-[state=closed]:animate-[exit-to-right_200ms_ease-in]",
                                 )}
+                                style={{
+                                    maxWidth: `${cartDrawerWidth}px`,
+                                }}
                                 aria-describedby={undefined}
                             >
-                                <div className="flex h-full flex-col space-y-3">
-                                    <div className="flex items-center justify-between gap-2 px-4">
-                                        <Dialog.Title
-                                            asChild
-                                            className="text-base"
-                                        >
-                                            <div className="flex items-center justify-start gap-1">
-                                                <Title as="span" size="2xl">
-                                                    {t("cart.title")}
-                                                </Title>
-
-                                                <Title
-                                                    as="span"
-                                                    size="base"
-                                                    variant="muted"
-                                                >
-                                                    ({cart?.totalQuantity || 0})
-                                                </Title>
-                                            </div>
-                                        </Dialog.Title>
-                                        <Dialog.Close asChild>
-                                            <button
-                                                type="button"
-                                                className="translate-x-2 p-2"
-                                                aria-label={t(
-                                                    "cart.closeDrawer",
-                                                )}
-                                            >
-                                                <XIcon className="h-4 w-4" />
-                                            </button>
-                                        </Dialog.Close>
-                                    </div>
-                                    <CartMain
-                                        layout="drawer"
-                                        cart={cart as CartReturn}
-                                    />
-                                    {/* <CartMain layout="aside" cart={cart as CartReturn} /> */}
-                                </div>
+                                <CartContent
+                                    cart={cart as CartReturn}
+                                    layout="drawer"
+                                />
                             </Dialog.Content>
                         </Dialog.Portal>
                     </Dialog.Root>

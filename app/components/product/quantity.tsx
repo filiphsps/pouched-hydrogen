@@ -16,6 +16,8 @@ interface QuantityProps {
     /** Additional CSS class names */
     className?: string;
     inputClassName?: string;
+    /** Minimum value allowed. Defaults to 1. */
+    min?: number;
     /** Whether the input and buttons are disabled */
     disabled?: boolean;
 }
@@ -29,8 +31,15 @@ interface QuantityProps {
  * @returns A quantity input with +/- buttons
  */
 export function Quantity(props: QuantityProps) {
-    const { value, onChange, label, className, inputClassName, disabled } =
-        props;
+    const {
+        value,
+        onChange,
+        label,
+        className,
+        inputClassName,
+        disabled,
+        min = 1,
+    } = props;
 
     const { t } = useTranslation();
 
@@ -40,15 +49,17 @@ export function Quantity(props: QuantityProps) {
     // Sync local value when prop value changes (e.g., from button clicks)
     useEffect(() => {
         setLocalValue(String(value));
+        // Reset local value if it violates min (unless user is typing)
+        // But here we just sync with prop value which is controlled
     }, [value]);
 
     /**
      * Commits the local value to the parent via onChange.
-     * Ensures the value is at least 1.
+     * Ensures the value is at least min.
      */
     const commitValue = () => {
         const numValue = Number(localValue);
-        if (!Number.isNaN(numValue) && numValue >= 1) {
+        if (!Number.isNaN(numValue) && numValue >= min) {
             onChange(numValue);
         } else {
             // Reset to current value if invalid
@@ -112,7 +123,7 @@ export function Quantity(props: QuantityProps) {
                     name="decrease-quantity"
                     aria-label={t("cart.decreaseQuantity")}
                     className="aspect-square h-full shrink-0 border-none font-medium text-lg"
-                    disabled={value <= 1 || disabled}
+                    disabled={value <= min || disabled}
                     onClick={() => onChange(value - 1)}
                 >
                     <span>&#8722;</span>

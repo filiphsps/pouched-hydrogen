@@ -27,4 +27,4 @@ export type SortParam =
 
 export type ImageAspectRatio = "adapt" | "1/1" | "4/3" | "3/4" | "16/9";
 
-export type CartLayoutType = "page" | "drawer";
+export type CartLayoutType = "page" | "drawer" | "modal";

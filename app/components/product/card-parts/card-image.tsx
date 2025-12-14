@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Image } from "~/components/image";
 import { cn } from "~/utils/cn";
 
@@ -19,12 +18,10 @@ interface PartialImage {
 export interface CardImageProps {
     /** Primary image to display */
     image: PartialImage | null | undefined;
-    /** Secondary image for hover swap effect */
-    secondaryImage?: PartialImage | null;
     /** Aspect ratio of the image container */
     aspectRatio?: "square" | "portrait" | "landscape" | "auto";
     /** Hover effect to apply */
-    hoverEffect?: "zoom" | "swap" | "none";
+    hoverEffect?: "zoom" | "none";
     /** Alt text override */
     alt?: string;
     /** Additional CSS classes */
@@ -52,7 +49,6 @@ const ASPECT_RATIOS = {
  */
 export function CardImage({
     image,
-    secondaryImage,
     aspectRatio = "square",
     hoverEffect = "zoom",
     alt,
@@ -60,14 +56,11 @@ export function CardImage({
     isLoading = false,
     onLoad,
 }: CardImageProps) {
-    const [isHovered, setIsHovered] = useState(false);
-
     if (!image?.url) {
         return null;
     }
 
     const altText = alt || image.altText || "Product image";
-    const showSwap = hoverEffect === "swap" && secondaryImage?.url;
     const ratioValue = ASPECT_RATIOS[aspectRatio];
 
     return (
@@ -76,8 +69,6 @@ export function CardImage({
                 "relative m-3 overflow-hidden rounded-xl bg-gray-100 transition-colors duration-300 group-hover:bg-white",
                 className,
             )}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
         >
             {/* Primary Image */}
             <Image
@@ -90,29 +81,8 @@ export function CardImage({
                 className={cn(
                     "!object-contain p-4 transition-all duration-300",
                     hoverEffect === "zoom" && "group-hover:scale-105",
-                    showSwap && isHovered && "opacity-0",
                 )}
             />
-
-            {/* Secondary Image (for swap effect) */}
-            {showSwap && (
-                <div
-                    className={cn(
-                        "absolute inset-0 transition-opacity duration-300",
-                        isHovered ? "opacity-100" : "opacity-0",
-                    )}
-                >
-                    <Image
-                        data={secondaryImage}
-                        aspectRatio={ratioValue}
-                        width={700}
-                        alt={`${altText} - alternate view`}
-                        loading="lazy"
-                        className="!object-contain p-4"
-                    />
-                </div>
-            )}
-
             {/* Loading overlay */}
             {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80">

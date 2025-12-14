@@ -8,7 +8,7 @@ import {
     useRouteError,
     useRouteLoaderData,
 } from "react-router";
-import { CartDrawer } from "~/components/cart/cart-drawer";
+import { CartContainer } from "~/components/cart/cart-container";
 import Link from "~/components/link";
 import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
@@ -98,7 +98,7 @@ export function Header() {
                 <div className="z-1 flex items-center gap-1">
                     <PredictiveSearchButton />
                     <AccountLink className="relative flex h-8 w-8 items-center justify-center" />
-                    <CartDrawer />
+                    <CartContainer />
                 </div>
             </div>
         </header>

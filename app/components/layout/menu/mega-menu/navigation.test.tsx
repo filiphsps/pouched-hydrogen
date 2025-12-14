@@ -1,13 +1,13 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { createMemoryRouter, RouterProvider } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 import { Navigation } from "./navigation";
+import { useMergedMenuData } from "./use-merged-menu-data";
 
 // Mock hooks and components
 vi.mock("./use-merged-menu-data", () => ({
     useMergedMenuData: vi.fn(),
 }));
-
-import { useMergedMenuData } from "./use-merged-menu-data";
 
 vi.mock("./mega-menu-content", () => ({
     MegaMenuContent: ({ items }: any) => (
@@ -49,6 +49,22 @@ global.ResizeObserver = class ResizeObserver {
     }
 };
 
+function renderWithRouter(ui: React.ReactElement) {
+    const router = createMemoryRouter(
+        [
+            {
+                path: "/",
+                element: ui,
+            },
+        ],
+        {
+            initialEntries: ["/"],
+        },
+    );
+
+    return render(<RouterProvider router={router} />);
+}
+
 describe("Navigation", () => {
     const mockItems = [
         { id: "1", title: "Home", to: "/", items: [] },
@@ -69,13 +85,13 @@ describe("Navigation", () => {
 
     it("renders nothing if no items", () => {
         (useMergedMenuData as any).mockReturnValue([]);
-        const { container } = render(<Navigation>Menu</Navigation>);
+        const { container } = renderWithRouter(<Navigation>Menu</Navigation>);
         expect(container).toBeEmptyDOMElement();
     });
 
     it("renders trigger button", () => {
         (useMergedMenuData as any).mockReturnValue(mockItems);
-        render(
+        renderWithRouter(
             <Navigation>
                 <button type="button">Menu Trigger</button>
             </Navigation>,
@@ -85,7 +101,7 @@ describe("Navigation", () => {
 
     it("opens drawer on trigger click (mobile)", async () => {
         (useMergedMenuData as any).mockReturnValue(mockItems);
-        render(
+        renderWithRouter(
             <Navigation>
                 <button type="button">Menu Trigger</button>
             </Navigation>,
@@ -104,7 +120,7 @@ describe("Navigation", () => {
 
     it("renders desktop navigation correctly", () => {
         (useMergedMenuData as any).mockReturnValue(mockItems);
-        render(
+        renderWithRouter(
             <Navigation>
                 <button type="button">Menu Trigger</button>
             </Navigation>,

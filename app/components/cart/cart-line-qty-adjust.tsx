@@ -86,6 +86,7 @@ export function CartLineQuantityAdjust({
                     label={false}
                     disabled={Boolean(isOptimistic)}
                     className="h-8 w-36"
+                    min={0}
                 />
             </div>
         </div>

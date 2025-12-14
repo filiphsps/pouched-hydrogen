@@ -21,6 +21,7 @@ import {
     CardPrice,
 } from "./card-parts";
 import { ProductCardOptions } from "./product-card-options";
+import { useWishlistStore } from "./wishlist-store";
 
 /**
  * Layout variant for the ProductCard.
@@ -39,50 +40,33 @@ export interface ProductCardProps {
     className?: string;
 }
 
-/**
- * A modern, extensible product card component with multiple layout variants.
- * Features include: Schema.org SEO markup, configurable badges, variant selection,
- * wishlist, quick shop, and responsive design.
- *
- * @param props - The component props
- * @returns A product card article element with SEO markup
- */
-export function ProductCard({ product, variant, className }: ProductCardProps) {
+// Hook to encapsulate ProductCard logic
+function useProductCard(
+    product: ProductCardFragment,
+    variantProp?: ProductCardVariant,
+) {
+    const settings = useThemeSettings();
     const {
-        pcardBorderRadius,
         pcardVariant,
         pcardHoverEffect,
-        pcardShowAddToCart,
-        pcardImageRatio,
-        pcardAlignment,
-        pcardShowVendor,
-        pcardRemoveVendorFromTitle,
-        pcardShowReviews,
-        pcardShowLowestPrice,
-        pcardShowSalePrice,
-        pcardEnableQuickShop,
-        pcardShowQuickShopOnHover,
         pcardQuickShopButtonType,
-        pcardQuickShopPanelType,
-        pcardShowSaleBadge,
-        pcardShowBundleBadge,
-        pcardShowBestSellerBadge,
-        pcardShowNewBadge,
-        pcardShowOutOfStockBadge,
-        pcardShowWishlist,
-        pcardShowAttributePills,
-    } = useThemeSettings();
+        pcardImageRatio,
+        pcardBorderRadius,
+    } = settings;
 
-    // Use prop variant or fall back to Weaverse setting
-    const cardVariant = variant || pcardVariant || "grid";
+    const cardVariant = variantProp || pcardVariant || "grid";
     const hoverEffect = pcardHoverEffect || "zoom";
     const buttonType = pcardQuickShopButtonType || "icon";
-    const showOnHover = pcardShowQuickShopOnHover ?? true;
 
     const [selectedVariant, setSelectedVariant] =
         useState<ProductVariantFragment | null>(null);
     const [isImageLoading, setIsImageLoading] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+
+    // Wishlist state
+    const isWishlisted = useWishlistStore((state) =>
+        state.items.includes(product.id),
+    );
 
     const productPageHref = usePrefixPathWithLocale(
         `/products/${product.handle}`,
@@ -105,234 +89,459 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
     const isSoldOut = !currentVariant?.availableForSale;
 
     let [image] = images.nodes;
-    const secondaryImage = images.nodes[1] || null;
     if (selectedVariant?.image) {
         image = selectedVariant.image;
     }
 
-    // Common card styles
     const cardStyles = {
         "--pcard-radius": `${pcardBorderRadius}px`,
         "--pcard-image-ratio": calculateAspectRatio(image, pcardImageRatio),
     } as React.CSSProperties;
 
-    // List variant layout
-    if (cardVariant === "list") {
-        return (
-            <article
-                className={cn(
-                    "group relative flex gap-4 overflow-hidden rounded-2xl bg-card p-4 shadow-sm transition-all hover:shadow-md",
-                    className,
-                )}
-                style={cardStyles}
-                itemScope
-                itemType="https://schema.org/Product"
-            >
-                <Link
-                    to={`/products/${product.handle}?${params.toString()}`}
-                    prefetch="intent"
-                    className="w-32 shrink-0 sm:w-40"
-                >
-                    <CardImage
-                        image={image}
-                        aspectRatio="square"
-                        hoverEffect="zoom"
-                        isLoading={isImageLoading}
-                        onLoad={() => setIsImageLoading(false)}
-                        className="rounded-xl"
-                    />
-                </Link>
-                <div className="flex min-w-0 flex-1 flex-col">
-                    <CardBadges
-                        showSale={pcardShowSaleBadge}
-                        showNew={pcardShowNewBadge}
-                        showBundle={pcardShowBundleBadge}
-                        showBestseller={pcardShowBestSellerBadge}
-                        isBundle={isBundle}
-                        isBestseller={isBestSellerProduct}
-                        publishedAt={product.publishedAt}
-                        price={minVariantPrice as MoneyV2}
-                        compareAtPrice={maxVariantPrice as MoneyV2}
-                        position="top-left"
-                        className="relative mb-2 flex-wrap"
-                    />
-                    <CardInfo
-                        title={product.title}
-                        handle={product.handle}
-                        vendor={product.vendor}
-                        showVendor={pcardShowVendor}
-                        removeVendorFromTitle={pcardRemoveVendorFromTitle}
-                        showRating={pcardShowReviews}
-                        urlParams={params.toString()}
-                        size="md"
-                    />
-                    <div className="mt-auto flex items-end justify-between gap-4 pt-3">
-                        <CardPrice
-                            price={currentVariant?.price || minVariantPrice}
-                            compareAtPrice={currentVariant?.compareAtPrice}
-                            showCompareAt={pcardShowSalePrice}
-                            size="md"
-                        />
-                    </div>
-                    {(pcardEnableQuickShop || pcardShowWishlist) && (
-                        <CardActions
-                            productHandle={product.handle}
-                            productId={product.id}
-                            showQuickAdd={pcardEnableQuickShop}
-                            showWishlist={pcardShowWishlist}
-                            buttonType={buttonType}
-                            quickShopPanelType={pcardQuickShopPanelType}
-                            layout="inline"
-                            className="mt-3"
-                        />
-                    )}
-                </div>
-            </article>
-        );
-    }
+    const handleVariantChange = (v: ProductVariantFragment) => {
+        const nextImage = v.image || images.nodes[0];
+        const currentImage = selectedVariant?.image || images.nodes[0];
 
-    // Compact variant layout
-    if (cardVariant === "compact") {
-        return (
-            <article
-                className={cn(
-                    "group relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:shadow-md",
-                    className,
-                )}
-                style={cardStyles}
-                itemScope
-                itemType="https://schema.org/Product"
+        if (nextImage?.url !== currentImage?.url) {
+            setIsImageLoading(true);
+        }
+        setSelectedVariant(v);
+    };
+
+    return {
+        settings,
+        cardVariant,
+        hoverEffect,
+        buttonType,
+        selectedVariant,
+        setSelectedVariant: handleVariantChange,
+        isImageLoading,
+        setIsImageLoading,
+        isHovered,
+        setIsHovered,
+        isTransitioning,
+        currentVariant,
+        params,
+        isBestSellerProduct,
+        isBundle,
+        isSoldOut,
+        image,
+        cardStyles,
+        minVariantPrice,
+        maxVariantPrice,
+        isWishlisted,
+    };
+}
+
+// Wrapper for CardBadges to reduce prop passing
+function ProductBadges({
+    product,
+    logic,
+    position,
+    className,
+}: {
+    product: ProductCardFragment;
+    logic: ReturnType<typeof useProductCard>;
+    position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+    className?: string;
+}) {
+    const {
+        settings,
+        minVariantPrice,
+        maxVariantPrice,
+        isBundle,
+        isBestSellerProduct,
+        isSoldOut,
+    } = logic;
+    const {
+        pcardShowSaleBadge,
+        pcardShowNewBadge,
+        pcardShowBundleBadge,
+        pcardShowBestSellerBadge,
+        pcardShowOutOfStockBadge,
+    } = settings;
+
+    return (
+        <CardBadges
+            showSale={pcardShowSaleBadge}
+            showNew={pcardShowNewBadge}
+            showBundle={pcardShowBundleBadge}
+            showBestseller={pcardShowBestSellerBadge}
+            showSoldOut={pcardShowOutOfStockBadge}
+            isBundle={isBundle}
+            isBestseller={isBestSellerProduct}
+            isSoldOut={isSoldOut}
+            publishedAt={product.publishedAt}
+            price={minVariantPrice as MoneyV2}
+            compareAtPrice={maxVariantPrice as MoneyV2}
+            position={position}
+            className={className}
+        />
+    );
+}
+
+// Wrapper for CardActions
+function ProductActions({
+    product,
+    logic,
+    layout = "inline",
+    className,
+    showWishlist,
+}: {
+    product: ProductCardFragment;
+    logic: ReturnType<typeof useProductCard>;
+    layout?: "inline" | "overlay" | "stacked";
+    className?: string;
+    showWishlist?: boolean;
+}) {
+    const { settings, buttonType } = logic;
+    const { pcardEnableQuickShop, pcardShowWishlist, pcardQuickShopPanelType } =
+        settings;
+
+    // Determine if wishlist should be shown based on prop override or settings
+    const shouldShowWishlist =
+        showWishlist !== undefined ? showWishlist : pcardShowWishlist;
+
+    if (!pcardEnableQuickShop && !shouldShowWishlist) return null;
+
+    return (
+        <CardActions
+            productHandle={product.handle}
+            productId={product.id}
+            showQuickAdd={pcardEnableQuickShop}
+            showWishlist={shouldShowWishlist}
+            buttonType={buttonType}
+            quickShopPanelType={pcardQuickShopPanelType}
+            layout={layout}
+            className={className}
+        />
+    );
+}
+
+// Standard Link Wrapper
+function ProductLink({
+    product,
+    params,
+    children,
+    className,
+    isTransitioning,
+}: {
+    product: ProductCardFragment;
+    params: URLSearchParams;
+    children: React.ReactNode;
+    className?: string;
+    isTransitioning?: boolean;
+}) {
+    return (
+        <Link
+            to={`/products/${product.handle}?${params.toString()}`}
+            prefetch="intent"
+            className={cn(
+                className,
+                isTransitioning &&
+                    "[&_img]:[view-transition-name:image-expand]",
+            )}
+        >
+            {children}
+        </Link>
+    );
+}
+
+// -- Layout Components --
+
+function ProductCardList({
+    product,
+    className,
+    logic,
+}: {
+    product: ProductCardFragment;
+    className?: string;
+    logic: ReturnType<typeof useProductCard>;
+}) {
+    const {
+        settings,
+        image,
+        isImageLoading,
+        setIsImageLoading,
+        cardStyles,
+        params,
+        currentVariant,
+        minVariantPrice,
+    } = logic;
+
+    const {
+        pcardShowVendor,
+        pcardRemoveVendorFromTitle,
+        pcardShowReviews,
+        pcardShowSalePrice,
+    } = settings;
+
+    return (
+        <article
+            className={cn(
+                "group relative flex gap-4 overflow-hidden rounded-2xl bg-card p-4 shadow-sm transition-all hover:shadow-md",
+                className,
+            )}
+            style={cardStyles}
+            itemScope
+            itemType="https://schema.org/Product"
+        >
+            <ProductLink
+                product={product}
+                params={params}
+                className="w-32 shrink-0 sm:w-40"
             >
-                <Link
-                    to={`/products/${product.handle}?${params.toString()}`}
-                    prefetch="intent"
-                    className="block"
-                >
-                    <CardImage
-                        image={image}
-                        aspectRatio="square"
-                        hoverEffect="zoom"
-                        isLoading={isImageLoading}
-                        onLoad={() => setIsImageLoading(false)}
-                    />
-                </Link>
-                <div className="p-3">
-                    <Link
-                        to={`/products/${product.handle}?${params.toString()}`}
-                        prefetch="intent"
-                    >
-                        <h3
-                            className="line-clamp-1 font-medium text-foreground text-sm hover:underline"
-                            itemProp="name"
-                        >
-                            {product.title}
-                        </h3>
-                    </Link>
+                <CardImage
+                    image={image}
+                    aspectRatio="square"
+                    hoverEffect="zoom"
+                    isLoading={isImageLoading}
+                    onLoad={() => setIsImageLoading(false)}
+                    className="rounded-xl"
+                />
+            </ProductLink>
+            <div className="flex min-w-0 flex-1 flex-col">
+                <ProductBadges
+                    product={product}
+                    logic={logic}
+                    position="top-left"
+                    className="relative mb-2 flex-wrap"
+                />
+                <CardInfo
+                    title={product.title}
+                    handle={product.handle}
+                    vendor={product.vendor}
+                    showVendor={pcardShowVendor}
+                    removeVendorFromTitle={pcardRemoveVendorFromTitle}
+                    showRating={pcardShowReviews}
+                    urlParams={params.toString()}
+                    size="md"
+                />
+                <div className="mt-auto flex items-end justify-between gap-4 pt-3">
                     <CardPrice
                         price={currentVariant?.price || minVariantPrice}
                         compareAtPrice={currentVariant?.compareAtPrice}
                         showCompareAt={pcardShowSalePrice}
-                        size="sm"
-                        className="mt-1"
+                        size="md"
                     />
                 </div>
-            </article>
-        );
-    }
-
-    // Featured variant layout
-    if (cardVariant === "featured") {
-        return (
-            <article
-                className={cn(
-                    "group relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:shadow-lg",
-                    className,
-                )}
-                style={cardStyles}
-                itemScope
-                itemType="https://schema.org/Product"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-            >
-                <Link
-                    to={`/products/${product.handle}?${params.toString()}`}
-                    prefetch="intent"
-                    className="block"
-                >
-                    <CardImage
-                        image={image}
-                        aspectRatio="landscape"
-                        hoverEffect="zoom"
-                        isLoading={isImageLoading}
-                        onLoad={() => setIsImageLoading(false)}
-                    />
-                </Link>
-                <CardBadges
-                    showSale={pcardShowSaleBadge}
-                    showNew={pcardShowNewBadge}
-                    showBundle={pcardShowBundleBadge}
-                    showBestseller={pcardShowBestSellerBadge}
-                    isBundle={isBundle}
-                    isBestseller={isBestSellerProduct}
-                    publishedAt={product.publishedAt}
-                    price={minVariantPrice as MoneyV2}
-                    compareAtPrice={maxVariantPrice as MoneyV2}
-                    position="top-left"
+                <ProductActions
+                    product={product}
+                    logic={logic}
+                    layout="inline"
+                    className="mt-3"
                 />
-                <div
-                    className={cn(
-                        "absolute top-4 right-4 transition-all duration-300",
-                        isHovered
-                            ? "translate-y-0 opacity-100"
-                            : "-translate-y-2 opacity-0",
-                    )}
-                >
-                    <CardActions
-                        productHandle={product.handle}
-                        productId={product.id}
-                        showQuickAdd={pcardEnableQuickShop}
-                        showWishlist={pcardShowWishlist}
-                        buttonType="icon"
-                        quickShopPanelType={pcardQuickShopPanelType}
-                        layout="overlay"
-                    />
-                </div>
-                <div className="p-5">
-                    <CardInfo
-                        title={product.title}
-                        handle={product.handle}
-                        vendor={product.vendor}
-                        showVendor={pcardShowVendor}
-                        removeVendorFromTitle={pcardRemoveVendorFromTitle}
-                        showRating={pcardShowReviews}
-                        urlParams={params.toString()}
+            </div>
+        </article>
+    );
+}
+
+function ProductCardCompact({
+    product,
+    className,
+    logic,
+}: {
+    product: ProductCardFragment;
+    className?: string;
+    logic: ReturnType<typeof useProductCard>;
+}) {
+    const {
+        settings,
+        image,
+        isImageLoading,
+        setIsImageLoading,
+        cardStyles,
+        params,
+        currentVariant,
+        minVariantPrice,
+    } = logic;
+
+    const { pcardShowSalePrice } = settings;
+
+    return (
+        <article
+            className={cn(
+                "group relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:shadow-md",
+                className,
+            )}
+            style={cardStyles}
+            itemScope
+            itemType="https://schema.org/Product"
+        >
+            <ProductLink product={product} params={params} className="block">
+                <CardImage
+                    image={image}
+                    aspectRatio="square"
+                    hoverEffect="zoom"
+                    isLoading={isImageLoading}
+                    onLoad={() => setIsImageLoading(false)}
+                />
+            </ProductLink>
+            <div className="p-3">
+                <ProductLink product={product} params={params}>
+                    <h3
+                        className="line-clamp-1 font-medium text-foreground text-sm hover:underline"
+                        itemProp="name"
+                    >
+                        {product.title}
+                    </h3>
+                </ProductLink>
+                <CardPrice
+                    price={currentVariant?.price || minVariantPrice}
+                    compareAtPrice={currentVariant?.compareAtPrice}
+                    showCompareAt={pcardShowSalePrice}
+                    size="sm"
+                    className="mt-1"
+                />
+            </div>
+        </article>
+    );
+}
+
+function ProductCardFeatured({
+    product,
+    className,
+    logic,
+}: {
+    product: ProductCardFragment;
+    className?: string;
+    logic: ReturnType<typeof useProductCard>;
+}) {
+    const {
+        settings,
+        image,
+        isImageLoading,
+        setIsImageLoading,
+        cardStyles,
+        params,
+        currentVariant,
+        minVariantPrice,
+        isHovered,
+        setIsHovered,
+        selectedVariant,
+        setSelectedVariant,
+        isWishlisted,
+    } = logic;
+
+    const {
+        pcardShowVendor,
+        pcardRemoveVendorFromTitle,
+        pcardShowReviews,
+        pcardShowSalePrice,
+    } = settings;
+
+    return (
+        <article
+            className={cn(
+                "group relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:shadow-lg",
+                className,
+            )}
+            style={cardStyles}
+            itemScope
+            itemType="https://schema.org/Product"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <ProductLink product={product} params={params} className="block">
+                <CardImage
+                    image={image}
+                    aspectRatio="landscape"
+                    hoverEffect="zoom"
+                    isLoading={isImageLoading}
+                    onLoad={() => setIsImageLoading(false)}
+                />
+            </ProductLink>
+            <ProductBadges
+                product={product}
+                logic={logic}
+                position="top-left"
+            />
+            <div
+                className={cn(
+                    "absolute top-4 right-4 transition-all duration-300",
+                    isHovered || isWishlisted
+                        ? "translate-y-0 opacity-100"
+                        : "-translate-y-2 opacity-0",
+                )}
+            >
+                <ProductActions
+                    product={product}
+                    logic={logic}
+                    layout="overlay"
+                />
+            </div>
+            <div className="p-5">
+                <CardInfo
+                    title={product.title}
+                    handle={product.handle}
+                    vendor={product.vendor}
+                    showVendor={pcardShowVendor}
+                    removeVendorFromTitle={pcardRemoveVendorFromTitle}
+                    showRating={pcardShowReviews}
+                    urlParams={params.toString()}
+                    size="lg"
+                />
+                <div className="mt-4 flex items-center justify-between gap-4">
+                    <CardPrice
+                        price={currentVariant?.price || minVariantPrice}
+                        compareAtPrice={currentVariant?.compareAtPrice}
+                        showCompareAt={pcardShowSalePrice}
                         size="lg"
                     />
-                    <div className="mt-4 flex items-center justify-between gap-4">
-                        <CardPrice
-                            price={currentVariant?.price || minVariantPrice}
-                            compareAtPrice={currentVariant?.compareAtPrice}
-                            showCompareAt={pcardShowSalePrice}
-                            size="lg"
-                        />
-                    </div>
-                    <ProductCardOptions
-                        product={product}
-                        selectedVariant={selectedVariant}
-                        setSelectedVariant={(v: ProductVariantFragment) => {
-                            if (v.image?.url !== selectedVariant?.image?.url) {
-                                setIsImageLoading(true);
-                            }
-                            setSelectedVariant(v);
-                        }}
-                        className="mt-3"
-                    />
                 </div>
-            </article>
-        );
-    }
+                <ProductCardOptions
+                    product={product}
+                    selectedVariant={selectedVariant}
+                    setSelectedVariant={setSelectedVariant}
+                    className="mt-3"
+                />
+            </div>
+        </article>
+    );
+}
 
-    // Default: grid variant
+function ProductCardGrid({
+    product,
+    className,
+    logic,
+}: {
+    product: ProductCardFragment;
+    className?: string;
+    logic: ReturnType<typeof useProductCard>;
+}) {
+    const {
+        settings,
+        image,
+        isImageLoading,
+        setIsImageLoading,
+        cardStyles,
+        params,
+        currentVariant,
+        minVariantPrice,
+        isHovered,
+        setIsHovered,
+        selectedVariant,
+        setSelectedVariant,
+        hoverEffect,
+        isTransitioning,
+        isBestSellerProduct,
+        isBundle,
+        isSoldOut,
+        isWishlisted,
+    } = logic;
+
+    const {
+        pcardShowVendor,
+        pcardRemoveVendorFromTitle,
+        pcardShowReviews,
+        pcardShowSalePrice,
+        pcardShowLowestPrice,
+        pcardShowWishlist,
+        pcardShowAttributePills,
+        pcardEnableQuickShop,
+        pcardAlignment,
+    } = settings;
+
     return (
         <article
             className={cn(
@@ -345,60 +554,43 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {/* Image section */}
             <div className="relative">
-                <Link
-                    to={`/products/${product.handle}?${params.toString()}`}
-                    prefetch="intent"
-                    className={cn(
-                        "block",
-                        isTransitioning &&
-                            "[&_img]:[view-transition-name:image-expand]",
-                    )}
+                <ProductLink
+                    product={product}
+                    params={params}
+                    className="block"
+                    isTransitioning={isTransitioning}
                 >
                     <CardImage
                         image={image}
-                        secondaryImage={
-                            hoverEffect === "swap" ? secondaryImage : null
-                        }
                         aspectRatio="square"
                         hoverEffect={hoverEffect}
                         isLoading={isImageLoading}
                         onLoad={() => setIsImageLoading(false)}
                     />
-                </Link>
+                </ProductLink>
 
-                {/* Badges - top left */}
-                <CardBadges
-                    showSale={pcardShowSaleBadge}
-                    showNew={pcardShowNewBadge}
-                    showBundle={pcardShowBundleBadge}
-                    showBestseller={pcardShowBestSellerBadge}
-                    showSoldOut={pcardShowOutOfStockBadge}
-                    isBundle={isBundle}
-                    isBestseller={isBestSellerProduct}
-                    isSoldOut={isSoldOut}
-                    publishedAt={product.publishedAt}
-                    price={minVariantPrice as MoneyV2}
-                    compareAtPrice={maxVariantPrice as MoneyV2}
+                <ProductBadges
+                    product={product}
+                    logic={logic}
                     position="top-left"
                 />
 
-                {/* Wishlist - top right */}
                 {pcardShowWishlist && (
                     <div
                         className={cn(
                             "absolute top-2 right-2 transition-all duration-300",
-                            isHovered
+                            isHovered || isWishlisted
                                 ? "translate-y-0 opacity-100"
                                 : "-translate-y-2 opacity-0",
                         )}
                     >
+                        {/* Manually invoking CardActions because wrapper logic differs for wishlist-only usage in grid */}
                         <CardActions
                             productHandle={product.handle}
                             productId={product.id}
                             showQuickAdd={false}
-                            showWishlist
+                            showWishlist={true}
                             showAddToCart={false}
                             layout="overlay"
                         />
@@ -406,14 +598,11 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                 )}
             </div>
 
-            {/* Content section */}
             <div className="flex flex-1 flex-col gap-1.5 p-4">
-                {/* Attribute pills */}
                 {pcardShowAttributePills && (
                     <AttributePills product={product} className="mb-1" />
                 )}
 
-                {/* Info: vendor, title, rating */}
                 <CardInfo
                     title={product.title}
                     handle={product.handle}
@@ -425,7 +614,17 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                     size="md"
                 />
 
-                {/* Price and Add to Cart row */}
+                <ProductCardOptions
+                    product={product}
+                    selectedVariant={selectedVariant}
+                    setSelectedVariant={setSelectedVariant}
+                    className={cn(
+                        pcardAlignment === "left" && "justify-start",
+                        pcardAlignment === "center" && "justify-center",
+                        pcardAlignment === "right" && "justify-end",
+                    )}
+                />
+
                 <div className="flex items-center justify-between gap-2">
                     {pcardShowLowestPrice || isCombinedListing(product) ? (
                         <CardPrice
@@ -440,38 +639,65 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                         />
                     )}
 
-                    {/* Quick shop button next to price */}
                     {pcardEnableQuickShop && (
-                        <CardActions
-                            productHandle={product.handle}
-                            productId={product.id}
-                            showQuickAdd
-                            showWishlist={false}
-                            showAddToCart={false}
-                            buttonType={buttonType}
-                            quickShopPanelType={pcardQuickShopPanelType}
+                        <ProductActions
+                            product={product}
+                            logic={logic}
                             layout="inline"
+                            showWishlist={false} // Disable duplicates in grid view
                         />
                     )}
                 </div>
-
-                {/* Variant options */}
-                <ProductCardOptions
-                    product={product}
-                    selectedVariant={selectedVariant}
-                    setSelectedVariant={(v: ProductVariantFragment) => {
-                        if (v.image?.url !== selectedVariant?.image?.url) {
-                            setIsImageLoading(true);
-                        }
-                        setSelectedVariant(v);
-                    }}
-                    className={cn(
-                        pcardAlignment === "left" && "justify-start",
-                        pcardAlignment === "center" && "justify-center",
-                        pcardAlignment === "right" && "justify-end",
-                    )}
-                />
             </div>
         </article>
     );
+}
+
+/**
+ * A modern, extensible product card component with multiple layout variants.
+ * Features include: Schema.org SEO markup, configurable badges, variant selection,
+ * wishlist, quick shop, and responsive design.
+ *
+ * @param props - The component props
+ * @returns A product card article element with SEO markup
+ */
+export function ProductCard({ product, variant, className }: ProductCardProps) {
+    const logic = useProductCard(product, variant);
+    // Use logic.cardVariant which is derived from props/settings
+    const { cardVariant } = logic;
+
+    switch (cardVariant) {
+        case "list":
+            return (
+                <ProductCardList
+                    product={product}
+                    className={className}
+                    logic={logic}
+                />
+            );
+        case "compact":
+            return (
+                <ProductCardCompact
+                    product={product}
+                    className={className}
+                    logic={logic}
+                />
+            );
+        case "featured":
+            return (
+                <ProductCardFeatured
+                    product={product}
+                    className={className}
+                    logic={logic}
+                />
+            );
+        default:
+            return (
+                <ProductCardGrid
+                    product={product}
+                    className={className}
+                    logic={logic}
+                />
+            );
+    }
 }

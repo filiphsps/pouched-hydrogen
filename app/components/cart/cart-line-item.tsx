@@ -1,4 +1,4 @@
-import { TrashIcon } from "@phosphor-icons/react";
+import { ArrowsClockwise, TrashIcon } from "@phosphor-icons/react";
 import {
     CartForm,
     Money,
@@ -118,13 +118,23 @@ export function CartLineItem({
                                 <p>{productTitle}</p>
                             )}
                         </div>
-                        {!isDefaultVariant && (
-                            <div className="space-y-0.5 text-gray-500 text-sm">
-                                {title}
-                            </div>
-                        )}
+                        <div className="flex flex-wrap items-center gap-x-2 text-gray-500 text-sm">
+                            {!isDefaultVariant && <span>{title}</span>}
+                            {(line as any).sellingPlanAllocation?.sellingPlan
+                                ?.name && (
+                                <span className="flex items-center gap-1 text-xs">
+                                    <ArrowsClockwise size={14} />
+                                    <span>
+                                        {
+                                            (line as any).sellingPlanAllocation
+                                                .sellingPlan.name
+                                        }
+                                    </span>
+                                </span>
+                            )}
+                        </div>
                     </div>
-                    {layout === "drawer" && (
+                    {(layout === "drawer" || layout === "modal") && (
                         <ItemRemoveButton
                             lineId={id}
                             className="-mt-1.5 -mr-2"
@@ -134,7 +144,7 @@ export function CartLineItem({
                 <div
                     className={cn(
                         "flex w-full items-center gap-3",
-                        layout === "drawer" &&
+                        (layout === "drawer" || layout === "modal") &&
                             "flex-col items-start justify-start gap-1",
                     )}
                 >
