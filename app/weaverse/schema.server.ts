@@ -586,6 +586,39 @@ export const themeSchema: HydrogenThemeSchema = {
                     defaultValue: 0,
                 },
                 {
+                    type: "select",
+                    name: "pcardVariant",
+                    label: "Card layout",
+                    defaultValue: "grid",
+                    configs: {
+                        options: [
+                            { value: "grid", label: "Grid" },
+                            { value: "list", label: "List" },
+                            { value: "compact", label: "Compact" },
+                            { value: "featured", label: "Featured" },
+                        ],
+                    },
+                },
+                {
+                    type: "select",
+                    name: "pcardHoverEffect",
+                    label: "Image hover effect",
+                    defaultValue: "zoom",
+                    configs: {
+                        options: [
+                            { value: "none", label: "None" },
+                            { value: "zoom", label: "Zoom" },
+                            { value: "swap", label: "Swap image" },
+                        ],
+                    },
+                },
+                {
+                    type: "switch",
+                    name: "pcardShowAddToCart",
+                    label: "Show add to cart button",
+                    defaultValue: false,
+                },
+                {
                     type: "heading",
                     label: "Image",
                 },

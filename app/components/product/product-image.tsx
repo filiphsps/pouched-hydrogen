@@ -104,7 +104,7 @@ export function ProductImage({
                 "relative overflow-hidden",
                 // Safari fix: use aspect-ratio with fallback padding trick
                 // Safari 14.1+ supports aspect-ratio, older versions use padding
-                "aspect-[var(--product-image-ratio)] supports-[aspect-ratio]:aspect-[var(--product-image-ratio)]",
+                "aspect-(--product-image-ratio) supports-aspect-ratio:aspect-(--product-image-ratio)",
                 className,
             )}
             style={
