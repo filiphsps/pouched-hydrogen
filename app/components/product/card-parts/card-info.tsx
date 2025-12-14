@@ -63,7 +63,7 @@ export function CardInfo({
             {/* Vendor/Brand */}
             {showVendor && vendor && (
                 <span
-                    className="block text-muted-foreground text-xs uppercase tracking-wide"
+                    className="block text-body-subtle text-xs uppercase tracking-wide transition-colors hover:text-body"
                     itemProp="brand"
                 >
                     {vendor}

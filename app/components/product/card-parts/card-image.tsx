@@ -6,7 +6,7 @@ import { cn } from "~/utils/cn";
  * Partial image type that works with GraphQL fragments.
  */
 interface PartialImage {
-    url: string;
+    url?: string;
     altText?: string | null;
     width?: number | null;
     height?: number | null;
@@ -45,7 +45,7 @@ const ASPECT_RATIOS = {
 
 /**
  * A reusable product card image component with hover effects.
- * Supports image swap on hover, zoom effects, and various aspect ratios.
+ * Uses Image component with aspectRatio for proper sizing.
  *
  * @param props - Component props
  * @returns Image container with optional hover effects
@@ -68,32 +68,27 @@ export function CardImage({
 
     const altText = alt || image.altText || "Product image";
     const showSwap = hoverEffect === "swap" && secondaryImage?.url;
+    const ratioValue = ASPECT_RATIOS[aspectRatio];
 
     return (
         <div
             className={cn(
-                "relative overflow-hidden bg-gray-100",
-                aspectRatio !== "auto" &&
-                    `aspect-[${ASPECT_RATIOS[aspectRatio]}]`,
+                "relative m-3 overflow-hidden rounded-xl bg-gray-100 transition-colors duration-300 group-hover:bg-white",
                 className,
             )}
-            style={
-                aspectRatio !== "auto"
-                    ? { aspectRatio: ASPECT_RATIOS[aspectRatio] }
-                    : undefined
-            }
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
             {/* Primary Image */}
             <Image
                 data={image}
+                aspectRatio={ratioValue}
                 width={700}
                 alt={altText}
                 loading="lazy"
                 onLoad={onLoad}
                 className={cn(
-                    "h-full w-full object-contain p-4 transition-all duration-300",
+                    "!object-contain p-4 transition-all duration-300",
                     hoverEffect === "zoom" && "group-hover:scale-105",
                     showSwap && isHovered && "opacity-0",
                 )}
@@ -101,16 +96,21 @@ export function CardImage({
 
             {/* Secondary Image (for swap effect) */}
             {showSwap && (
-                <Image
-                    data={secondaryImage}
-                    width={700}
-                    alt={`${altText} - alternate view`}
-                    loading="lazy"
+                <div
                     className={cn(
-                        "absolute inset-0 h-full w-full object-contain p-4 transition-opacity duration-300",
+                        "absolute inset-0 transition-opacity duration-300",
                         isHovered ? "opacity-100" : "opacity-0",
                     )}
-                />
+                >
+                    <Image
+                        data={secondaryImage}
+                        aspectRatio={ratioValue}
+                        width={700}
+                        alt={`${altText} - alternate view`}
+                        loading="lazy"
+                        className="!object-contain p-4"
+                    />
+                </div>
             )}
 
             {/* Loading overlay */}

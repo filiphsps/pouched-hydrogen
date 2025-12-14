@@ -336,7 +336,7 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
     return (
         <article
             className={cn(
-                "group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-gray-100 shadow-sm transition-all hover:shadow-lg",
+                "group relative flex flex-col overflow-hidden rounded-2xl bg-gray-100 shadow-sm transition-all hover:shadow-lg",
                 className,
             )}
             style={cardStyles}
@@ -388,7 +388,7 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                 {pcardShowWishlist && (
                     <div
                         className={cn(
-                            "absolute top-3 right-3 transition-all duration-300",
+                            "absolute top-2 right-2 transition-all duration-300",
                             isHovered
                                 ? "translate-y-0 opacity-100"
                                 : "-translate-y-2 opacity-0",
