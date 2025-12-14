@@ -54,7 +54,7 @@ export default function SellingPlanSelector() {
     };
 
     return (
-        <fieldset className="mb-4 space-y-3">
+        <fieldset className="mb-4 select-none space-y-3">
             <legend className="mb-2 font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Purchase Option
             </legend>
@@ -62,7 +62,7 @@ export default function SellingPlanSelector() {
                 {/* One-time Purchase Option */}
                 <label
                     className={cn(
-                        "flex cursor-pointer items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted/50",
+                        "flex cursor-pointer items-center justify-between rounded-full border p-4 transition-colors hover:bg-muted/50",
                         selectedValue === "onetime"
                             ? "border-primary bg-primary/5"
                             : "border-input",
@@ -94,7 +94,7 @@ export default function SellingPlanSelector() {
                         <label
                             key={group.name}
                             className={cn(
-                                "flex cursor-pointer items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted/50",
+                                "flex cursor-pointer items-center justify-between rounded-full border p-4 transition-colors hover:bg-muted/50",
                                 selectedValue === firstPlan.id
                                     ? "border-primary bg-primary/5"
                                     : "border-input",

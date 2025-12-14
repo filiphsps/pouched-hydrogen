@@ -56,7 +56,7 @@ export function QuantityBreakButton({
             {/* Discount badge positioned above the button */}
             {discountPercentage != null && discountPercentage > 0 && (
                 <span
-                    className="mb-1 whitespace-nowrap rounded-sm bg-body px-1.5 py-0.5 text-center font-semibold text-background text-xs"
+                    className="mb-1 whitespace-nowrap rounded-full bg-body px-2 py-1 text-center font-semibold text-background text-xs"
                     data-testid={`discount-badge-${quantity}`}
                 >
                     -{discountPercentage}%

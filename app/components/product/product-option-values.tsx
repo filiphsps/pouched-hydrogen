@@ -219,9 +219,7 @@ function OptionValue({
             <Component
                 {...componentProps}
                 className={cn(
-                    "flex aspect-square size-(--option-swatch-size)",
-                    "overflow-hidden rounded-full",
-                    "outline-1 outline-offset-2 transition-[outline-color]",
+                    "flex aspect-square size-(--option-swatch-size) overflow-hidden rounded-full outline-1 outline-offset-2 transition-[outline-color]",
                     !exists && "cursor-not-allowed",
                     selected && !combinedListing
                         ? "outline-line"
@@ -259,7 +257,7 @@ function OptionValue({
             <Component
                 {...componentProps}
                 className={cn(
-                    "border border-line-subtle px-4 py-2.5 text-center transition-colors",
+                    "rounded-full border border-line-subtle px-4 py-2.5 text-center transition-colors",
                     !exists && "cursor-not-allowed",
                     selected && !combinedListing
                         ? [
