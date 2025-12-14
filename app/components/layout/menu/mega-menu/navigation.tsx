@@ -2,8 +2,8 @@ import { CaretDownIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { AnimatePresence, motion } from "framer-motion";
-import type { ReactNode } from "react";
-import { useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import { CountrySelector } from "~/components/layout/country-selector";
 import Link from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
@@ -28,6 +28,14 @@ export function Navigation({ children }: { children: ReactNode }) {
     const items = useMergedMenuData();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [menuId, setMenuId] = useState<string>();
+    const location = useLocation();
+
+    // Close drawer on any navigation (including same page clicks)
+    // biome-ignore lint/correctness/useExhaustiveDependencies: close on any route change
+    useEffect(() => {
+        setIsDrawerOpen(false);
+        setMenuId(undefined);
+    }, [location.key]);
 
     if (!items?.length) return null;
 

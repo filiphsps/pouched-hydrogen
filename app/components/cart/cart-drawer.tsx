@@ -22,10 +22,10 @@ export function CartDrawer() {
     } = useCartDrawerStore();
     const location = useLocation();
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: close on route change
+    // biome-ignore lint/correctness/useExhaustiveDependencies: close on any route change (including same page)
     useEffect(() => {
         closeCartDrawer();
-    }, [location.pathname, closeCartDrawer]);
+    }, [location.key, closeCartDrawer]);
 
     return (
         <Suspense
