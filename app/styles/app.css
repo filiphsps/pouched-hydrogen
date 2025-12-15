@@ -33,6 +33,8 @@
   --color-muted-foreground: var(--color-muted-foreground);
   --color-link: var(--color-link);
 
+  --color-gray-100: oklch(97.6% 0.0025 256.191);
+
   --text-scale: calc(
     var(--min-size-px) +
     (var(--max-size) - var(--min-size)) *
