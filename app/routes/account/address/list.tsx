@@ -13,6 +13,7 @@ import {
     useOutletContext,
 } from "react-router";
 import { Button } from "~/components/button";
+import { Input } from "~/components/input";
 import { Section } from "~/components/section";
 import { Title } from "~/components/title";
 import type { Route } from "./+types/list";
@@ -421,7 +422,7 @@ export function AddressForm({
                         <label htmlFor="firstName" className="mb-1">
                             First name*
                         </label>
-                        <input
+                        <Input
                             aria-label="First name"
                             autoComplete="given-name"
                             defaultValue={address?.firstName ?? ""}
@@ -430,14 +431,13 @@ export function AddressForm({
                             placeholder="First name"
                             required
                             type="text"
-                            className="w-full border border-border bg-background px-3 py-2"
                         />
                     </div>
                     <div>
                         <label htmlFor="lastName" className="mb-1">
                             Last name*
                         </label>
-                        <input
+                        <Input
                             aria-label="Last name"
                             autoComplete="family-name"
                             defaultValue={address?.lastName ?? ""}
@@ -446,7 +446,6 @@ export function AddressForm({
                             placeholder="Last name"
                             required
                             type="text"
-                            className="w-full border border-border bg-background px-3 py-2"
                         />
                     </div>
                 </div>
@@ -454,7 +453,7 @@ export function AddressForm({
                     <label htmlFor="company" className="mb-1">
                         Company
                     </label>
-                    <input
+                    <Input
                         aria-label="Company"
                         autoComplete="organization"
                         defaultValue={address?.company ?? ""}
@@ -462,14 +461,13 @@ export function AddressForm({
                         name="company"
                         placeholder="Company"
                         type="text"
-                        className="w-full border border-border bg-background px-3 py-2"
                     />
                 </div>
                 <div>
                     <label htmlFor="address1" className="mb-1">
                         Address line*
                     </label>
-                    <input
+                    <Input
                         aria-label="Address line 1"
                         autoComplete="address-line1"
                         defaultValue={address?.address1 ?? ""}
@@ -478,14 +476,13 @@ export function AddressForm({
                         placeholder="Address line 1*"
                         required
                         type="text"
-                        className="w-full border border-border bg-background px-3 py-2"
                     />
                 </div>
                 <div>
                     <label htmlFor="address2" className="mb-1">
                         Address line 2
                     </label>
-                    <input
+                    <Input
                         aria-label="Address line 2"
                         autoComplete="address-line2"
                         defaultValue={address?.address2 ?? ""}
@@ -493,7 +490,6 @@ export function AddressForm({
                         name="address2"
                         placeholder="Address line 2"
                         type="text"
-                        className="w-full border border-border bg-background px-3 py-2"
                     />
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -501,7 +497,7 @@ export function AddressForm({
                         <label htmlFor="city" className="mb-1">
                             City*
                         </label>
-                        <input
+                        <Input
                             aria-label="City"
                             autoComplete="address-level2"
                             defaultValue={address?.city ?? ""}
@@ -510,14 +506,13 @@ export function AddressForm({
                             placeholder="City"
                             required
                             type="text"
-                            className="w-full border border-border bg-background px-3 py-2"
                         />
                     </div>
                     <div>
                         <label htmlFor="zoneCode" className="mb-1">
                             State / Province*
                         </label>
-                        <input
+                        <Input
                             aria-label="State/Province"
                             autoComplete="address-level1"
                             defaultValue={address?.zoneCode ?? ""}
@@ -526,7 +521,6 @@ export function AddressForm({
                             placeholder="State / Province"
                             required
                             type="text"
-                            className="w-full border border-border bg-background px-3 py-2"
                         />
                     </div>
                 </div>
@@ -535,7 +529,7 @@ export function AddressForm({
                         <label htmlFor="zip" className="mb-1">
                             Zip / Postal Code*
                         </label>
-                        <input
+                        <Input
                             aria-label="Zip"
                             autoComplete="postal-code"
                             defaultValue={address?.zip ?? ""}
@@ -544,14 +538,13 @@ export function AddressForm({
                             placeholder="Zip / Postal Code"
                             required
                             type="text"
-                            className="w-full border border-border bg-background px-3 py-2"
                         />
                     </div>
                     <div>
                         <label htmlFor="territoryCode" className="mb-1">
                             Country Code*
                         </label>
-                        <input
+                        <Input
                             aria-label="territoryCode"
                             autoComplete="country"
                             defaultValue={address?.territoryCode ?? ""}
@@ -561,7 +554,6 @@ export function AddressForm({
                             required
                             type="text"
                             maxLength={2}
-                            className="w-full border border-border bg-background px-3 py-2"
                         />
                     </div>
                 </div>
@@ -569,7 +561,7 @@ export function AddressForm({
                     <label htmlFor="phoneNumber" className="mb-1">
                         Phone
                     </label>
-                    <input
+                    <Input
                         aria-label="Phone Number"
                         autoComplete="tel"
                         defaultValue={address?.phoneNumber ?? ""}
@@ -578,7 +570,6 @@ export function AddressForm({
                         placeholder="+16135551111"
                         pattern="^\+?[1-9]\d{3,14}$"
                         type="tel"
-                        className="w-full border border-border bg-background px-3 py-2"
                     />
                 </div>
                 <div className="flex items-center gap-2">

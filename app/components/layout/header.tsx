@@ -65,11 +65,7 @@ export function Header() {
     return (
         <header
             className={cn(
-                "z-10 w-full",
-                "transition-all duration-300 ease-in-out",
-                "bg-(--color-header-bg) hover:bg-(--color-header-bg)",
-                "text-(--color-header-text) hover:text-(--color-header-text)",
-                "border-line-subtle border-b",
+                "z-10 h-(--height-nav) w-full border-line-subtle border-b bg-(--color-header-bg) text-(--color-header-text) transition-all duration-300 ease-in-out hover:bg-(--color-header-bg) hover:text-(--color-header-text)",
                 variants({ padding: headerWidth }),
                 scrolled ? "shadow-header" : "shadow-none",
                 "sticky top-0",
@@ -83,7 +79,7 @@ export function Header() {
         >
             <div
                 className={cn(
-                    "flex h-(--height-nav) items-center justify-between gap-2 py-1.5 lg:gap-8 lg:py-3",
+                    "flex h-full items-center justify-between gap-2 py-1.5 lg:gap-8 lg:py-3",
                     variants({ width: headerWidth }),
                 )}
             >
@@ -94,7 +90,9 @@ export function Header() {
                 <Link to="/search" className="p-1.5 lg:hidden">
                     <MagnifyingGlassIcon className="h-5 w-5" />
                 </Link>
+
                 <Logo />
+
                 <div className="z-1 flex items-center gap-1">
                     <PredictiveSearchButton />
                     <AccountLink className="relative flex h-8 w-8 items-center justify-center" />

@@ -35,10 +35,12 @@
         "test:coverage": "vitest run --coverage",
         "e2e": "pnpx playwright test",
         "e2e:ui": "pnpx playwright test --ui",
-        "biome": "biome check",
-        "biome:fix": "biome check --write --unsafe",
-        "format": "biome format --write",
-        "format:check": "biome format"
+        "biome:check": "biome check",
+        "biome:format": "biome format",
+        "biome:check:fix": "biome check --write --unsafe",
+        "biome:format:fix": "biome format --write",
+        "biome": "npm-run-all --parallel biome:check biome:format",
+        "format": "npm-run-all --parallel biome:format:fix biome:check:fix"
     },
     "dependencies": {
         "@fontsource-variable/inter": "^5.2.8",
@@ -105,7 +107,7 @@
         "@weaverse/biome": "5.6.2",
         "babel-plugin-react-compiler": "19.1.0-rc.3",
         "jsdom": "^27.2.0",
-        "react-scan": "^0.4.3",
+        "npm-run-all2": "8.0.4",
         "schema-dts": "1.1.5",
         "tailwindcss": "^4.1.17",
         "typescript": "5.9.3",

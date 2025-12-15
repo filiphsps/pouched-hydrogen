@@ -7,6 +7,9 @@ import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { IconButton } from "~/components/icon-button";
+import { Input } from "~/components/input";
+import { Textarea } from "~/components/textarea";
 import { cn } from "~/utils/cn";
 
 export function NoteDialog({
@@ -61,13 +64,13 @@ export function NoteDialog({
             >
                 <div className="relative w-full max-w-md overflow-hidden bg-white p-6 shadow-xl">
                     <Dialog.Close asChild>
-                        <button
-                            type="button"
-                            className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
+                        <IconButton
+                            variant="close"
+                            position="top-right"
                             aria-label={t("cart.close")}
                         >
                             <XIcon size={16} />
-                        </button>
+                        </IconButton>
                     </Dialog.Close>
 
                     <Dialog.Title className="mb-4 font-medium text-lg">
@@ -75,8 +78,8 @@ export function NoteDialog({
                     </Dialog.Title>
 
                     <form className="space-y-4" onSubmit={handleSubmit}>
-                        <textarea
-                            className="min-h-20 w-full resize-none p-3"
+                        <Textarea
+                            variant="dialog"
                             placeholder={t("cart.notePlaceholder")}
                             rows={4}
                             name="cartNote"
@@ -169,13 +172,13 @@ export function DiscountDialog({
             >
                 <div className="relative w-full max-w-md overflow-hidden bg-white p-6 shadow-xl">
                     <Dialog.Close asChild>
-                        <button
-                            type="button"
-                            className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
+                        <IconButton
+                            variant="close"
+                            position="top-right"
                             aria-label={t("cart.close")}
                         >
                             <XIcon size={16} />
-                        </button>
+                        </IconButton>
                     </Dialog.Close>
 
                     <Dialog.Title className="mb-4 font-medium text-xl">
@@ -183,13 +186,13 @@ export function DiscountDialog({
                     </Dialog.Title>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <input
+                        <Input
+                            variant="dialog"
                             value={code}
                             onChange={(e) => {
                                 setCode(e.target.value);
                                 fetcher.data = null;
                             }}
-                            className="w-full p-3"
                             type="text"
                             name="discountCode"
                             placeholder={t("cart.discountPlaceholder")}
@@ -294,13 +297,13 @@ export function GiftCardDialog({
             >
                 <div className="relative w-full max-w-md overflow-hidden bg-white p-6 shadow-xl">
                     <Dialog.Close asChild>
-                        <button
-                            type="button"
-                            className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
+                        <IconButton
+                            variant="close"
+                            position="top-right"
                             aria-label={t("cart.close")}
                         >
                             <XIcon size={16} />
-                        </button>
+                        </IconButton>
                     </Dialog.Close>
 
                     <Dialog.Title className="mb-4 font-medium text-xl">
@@ -308,8 +311,8 @@ export function GiftCardDialog({
                     </Dialog.Title>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <input
-                            className="w-full p-3"
+                        <Input
+                            variant="dialog"
                             type="text"
                             name="giftCardCode"
                             placeholder={t("cart.giftCardPlaceholder")}

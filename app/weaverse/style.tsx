@@ -41,8 +41,6 @@ export function GlobalStyle() {
             h1BaseSize,
             headingBaseSpacing,
             headingBaseLineHeight,
-            navHeightDesktop,
-            navHeightTablet,
             pageWidth,
         } = settings;
 
@@ -54,7 +52,18 @@ export function GlobalStyle() {
                     __html: `
             :root {
               /* Layout */
-              --height-nav: ${settings.navHeightMobile}rem;
+              --height-nav: 4rem;
+              @media (min-width: 32em) {
+                  body {
+                      --height-nav: 6rem;
+                  }
+              }
+              @media (min-width: 48em) {
+                  body {
+                      --height-nav: 6rem;
+                  }
+              }
+
               --page-width: ${pageWidth}px;
 
               /* Colors (general) */
@@ -116,17 +125,6 @@ export function GlobalStyle() {
 
               --heading-base-spacing: ${headingBaseSpacing};
               --heading-base-line-height: ${headingBaseLineHeight};
-
-            @media (min-width: 32em) {
-              body {
-                --height-nav: ${navHeightTablet}rem;
-              }
-            }
-            @media (min-width: 48em) {
-              body {
-                --height-nav: ${navHeightDesktop}rem;
-              }
-            }
           `,
                 }}
             />

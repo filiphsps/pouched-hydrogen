@@ -28,9 +28,16 @@ export interface ImageProps
         incrementSize: number;
         placeholderWidth: number;
     };
+    imageClassName?: string;
 }
 
-export function Image({ ref, className, onLoad, ...rest }: ImageProps) {
+export function Image({
+    ref,
+    className,
+    imageClassName,
+    onLoad,
+    ...rest
+}: ImageProps) {
     /**
      * Use useRef for HydrogenImage, so we can access the HydrogenImage's ref
      * even when using ref prop for the outer div
@@ -57,7 +64,8 @@ export function Image({ ref, className, onLoad, ...rest }: ImageProps) {
             <HydrogenImage
                 ref={hydrogenImageRef}
                 className={cn(
-                    "h-full max-h-full w-full object-cover object-center [transition:filter_500ms_cubic-bezier(.4,0,.2,1)]",
+                    "size-full object-center [transition:filter_500ms_cubic-bezier(.4,0,.2,1)]",
+                    imageClassName,
                     loaded ? "blur-0" : "blur-xl",
                 )}
                 onLoad={(e) => {

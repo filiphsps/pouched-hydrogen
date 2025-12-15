@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "~/utils/cn";
 import { Button } from "../button";
+import { Input } from "../input";
 
 /**
  * Props for the Quantity component.
@@ -128,9 +129,10 @@ export function Quantity(props: QuantityProps) {
                 >
                     <span>&#8722;</span>
                 </Button>
-                <input
+                <Input
+                    variant="ghost"
                     className={cn(
-                        "min-w-16 flex-1 border-none bg-transparent py-2.5 text-center focus:outline-hidden focus:ring-0",
+                        "min-w-16 flex-1 py-2.5 text-center",
                         inputClassName,
                     )}
                     value={localValue}

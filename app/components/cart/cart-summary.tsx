@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
-import { Link } from "~/components/link";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
 import { Title } from "~/components/title";
@@ -18,7 +17,6 @@ import {
     GiftCardDialog,
     NoteDialog,
 } from "./cart-summary-actions";
-import { FreeShippingProgress } from "./free-shipping-progress";
 
 export function CartSummary({
     cart,
@@ -53,21 +51,12 @@ export function CartSummary({
         dcRemoveFetcher.state !== "idle" ||
         gcRemoveFetcher.state !== "idle";
     return (
-        <div
-            className={cn(
-                layout === "drawer" &&
-                    "grid border-line-subtle border-t px-4 pt-4",
-                layout === "modal" &&
-                    "grid border-line-subtle border-t px-6 py-4",
-                layout === "page" &&
-                    "sticky top-(--height-nav) grid w-full rounded-sm py-4 md:translate-y-4 md:px-6 lg:py-0",
-            )}
-        >
+        <div>
             <Title as="h2" id="summary-heading" className="sr-only">
                 {t("cart.orderSummary")}
             </Title>
-            {/* Free shipping progress bar */}
-            <FreeShippingProgress cartCost={cost} className="mb-4" />
+
+            {/* Active Gift Cards */}
             {appliedGiftCards?.length > 0 && (
                 <div className="mb-4 flex flex-wrap justify-end gap-2">
                     {appliedGiftCards.map((giftCard) => {
@@ -130,6 +119,8 @@ export function CartSummary({
                     })}
                 </div>
             )}
+
+            {/* Active Discount Codes*/}
             {discountCodes?.length > 0 && (
                 <div className="mb-4 flex flex-wrap justify-end gap-2">
                     {discountCodes
@@ -201,6 +192,7 @@ export function CartSummary({
                         })}
                 </div>
             )}
+
             <dl className="mb-4 grid">
                 <div
                     className={cn(
@@ -225,8 +217,10 @@ export function CartSummary({
             <div className="mb-2 text-right text-body-subtle">
                 {t("cart.taxesDiscountsShipping")}
             </div>
+
             {(enableCartNote || enableDiscountCode || enableGiftCard) && (
                 <div className="mb-4 flex flex-wrap items-center justify-end gap-2">
+                    {/* Note */}
                     {enableCartNote && (
                         <>
                             <Dialog.Root>
@@ -242,6 +236,8 @@ export function CartSummary({
                             )}
                         </>
                     )}
+
+                    {/* Discount */}
                     {enableDiscountCode && (
                         <>
                             <Dialog.Root>
@@ -255,6 +251,8 @@ export function CartSummary({
                             {enableGiftCard && <span>/</span>}
                         </>
                     )}
+
+                    {/* Gift Card */}
                     {enableGiftCard && (
                         <Dialog.Root>
                             <Dialog.Trigger asChild>
@@ -266,25 +264,6 @@ export function CartSummary({
                                 appliedGiftCards={appliedGiftCards}
                             />
                         </Dialog.Root>
-                    )}
-                </div>
-            )}
-            {checkoutUrl && (
-                <div className="mt-4 flex flex-col gap-3">
-                    <a href={checkoutUrl} target="_self">
-                        <Button className="w-full">
-                            {t("cart.continueToCheckout")}
-                        </Button>
-                    </a>
-                    {/* @todo: <CartShopPayButton cart={cart} /> */}
-                    {(layout === "drawer" || layout === "modal") && (
-                        <Link
-                            variant="underline"
-                            to="/cart"
-                            className="mx-auto w-fit"
-                        >
-                            {t("cart.viewCart")}
-                        </Link>
                     )}
                 </div>
             )}

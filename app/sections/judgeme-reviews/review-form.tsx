@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLoaderData } from "react-router";
 import { Button } from "~/components/button";
+import { Input } from "~/components/input";
+import { Textarea } from "~/components/textarea";
 import { Title } from "~/components/title";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { loader as productRouteLoader } from "~/routes/products/product";
@@ -193,14 +195,14 @@ export function ReviewForm({
                         {t("judgeme.form.fields.name.label")}
                         <span className="ml-1 text-red-500">*</span>
                     </label>
-                    <input
+                    <Input
+                        variant="outline"
                         type="text"
                         name="name"
                         id="judgeme-reviewer-name"
                         defaultValue=""
                         placeholder={t("judgeme.form.fields.name.placeholder")}
                         required
-                        className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                     />
                 </div>
 
@@ -213,14 +215,14 @@ export function ReviewForm({
                         {t("judgeme.form.fields.email.label")}
                         <span className="ml-1 text-red-500">*</span>
                     </label>
-                    <input
+                    <Input
+                        variant="outline"
                         type="email"
                         name="email"
                         id="judgeme-reviewer-email"
                         defaultValue=""
                         placeholder={t("judgeme.form.fields.email.placeholder")}
                         required
-                        className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                     />
                 </div>
 
@@ -232,13 +234,13 @@ export function ReviewForm({
                     >
                         {t("judgeme.form.fields.title.label")}
                     </label>
-                    <input
+                    <Input
+                        variant="outline"
                         type="text"
                         name="title"
                         id="judgeme-review-title"
                         defaultValue=""
                         placeholder={t("judgeme.form.fields.title.placeholder")}
-                        className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                     />
                 </div>
 
@@ -251,14 +253,14 @@ export function ReviewForm({
                         {t("judgeme.form.fields.body.label")}
                         <span className="ml-1 text-red-500">*</span>
                     </label>
-                    <textarea
+                    <Textarea
+                        variant="outline"
                         name="body"
                         id="judgeme-review-body"
                         defaultValue=""
                         required
                         placeholder={t("judgeme.form.fields.body.placeholder")}
                         rows={5}
-                        className="w-full border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                     />
                 </div>
 

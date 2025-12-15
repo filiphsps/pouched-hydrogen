@@ -91,7 +91,7 @@ export function FreeShippingProgress({
     return (
         <output
             className={cn(
-                "block rounded-lg border border-line-subtle bg-gray-50 p-4",
+                "block rounded-lg border border-line-subtle bg-gray-100 p-3",
                 className,
             )}
             aria-live="polite"

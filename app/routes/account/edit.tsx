@@ -14,6 +14,7 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
+import { Input } from "~/components/input";
 import Link from "~/components/link";
 import { getContext } from "~/types/context";
 import { doLogout } from "./auth/logout";
@@ -131,10 +132,10 @@ export default function AccountDetailsEdit() {
                     <label htmlFor="firstName" className="mb-1 block">
                         First name
                     </label>
-                    <input
+                    <Input
+                        variant="dialog"
                         id="firstName"
                         name="firstName"
-                        className="w-full appearance-none border border-line p-3 focus:outline-hidden"
                         type="text"
                         autoComplete="given-name"
                         placeholder="First name"
@@ -146,10 +147,10 @@ export default function AccountDetailsEdit() {
                     <label htmlFor="lastName" className="mb-1 block">
                         Last name
                     </label>
-                    <input
+                    <Input
+                        variant="dialog"
                         id="lastName"
                         name="lastName"
-                        className="w-full appearance-none border border-line p-3 focus:outline-hidden"
                         type="text"
                         autoComplete="family-name"
                         placeholder="Last name"

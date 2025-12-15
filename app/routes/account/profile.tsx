@@ -10,6 +10,7 @@ import {
     useOutletContext,
 } from "react-router";
 import { Button } from "~/components/button";
+import { Input } from "~/components/input";
 import { Section } from "~/components/section";
 import { Title } from "~/components/title";
 import type { Route } from "./+types/profile";
@@ -143,7 +144,7 @@ export default function AccountProfile() {
                             <label htmlFor="firstName">
                                 {t("account.firstName")}
                             </label>
-                            <input
+                            <Input
                                 id="firstName"
                                 name="firstName"
                                 type="text"
@@ -152,14 +153,13 @@ export default function AccountProfile() {
                                 aria-label={t("account.firstName")}
                                 defaultValue={customer?.firstName ?? ""}
                                 minLength={2}
-                                className="w-full border border-border bg-background px-3 py-2"
                             />
                         </div>
                         <div className="space-y-2">
                             <label htmlFor="lastName">
                                 {t("account.lastName")}
                             </label>
-                            <input
+                            <Input
                                 id="lastName"
                                 name="lastName"
                                 type="text"
@@ -168,7 +168,6 @@ export default function AccountProfile() {
                                 aria-label={t("account.lastName")}
                                 defaultValue={customer?.lastName ?? ""}
                                 minLength={2}
-                                className="w-full border border-border bg-background px-3 py-2"
                             />
                         </div>
                     </fieldset>

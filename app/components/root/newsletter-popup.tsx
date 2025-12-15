@@ -7,7 +7,9 @@ import { useTranslation } from "react-i18next";
 import { useFetcher, useLocation, useRouteLoaderData } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { IconButton } from "~/components/icon-button";
 import { Image } from "~/components/image";
+import { Input } from "~/components/input";
 import { Title } from "~/components/title";
 import { useWeaverseStudioCheck } from "~/hooks/use-weaverse-studio-check";
 import type { RootLoader } from "~/root";
@@ -131,13 +133,13 @@ export function NewsletterPopup() {
                         )}
                     >
                         <Dialog.Close asChild>
-                            <button
-                                type="button"
-                                className="absolute top-2 right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-colors hover:bg-gray-100 focus-visible:outline-0"
+                            <IconButton
+                                variant="close"
+                                position="top-right"
                                 aria-label={t("newsletter.popup.close")}
                             >
                                 <XIcon size={16} />
-                            </button>
+                            </IconButton>
                         </Dialog.Close>
                         <VisuallyHidden.Root asChild>
                             <Dialog.Title>
@@ -197,14 +199,14 @@ export function NewsletterPopup() {
                                     encType="multipart/form-data"
                                     className="space-y-4"
                                 >
-                                    <input
+                                    <Input
+                                        variant="dialog"
                                         name="email"
                                         type="email"
                                         required
                                         placeholder={t(
                                             "newsletter.popup.emailPlaceholder",
                                         )}
-                                        className="w-full px-4 py-2.5"
                                     />
                                     <Button
                                         type="submit"

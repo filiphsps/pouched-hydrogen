@@ -4,6 +4,7 @@ import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
+import { Input } from "~/components/input";
 import { cn } from "~/utils/cn";
 import { FILTER_URL_PREFIX } from "~/utils/const";
 import { filterInputToParams } from "./filter-utils";
@@ -100,7 +101,8 @@ export function PriceRangeFilter({
                         </label>
                     </VisuallyHidden.Root>
                     <span>$</span>
-                    <input
+                    <Input
+                        variant="ghost"
                         name="minPrice"
                         type="number"
                         value={minPrice ?? ""}
@@ -116,7 +118,7 @@ export function PriceRangeFilter({
                             setMinPrice(newMinPrice);
                         }}
                         onBlur={handleFilter}
-                        className="w-full border-none bg-transparent py-3 text-right focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
+                        className="py-3 text-right"
                     />
                 </div>
                 <span>To</span>
@@ -127,7 +129,8 @@ export function PriceRangeFilter({
                         </label>
                     </VisuallyHidden.Root>
                     <span>$</span>
-                    <input
+                    <Input
+                        variant="ghost"
                         name="maxPrice"
                         type="number"
                         value={maxPrice ?? ""}
@@ -143,7 +146,7 @@ export function PriceRangeFilter({
                             setMaxPrice(newMaxPrice);
                         }}
                         onBlur={handleFilter}
-                        className="w-full border-none bg-transparent py-3 text-right focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
+                        className="py-3 text-right"
                     />
                 </div>
             </div>

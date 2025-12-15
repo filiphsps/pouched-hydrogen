@@ -63,7 +63,7 @@ function TeamMembers(props: TeamMembersProps) {
                     x_url,
                 } = member;
                 return (
-                    <div key={id} className="items-center bg-gray-50 sm:flex">
+                    <div key={id} className="items-center bg-gray-100 sm:flex">
                         {avatar && (
                             <Image
                                 data={avatar}

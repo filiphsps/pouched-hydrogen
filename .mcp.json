@@ -1,0 +1,43 @@
+{
+    "mcpServers": {
+        "context7": {
+            "args": [
+                "@upstash/context7-mcp@latest",
+                "--api-key",
+                "ctx7sk-fdd32fe5-46f0-435a-8cf0-1930e499c520"
+            ],
+            "command": "bunx",
+            "disabled": false,
+            "env": {}
+        },
+        "desktop-commander": {
+            "args": ["@wonderwhy-er/desktop-commander@latest"],
+            "command": "bunx",
+            "disabled": false,
+            "disabledTools": [
+                "give_feedback_to_desktop_commander",
+                "get_usage_stats",
+                "get_recent_tool_calls"
+            ]
+        },
+        "octocode": {
+            "args": ["octocode-mcp@latest"],
+            "command": "bunx",
+            "disabled": false,
+            "disabledTools": ["githubSearchPullRequests"],
+            "env": {}
+        },
+        "sequential-thinking": {
+            "args": ["@modelcontextprotocol/server-sequential-thinking@latest"],
+            "command": "bunx",
+            "disabled": false,
+            "env": {}
+        },
+        "shadcn": {
+            "args": ["shadcn@latest", "mcp"],
+            "command": "bunx",
+            "disabled": false,
+            "env": {}
+        }
+    }
+}

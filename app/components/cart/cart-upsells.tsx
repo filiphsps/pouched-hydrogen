@@ -96,7 +96,7 @@ export function CartUpsells({
     }
 
     return (
-        <div className={cn("mt-4 border-line-subtle border-t pt-4", className)}>
+        <div className={cn(className)}>
             <Title as="h3" className="mb-3 font-medium" size="base">
                 {cartUpsellsHeading || t("cart.upsells.heading")}
             </Title>

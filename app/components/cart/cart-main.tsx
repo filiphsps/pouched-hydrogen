@@ -3,15 +3,17 @@ import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import useScroll from "react-use/esm/useScroll";
 import type { CartApiQueryFragment } from "storefront-api.generated";
+import { CartActions } from "~/components/cart/cart-actions";
+import { CartBestSellers } from "~/components/cart/cart-best-sellers";
+import { CartLineItem } from "~/components/cart/cart-line-item";
+import { CartSummary } from "~/components/cart/cart-summary";
+import { CartUpsells } from "~/components/cart/cart-upsells";
+import { FreeShippingProgress } from "~/components/cart/free-shipping-progress";
 import { Link } from "~/components/link";
 import { ScrollArea } from "~/components/scroll-area";
 import { Section } from "~/components/section";
 import type { CartLayoutType } from "~/types/others";
 import { cn } from "~/utils/cn";
-import { CartBestSellers } from "./cart-best-sellers";
-import { CartLineItem } from "./cart-line-item";
-import { CartSummary } from "./cart-summary";
-import { CartUpsells } from "./cart-upsells";
 
 function CartEmpty({
     hidden = false,
@@ -91,6 +93,8 @@ export function CartMain({
     const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
     const cartHasItems = Boolean(cart) && cart.totalQuantity > 0;
 
+    const cost = cart?.cost ?? null;
+
     return (
         <>
             <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />
@@ -108,7 +112,6 @@ export function CartMain({
                 <div
                     ref={scrollRef}
                     className={cn([
-                        "pb-4",
                         y > 0 ? "border-line-subtle border-t" : "",
                         layout === "page" && "grow md:translate-y-4",
                         (layout === "drawer" || layout === "modal") &&
@@ -122,31 +125,54 @@ export function CartMain({
                         )}
                         size="sm"
                     >
-                        <ul
+                        <div
                             className={cn(
-                                "grid",
-                                layout === "page" && "gap-9 px-4",
-                                layout === "drawer" && "gap-5 px-4",
-                                layout === "modal" && "gap-5 px-6",
+                                "flex flex-col gap-3 py-3 lg:py-6",
+                                layout === "page" && "px-4",
+                                layout === "drawer" && "px-4",
+                                layout === "modal" && "px-6",
                             )}
                         >
-                            {(cart?.lines?.nodes ?? []).map((line) => (
-                                <CartLineItem
-                                    key={line.id}
-                                    line={line}
-                                    layout={layout}
-                                />
-                            ))}
-                        </ul>
-                        {/* Dynamic cart upsells */}
-                        <CartUpsells
-                            cartLineItems={cart?.lines?.nodes ?? []}
-                            layout={layout}
-                            className={layout === "modal" ? "px-6" : "px-4"}
-                        />
+                            {/* Free shipping progress bar */}
+                            <FreeShippingProgress
+                                cartCost={cost}
+                                className="mb-4"
+                            />
+
+                            <ul
+                                className={cn(
+                                    "grid",
+                                    layout === "page" && "gap-9",
+                                    layout === "drawer" && "gap-5",
+                                    layout === "modal" && "gap-5",
+                                )}
+                            >
+                                {(cart?.lines?.nodes ?? []).map((line) => (
+                                    <>
+                                        <CartLineItem
+                                            key={line.id}
+                                            line={line}
+                                            layout={layout}
+                                        />
+                                        <div className="border-line-subtle border-t" />
+                                    </>
+                                ))}
+                            </ul>
+
+                            {/* Dynamic cart upsells */}
+                            <CartUpsells
+                                cartLineItems={cart?.lines?.nodes ?? []}
+                                layout={layout}
+                            />
+
+                            {/* Summary */}
+                            {cartHasItems && (
+                                <CartSummary cart={cart} layout={layout} />
+                            )}
+                        </div>
                     </ScrollArea>
                 </div>
-                {cartHasItems && <CartSummary cart={cart} layout={layout} />}
+                {cartHasItems && <CartActions cart={cart} layout={layout} />}
             </div>
         </>
     );

@@ -279,28 +279,24 @@ function ProductCardList({
     return (
         <article
             className={cn(
-                "group relative flex gap-4 overflow-hidden rounded-2xl bg-card p-4 shadow-sm transition-all hover:shadow-md",
+                "group relative flex h-36 gap-4 overflow-hidden rounded-2xl bg-card shadow-sm transition-all hover:shadow-md",
                 className,
             )}
             style={cardStyles}
             itemScope
             itemType="https://schema.org/Product"
         >
-            <ProductLink
-                product={product}
-                params={params}
-                className="w-32 shrink-0 sm:w-40"
-            >
+            <ProductLink product={product} params={params} className="contents">
                 <CardImage
                     image={image}
-                    aspectRatio="square"
                     hoverEffect="zoom"
                     isLoading={isImageLoading}
                     onLoad={() => setIsImageLoading(false)}
-                    className="rounded-xl"
+                    className="h-full p-3"
                 />
             </ProductLink>
-            <div className="flex min-w-0 flex-1 flex-col">
+
+            <div className="flex min-w-0 flex-1 flex-col py-3">
                 <ProductBadges
                     product={product}
                     logic={logic}
@@ -558,7 +554,7 @@ function ProductCardGrid({
                 <ProductLink
                     product={product}
                     params={params}
-                    className="block"
+                    className="block p-3"
                     isTransitioning={isTransitioning}
                 >
                     <CardImage
@@ -567,6 +563,7 @@ function ProductCardGrid({
                         hoverEffect={hoverEffect}
                         isLoading={isImageLoading}
                         onLoad={() => setIsImageLoading(false)}
+                        className="p-3"
                     />
                 </ProductLink>
 

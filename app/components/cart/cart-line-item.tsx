@@ -82,24 +82,25 @@ export function CartLineItem({
 
     return (
         <li
-            className="flex gap-4 border-line-subtle border-t pt-4"
+            className="flex gap-4"
             style={{
                 // Hide the line item if the optimistic data action is remove
                 // Do not remove the form from the DOM
                 display: optimisticData?.action === "remove" ? "none" : "flex",
             }}
         >
-            <div className="relative shrink-0">
-                {image && (
+            {image && (
+                <div className="relative flex h-full shrink-0 items-center overflow-hidden rounded-2xl bg-gray-100 p-2">
                     <ProductImage
                         image={image}
                         size="small"
                         aspectRatio="1/1"
                         alt={title}
-                        className="h-24 w-24 rounded-2xl bg-gray-100 p-2"
+                        className="aspect-square size-24"
                     />
-                )}
-            </div>
+                </div>
+            )}
+
             <div className="flex grow flex-col gap-3 gap-y-1">
                 <div className="flex justify-between gap-4">
                     <div>

@@ -8,6 +8,8 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { type RefObject, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router";
+import { IconButton } from "~/components/icon-button";
+import { Input } from "~/components/input";
 import Link from "~/components/link";
 import { usePredictiveSearch } from "~/hooks/use-predictive-search";
 import { cn } from "~/utils/cn";
@@ -78,7 +80,8 @@ export function PredictiveSearchButton() {
                                 <div className="mx-auto w-[560px] max-w-[90vw] space-y-2 py-6">
                                     <div className="flex items-center gap-3 rounded-full border border-line-subtle px-3">
                                         <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-gray-500" />
-                                        <input
+                                        <Input
+                                            variant="ghost"
                                             name="q"
                                             type="search"
                                             onChange={(e) =>
@@ -106,11 +109,12 @@ export function PredictiveSearchButton() {
                                             )}
                                             ref={inputRef}
                                             autoComplete="off"
-                                            className="h-full w-full border-none py-4 focus:outline-hidden focus:ring-0 focus-visible:outline-hidden"
+                                            className="h-full py-4"
                                         />
-                                        <button
-                                            type="button"
-                                            className="shrink-0 p-1 text-gray-500"
+                                        <IconButton
+                                            variant="subtle"
+                                            size="sm"
+                                            className="shrink-0"
                                             onClick={() => {
                                                 if (inputRef.current) {
                                                     inputRef.current.value = "";
@@ -119,7 +123,7 @@ export function PredictiveSearchButton() {
                                             }}
                                         >
                                             <XIcon className="h-5 w-5" />
-                                        </button>
+                                        </IconButton>
                                     </div>
                                     <PopularKeywords
                                         onKeywordClick={(keyword) => {

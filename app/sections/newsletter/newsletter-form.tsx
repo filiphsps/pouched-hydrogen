@@ -3,6 +3,7 @@ import { createSchema, type HydrogenComponentProps } from "@weaverse/hydrogen";
 import { useFetcher } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { Input } from "~/components/input";
 import type { CustomerApiPayload } from "~/routes/api/customer";
 
 interface NewsLetterInputProps extends HydrogenComponentProps {
@@ -45,12 +46,13 @@ function NewsLetterForm(props: NewsLetterInputProps) {
             >
                 <div className="flex grow items-center border-y border-r-0 border-l">
                     <EnvelopeSimpleIcon className="mr-1.5 ml-3 h-5 w-5 shrink-0" />
-                    <input
+                    <Input
+                        variant="ghost"
                         name="email"
                         type="email"
                         required
                         placeholder={placeholder}
-                        className="w-full border-none bg-transparent py-3 pr-3 pl-1.5 leading-tight focus:outline-hidden focus:ring-0"
+                        className="py-3 pr-3 pl-1.5 leading-tight"
                     />
                 </div>
                 <Button

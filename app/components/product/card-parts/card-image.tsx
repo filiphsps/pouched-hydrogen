@@ -66,7 +66,7 @@ export function CardImage({
     return (
         <div
             className={cn(
-                "relative m-3 overflow-hidden rounded-xl bg-gray-100 transition-colors duration-300 group-hover:bg-white",
+                "relative aspect-square overflow-hidden rounded-xl bg-gray-100 transition-colors duration-300 group-hover:bg-white",
                 className,
             )}
         >
@@ -79,10 +79,12 @@ export function CardImage({
                 loading="lazy"
                 onLoad={onLoad}
                 className={cn(
-                    "!object-contain p-4 transition-all duration-300",
+                    "p-2 transition-all duration-300",
                     hoverEffect === "zoom" && "group-hover:scale-105",
                 )}
+                imageClassName={cn("aspect-square object-contain")}
             />
+
             {/* Loading overlay */}
             {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80">

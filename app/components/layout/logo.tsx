@@ -15,7 +15,7 @@ export function Logo() {
             className="z-30 flex h-full w-full items-center justify-center lg:h-fit lg:w-fit"
         >
             <div
-                className="relative h-full"
+                className="relative flex h-full flex-col justify-center"
                 style={{ width: logoData ? logoWidth : "auto" }}
             >
                 {logoData ? (
