@@ -62,10 +62,8 @@ export default function SellingPlanSelector() {
                 {/* One-time Purchase Option */}
                 <label
                     className={cn(
-                        "flex cursor-pointer items-center justify-between rounded-full border p-4 transition-colors hover:bg-muted/50",
-                        selectedValue === "onetime"
-                            ? "border-primary bg-primary/5"
-                            : "border-input",
+                        "flex cursor-pointer items-center justify-between rounded-full border border-line-subtle p-4 transition-colors hover:bg-muted/50",
+                        selectedValue === "onetime" ? "bg-primary/5" : "",
                     )}
                 >
                     <div className="flex items-center space-x-2">
@@ -94,10 +92,10 @@ export default function SellingPlanSelector() {
                         <label
                             key={group.name}
                             className={cn(
-                                "flex cursor-pointer items-center justify-between rounded-full border p-4 transition-colors hover:bg-muted/50",
+                                "flex cursor-pointer items-center justify-between rounded-full border border-line-subtle p-4 transition-colors hover:bg-muted/50",
                                 selectedValue === firstPlan.id
-                                    ? "border-primary bg-primary/5"
-                                    : "border-input",
+                                    ? "bg-primary/5"
+                                    : "",
                             )}
                         >
                             <div className="flex items-center space-x-2">
