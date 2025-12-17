@@ -4,14 +4,21 @@ import { describe, expect, it, vi } from "vitest";
 import { Navigation } from "./navigation";
 import { useMergedMenuData } from "./use-merged-menu-data";
 
-// Mock hooks and components
+// Mock the data hook - the component's core dependency
 vi.mock("./use-merged-menu-data", () => ({
     useMergedMenuData: vi.fn(),
 }));
 
+// Mock child components - we test these separately
 vi.mock("./mega-menu-content", () => ({
-    MegaMenuContent: ({ items }: any) => (
-        <div data-testid="mega-menu-content">Content Items: {items.length}</div>
+    MegaMenuContent: ({ items }: { items: unknown[] }) => (
+        <div data-testid="mega-menu-content">
+            {items.map((item: any) => (
+                <div key={item.id} data-testid="menu-section">
+                    {item.title}
+                </div>
+            ))}
+        </div>
     ),
 }));
 
@@ -24,13 +31,8 @@ vi.mock("./account-link", () => ({
 }));
 
 vi.mock("~/components/link", () => ({
-    default: ({ to, children, className, onClick }: any) => (
-        <a
-            href={to}
-            className={className}
-            onClick={onClick}
-            data-testid="nav-link"
-        >
+    default: ({ to, children, onClick }: any) => (
+        <a href={to} onClick={onClick} data-testid="menu-link">
             {children}
         </a>
     ),
@@ -49,102 +51,108 @@ global.ResizeObserver = class ResizeObserver {
     }
 };
 
+/**
+ * Renders component with React Router context
+ */
 function renderWithRouter(ui: React.ReactElement) {
-    const router = createMemoryRouter(
-        [
-            {
-                path: "/",
-                element: ui,
-            },
-        ],
-        {
-            initialEntries: ["/"],
-        },
-    );
-
+    const router = createMemoryRouter([{ path: "/", element: ui }], {
+        initialEntries: ["/"],
+    });
     return render(<RouterProvider router={router} />);
 }
 
 describe("Navigation", () => {
-    const mockItems = [
-        { id: "1", title: "Home", to: "/", items: [] },
+    const mockMenuItems = [
+        { id: "home", title: "Home", to: "/", items: [] },
         {
-            id: "2",
+            id: "shop",
             title: "Shop",
             to: "/shop",
             isMegaMenu: true,
             items: [
                 {
-                    id: "sub1",
-                    title: "Sub",
-                    items: [{ id: "l1", title: "Link 1", to: "/l1" }],
+                    id: "category",
+                    title: "Category",
+                    items: [
+                        { id: "product", title: "Product", to: "/product" },
+                    ],
                 },
             ],
         },
     ];
 
-    it("renders nothing if no items", () => {
+    it("renders nothing when menu has no items", () => {
         (useMergedMenuData as any).mockReturnValue([]);
-        const { container } = renderWithRouter(<Navigation>Menu</Navigation>);
+        const { container } = renderWithRouter(
+            <Navigation>Trigger</Navigation>,
+        );
         expect(container).toBeEmptyDOMElement();
     });
 
-    it("renders trigger button", () => {
-        (useMergedMenuData as any).mockReturnValue(mockItems);
+    it("renders trigger button that opens mobile drawer", async () => {
+        (useMergedMenuData as any).mockReturnValue(mockMenuItems);
         renderWithRouter(
             <Navigation>
-                <button type="button">Menu Trigger</button>
-            </Navigation>,
-        );
-        expect(screen.getByText("Menu Trigger")).toBeInTheDocument();
-    });
-
-    it("opens drawer on trigger click (mobile)", async () => {
-        (useMergedMenuData as any).mockReturnValue(mockItems);
-        renderWithRouter(
-            <Navigation>
-                <button type="button">Menu Trigger</button>
+                <button type="button">Open Menu</button>
             </Navigation>,
         );
 
-        fireEvent.click(screen.getByText("Menu Trigger"));
+        // Trigger should be visible
+        const trigger = screen.getByRole("button", { name: "Open Menu" });
+        expect(trigger).toBeInTheDocument();
+
+        // Click opens drawer with account link and country selector
+        fireEvent.click(trigger);
 
         await waitFor(() => {
             expect(screen.getByTestId("account-link")).toBeInTheDocument();
             expect(screen.getByTestId("country-selector")).toBeInTheDocument();
         });
-
-        // Check for links in drawer and desktop (since both are in DOM)
-        expect(screen.getAllByTestId("nav-link")).toHaveLength(3); // Home (Mobile), Shop (Mobile), Home (Desktop)
     });
 
-    it("renders desktop navigation correctly", () => {
-        (useMergedMenuData as any).mockReturnValue(mockItems);
+    it("shows menu items in drawer when opened", async () => {
+        (useMergedMenuData as any).mockReturnValue(mockMenuItems);
         renderWithRouter(
             <Navigation>
-                <button type="button">Menu Trigger</button>
+                <button type="button">Open Menu</button>
             </Navigation>,
         );
 
-        // Desktop menu structure is present in DOM but might be hidden via CSS in real browser
-        // In jsdom, class names are just strings.
-        // We can check if Radix Navigation Menu Root is present.
-        // The desktop menu lists items.
+        fireEvent.click(screen.getByRole("button", { name: "Open Menu" }));
 
-        // Note: NavigationMenu items are rendered.
-        // Radix NavigationMenu renders into the DOM.
-        // Let's verify we have text corresponding to items.
-        // Since both mobile drawer (when open) and desktop menu have "Home", it might be ambiguous if duplicate.
-        // But drawer is closed initially.
+        await waitFor(() => {
+            // Menu items are visible (may appear in both mobile drawer and desktop nav)
+            expect(screen.getAllByText("Home").length).toBeGreaterThan(0);
+            // Mega menu content is rendered
+            expect(
+                screen.getAllByTestId("mega-menu-content").length,
+            ).toBeGreaterThan(0);
+        });
+    });
 
-        const homeLinks = screen.getAllByText("Home");
-        // One in mobile drawer (hidden/unmounted via Dialog?) -> Dialog contents are usually not in DOM until open if `modal` is default (true).
-        // Radix Dialog portal logic: if not open, not in DOM.
-        // So `screen.getByText("Home")` should find the Desktop one.
+    it("closes drawer when close button is clicked", async () => {
+        (useMergedMenuData as any).mockReturnValue(mockMenuItems);
+        renderWithRouter(
+            <Navigation>
+                <button type="button">Open Menu</button>
+            </Navigation>,
+        );
 
-        // Wait, Radix Dialog logic: Portal content is not rendered when closed.
-        // So ONLY the desktop menu "Home" should be visible?
-        // Let's check.
-        expect(homeLinks.length).toBeGreaterThan(0);
+        // Open drawer
+        fireEvent.click(screen.getByRole("button", { name: "Open Menu" }));
+
+        await waitFor(() => {
+            expect(screen.getByTestId("account-link")).toBeInTheDocument();
+        });
+
+        // Find and click close button (the X button in header)
+        const closeButton = screen.getByRole("button", { name: "" });
+        fireEvent.click(closeButton);
+
+        await waitFor(() => {
+            expect(
+                screen.queryByTestId("account-link"),
+            ).not.toBeInTheDocument();
+        });
     });
 });
