@@ -1,5 +1,4 @@
 import { HeartIcon } from "@phosphor-icons/react";
-import { Button } from "~/components/button";
 import { cn } from "~/utils/cn";
 import { useWishlistStore } from "./wishlist-store";
 
@@ -9,6 +8,8 @@ import { useWishlistStore } from "./wishlist-store";
 interface WishlistButtonProps {
     /** The unique identifier of the product. */
     productId: string;
+    /** Size variant */
+    size?: "sm" | "md";
     /** Additional CSS class names for styling. */
     className?: string;
 }
@@ -16,39 +17,47 @@ interface WishlistButtonProps {
 /**
  * A wishlist button component that displays a heart icon.
  * Toggles between filled (wishlisted) and outline (not wishlisted) states.
- * Currently uses local state - can be integrated with backend wishlist API.
+ * Clean minimal design with subtle hover effects.
  *
  * @param props - The component props
  * @returns A button element with a heart icon
  */
-export function WishlistButton({ productId, className }: WishlistButtonProps) {
+export function WishlistButton({
+    productId,
+    size = "md",
+    className,
+}: WishlistButtonProps) {
     const isWishlisted = useWishlistStore((state) =>
         state.items.includes(productId),
     );
     const toggleItem = useWishlistStore((state) => state.toggleItem);
 
-    /**
-     * Handles the click event on the wishlist button.
-     * Toggles the wishlisted state and prevents event propagation.
-     *
-     * @param e - The mouse event
-     */
     const handleClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         toggleItem(productId);
     };
 
+    const sizeClasses = {
+        sm: "h-8 w-8",
+        md: "h-9 w-9",
+    };
+
+    const iconSizes = {
+        sm: 16,
+        md: 18,
+    };
+
     return (
-        <Button
-            variant="custom"
+        <button
             type="button"
             onClick={handleClick}
             className={cn(
-                "group/wishlist flex h-10 w-10 items-center justify-center rounded-full border-0 p-0 shadow-xs outline-none ring-0 ring-line transition-all duration-200 hover:ring-2 hover:ring-offset-2",
+                "group/wishlist flex items-center justify-center rounded-full transition-all duration-200",
+                sizeClasses[size],
                 isWishlisted
-                    ? "bg-red-500 text-white hover:bg-background"
-                    : "bg-background text-gray-700 hover:bg-background",
+                    ? "bg-red-50 hover:bg-red-100"
+                    : "bg-white/90 shadow-sm backdrop-blur-sm hover:bg-white hover:shadow-md",
                 className,
             )}
             aria-label={
@@ -57,15 +66,15 @@ export function WishlistButton({ productId, className }: WishlistButtonProps) {
             aria-pressed={isWishlisted}
         >
             <HeartIcon
-                size={20}
+                size={iconSizes[size]}
                 weight={isWishlisted ? "fill" : "regular"}
                 className={cn(
                     "transition-colors duration-200",
                     isWishlisted
-                        ? "text-white group-hover/wishlist:text-body"
-                        : "text-body group-hover/wishlist:text-red-500",
+                        ? "text-red-500"
+                        : "text-gray-500 group-hover/wishlist:text-red-500",
                 )}
             />
-        </Button>
+        </button>
     );
 }

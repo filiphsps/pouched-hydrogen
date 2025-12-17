@@ -35,13 +35,13 @@ describe("CardImage", () => {
     it("applies zoom effect by default", () => {
         render(<CardImage image={mockImage} />);
         const img = screen.getByRole("img", { name: "Primary" });
-        expect(img).toHaveClass("group-hover:scale-105");
+        expect(img).toHaveClass("group-hover:scale-[1.03]");
     });
 
     it("does not apply zoom effect when disabled", () => {
         render(<CardImage image={mockImage} hoverEffect="none" />);
         const img = screen.getByRole("img", { name: "Primary" });
-        expect(img).not.toHaveClass("group-hover:scale-105");
+        expect(img).not.toHaveClass("group-hover:scale-[1.03]");
     });
 
     it("renders loading spinner when isLoading is true", () => {

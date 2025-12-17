@@ -40,9 +40,17 @@ const ASPECT_RATIOS = {
     auto: "auto",
 } as const;
 
+/** Aspect ratio Tailwind classes */
+const ASPECT_CLASSES = {
+    square: "aspect-square",
+    portrait: "aspect-[3/4]",
+    landscape: "aspect-[4/3]",
+    auto: "",
+} as const;
+
 /**
  * A reusable product card image component with hover effects.
- * Uses Image component with aspectRatio for proper sizing.
+ * Clean minimal design with neutral backdrop for product photography.
  *
  * @param props - Component props
  * @returns Image container with optional hover effects
@@ -62,11 +70,13 @@ export function CardImage({
 
     const altText = alt || image.altText || "Product image";
     const ratioValue = ASPECT_RATIOS[aspectRatio];
+    const aspectClass = ASPECT_CLASSES[aspectRatio];
 
     return (
         <div
             className={cn(
-                "relative aspect-square overflow-hidden rounded-xl bg-gray-100 transition-colors duration-300 group-hover:bg-white",
+                "relative overflow-hidden rounded-t-xl bg-gray-100",
+                aspectClass,
                 className,
             )}
         >
@@ -79,16 +89,16 @@ export function CardImage({
                 loading="lazy"
                 onLoad={onLoad}
                 className={cn(
-                    "p-2 transition-all duration-300",
-                    hoverEffect === "zoom" && "group-hover:scale-105",
+                    "h-full w-full p-6 transition-transform duration-300 ease-out",
+                    hoverEffect === "zoom" && "group-hover:scale-[1.03]",
                 )}
-                imageClassName={cn("aspect-square object-contain")}
+                imageClassName="h-full w-full object-contain"
             />
 
             {/* Loading overlay */}
             {isLoading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80">
-                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900" />
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-100/90">
+                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
                 </div>
             )}
         </div>

@@ -1,10 +1,8 @@
-import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { cn } from "~/utils/cn";
 import {
     BestSellerBadge,
     BundleBadge,
     NewBadge,
-    SaleBadge,
     SoldOutBadge,
 } from "../badges";
 
@@ -12,8 +10,6 @@ import {
  * Props for the CardBadges component.
  */
 export interface CardBadgesProps {
-    /** Whether to show the sale badge */
-    showSale?: boolean;
     /** Whether to show the new badge */
     showNew?: boolean;
     /** Whether to show the bundle badge */
@@ -30,10 +26,6 @@ export interface CardBadgesProps {
     isSoldOut?: boolean;
     /** Product published date for new badge calculation */
     publishedAt?: string;
-    /** Current price for sale calculation */
-    price?: MoneyV2;
-    /** Compare at price for sale calculation */
-    compareAtPrice?: MoneyV2;
     /** Badge position */
     position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
     /** Additional CSS classes */
@@ -41,14 +33,14 @@ export interface CardBadgesProps {
 }
 
 /**
- * Container for product card badges (sale, new, bundle, bestseller, sold out).
- * Automatically handles visibility based on product state and settings.
+ * Container for product card status badges (new, bundle, bestseller, sold out).
+ * Sale percentage is now shown inline with price for cleaner design.
+ * Positioned over the image area with clean minimal styling.
  *
  * @param props - Component props
  * @returns Badge container with visible badges
  */
 export function CardBadges({
-    showSale = true,
     showNew = true,
     showBundle = true,
     showBestseller = true,
@@ -57,33 +49,29 @@ export function CardBadges({
     isBestseller = false,
     isSoldOut = false,
     publishedAt,
-    price,
-    compareAtPrice,
     position = "top-left",
     className,
 }: CardBadgesProps) {
+    // Position inside the image area
     const positionClasses = {
-        "top-left": "top-2 left-2",
-        "top-right": "top-2 right-2",
-        "bottom-left": "bottom-2 left-2",
-        "bottom-right": "bottom-2 right-2",
+        "top-left": "top-3 left-3",
+        "top-right": "top-3 right-3",
+        "bottom-left": "bottom-3 left-3",
+        "bottom-right": "bottom-3 right-3",
     };
 
     return (
         <div
             className={cn(
-                "absolute z-10 flex flex-wrap gap-1.5",
+                "absolute z-10 flex flex-col gap-1.5",
                 positionClasses[position],
                 className,
             )}
         >
+            {showSoldOut && isSoldOut && <SoldOutBadge />}
             {showBundle && isBundle && <BundleBadge />}
-            {showSale && price && compareAtPrice && (
-                <SaleBadge price={price} compareAtPrice={compareAtPrice} />
-            )}
             {showBestseller && isBestseller && <BestSellerBadge />}
             {showNew && publishedAt && <NewBadge publishedAt={publishedAt} />}
-            {showSoldOut && isSoldOut && <SoldOutBadge />}
         </div>
     );
 }

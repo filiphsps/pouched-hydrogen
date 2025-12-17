@@ -29,7 +29,7 @@ export interface CardInfoProps {
 
 /**
  * Product card info section with title, vendor, and rating.
- * Includes Schema.org Product markup for SEO.
+ * Clean minimal design with clear typography hierarchy.
  *
  * @param props - Component props
  * @returns Info section with title, vendor, and optional extras
@@ -53,28 +53,28 @@ export function CardInfo({
     );
 
     const titleSizeClasses = {
-        sm: "text-sm",
-        md: "text-base",
-        lg: "text-lg font-semibold",
+        sm: "text-sm leading-tight",
+        md: "text-base leading-snug",
+        lg: "text-lg leading-snug",
     };
 
     return (
-        <div className={cn("space-y-1", className)}>
-            {/* Vendor/Brand */}
+        <div className={cn("space-y-0.5", className)}>
+            {/* Vendor/Brand - subtle but readable */}
             {showVendor && vendor && (
                 <span
-                    className="block text-body-subtle text-xs uppercase tracking-wide transition-colors hover:text-body"
+                    className="block font-medium text-body-subtle text-xs uppercase tracking-wide"
                     itemProp="brand"
                 >
                     {vendor}
                 </span>
             )}
 
-            {/* Product Title */}
-            <Link to={productUrl} prefetch="intent">
+            {/* Product Title - prominent and clear */}
+            <Link to={productUrl} prefetch="intent" className="block">
                 <h3
                     className={cn(
-                        "line-clamp-2 font-medium text-foreground leading-snug hover:underline",
+                        "line-clamp-2 font-semibold text-foreground transition-colors duration-200 group-hover:text-foreground/70",
                         titleSizeClasses[size],
                     )}
                     itemProp="name"
@@ -85,11 +85,13 @@ export function CardInfo({
 
             {/* Rating */}
             {showRating && (
-                <JudgemeStarsRating
-                    productHandle={handle}
-                    ratingText="{{rating}} ({{total_reviews}} reviews)"
-                    errorText=""
-                />
+                <div className="pt-1">
+                    <JudgemeStarsRating
+                        productHandle={handle}
+                        ratingText="{{rating}} ({{total_reviews}})"
+                        errorText=""
+                    />
+                </div>
             )}
         </div>
     );

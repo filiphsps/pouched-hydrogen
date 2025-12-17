@@ -15,7 +15,7 @@
 
   --shadow-header: 0 2px 5px #0000000f;
 
-  --color-gray-150: oklch(94.75% 0.0045 264.5365);
+  /*--color-gray-150: oklch(94.75% 0.0045 264.5365);*/
 }
 
 @theme inline {
@@ -33,7 +33,7 @@
   --color-muted-foreground: var(--color-muted-foreground);
   --color-link: var(--color-link);
 
-  --color-gray-100: oklch(97.6% 0.0025 256.191);
+  /*--color-gray-100: oklch(97.6% 0.0025 256.191);*/
 
   --text-scale: calc(
     var(--min-size-px) +

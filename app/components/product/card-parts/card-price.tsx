@@ -3,6 +3,21 @@ import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { cn } from "~/utils/cn";
 
 /**
+ * Calculate discount percentage between two prices.
+ */
+function calculateDiscountPercentage(
+    price: MoneyV2,
+    compareAtPrice: MoneyV2,
+): number {
+    const priceNum = Number(price.amount);
+    const compareNum = Number(compareAtPrice.amount);
+    if (compareNum > priceNum) {
+        return Math.round(((compareNum - priceNum) / compareNum) * 100);
+    }
+    return 0;
+}
+
+/**
  * Props for the CardPrice component.
  */
 export interface CardPriceProps {
@@ -12,6 +27,8 @@ export interface CardPriceProps {
     compareAtPrice?: MoneyV2 | null;
     /** Whether to show the compare at price */
     showCompareAt?: boolean;
+    /** Whether to show percentage discount badge */
+    showPercentage?: boolean;
     /** Size variant */
     size?: "sm" | "md" | "lg";
     /** Additional CSS classes */
@@ -20,7 +37,7 @@ export interface CardPriceProps {
 
 /**
  * Price display with optional compare-at price for sales.
- * Includes Schema.org Offer markup for SEO.
+ * Clean minimal design with clear price hierarchy.
  *
  * @param props - Component props
  * @returns Price display with optional sale styling
@@ -29,6 +46,7 @@ export function CardPrice({
     price,
     compareAtPrice,
     showCompareAt = true,
+    showPercentage = true,
     size = "md",
     className,
 }: CardPriceProps) {
@@ -37,25 +55,27 @@ export function CardPrice({
         compareAtPrice &&
         Number(compareAtPrice.amount) > Number(price.amount);
 
+    const discountPercentage =
+        isOnSale && compareAtPrice
+            ? calculateDiscountPercentage(price, compareAtPrice)
+            : 0;
+
     const sizeClasses = {
         sm: "text-sm",
         md: "text-base",
-        lg: "text-xl font-semibold",
+        lg: "text-lg",
     };
 
     return (
         <div
-            className={cn("flex flex-wrap items-center gap-2", className)}
+            className={cn("flex flex-wrap items-baseline gap-2", className)}
             itemProp="offers"
             itemScope
             itemType="https://schema.org/Offer"
         >
             {/* Current price */}
             <span
-                className={cn(
-                    "font-semibold text-foreground",
-                    sizeClasses[size],
-                )}
+                className={cn("font-bold text-foreground", sizeClasses[size])}
                 itemProp="price"
                 content={price.amount}
             >
@@ -65,13 +85,15 @@ export function CardPrice({
 
             {/* Compare at price */}
             {isOnSale && compareAtPrice && (
-                <span
-                    className={cn(
-                        "text-muted-foreground line-through",
-                        size === "lg" ? "text-base" : "text-sm",
-                    )}
-                >
+                <span className="text-body-subtle text-sm line-through">
                     <Money withoutTrailingZeros data={compareAtPrice} />
+                </span>
+            )}
+
+            {/* Discount percentage badge */}
+            {showPercentage && discountPercentage > 0 && (
+                <span className="rounded-full bg-red-500 px-2 py-0.5 font-semibold text-white text-xs">
+                    -{discountPercentage}%
                 </span>
             )}
         </div>

@@ -1,8 +1,4 @@
-import {
-    HandbagSimpleIcon,
-    ImageIcon,
-    ShoppingCartIcon,
-} from "@phosphor-icons/react";
+import { HandbagSimpleIcon, ImageIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -174,7 +170,7 @@ function QuickShopSkeleton({
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="flex h-10 w-1/2 items-center justify-center">
-                    <ShoppingCartIcon className="h-5 w-5 text-body-subtle" />
+                    <HandbagSimpleIcon className="h-5 w-5 text-body-subtle" />
                 </Skeleton>
             </div>
         </div>
@@ -220,33 +216,32 @@ export function QuickShopTrigger({
         <>
             <Dialog.Root open={open} onOpenChange={setOpen}>
                 <Dialog.Trigger asChild>
-                    <Button
-                        animate={false}
-                        variant="secondary"
-                        className={cn(
-                            "justify-center p-3 leading-4",
-                            buttonType === "icon"
-                                ? "rounded-full"
-                                : "w-full shadow-xs",
-                            showOnHover &&
-                                "opacity-0 transition-opacity group-hover:opacity-100",
-                        )}
-                        title={t("cart.addToCart")}
-                    >
-                        {buttonType === "icon" ? (
-                            <>
-                                <HandbagSimpleIcon
-                                    size={16}
-                                    className="h-4 w-4"
-                                />
-                                <span className="w-0 overflow-hidden pl-0 text-right text-base transition-all group-hover/quick-shop:w-11 group-hover/quick-shop:pl-2">
-                                    {t("product.add")}
-                                </span>
-                            </>
-                        ) : (
-                            <span className="px-2">{buttonText}</span>
-                        )}
-                    </Button>
+                    {buttonType === "icon" ? (
+                        <button
+                            type="button"
+                            className={cn(
+                                "flex items-center justify-center rounded-full bg-gray-100 p-2.5 transition-colors hover:bg-gray-200",
+                                showOnHover &&
+                                    "opacity-0 transition-opacity group-hover:opacity-100",
+                            )}
+                            title={t("cart.addToCart")}
+                        >
+                            <HandbagSimpleIcon size={18} />
+                        </button>
+                    ) : (
+                        <Button
+                            animate={false}
+                            variant="primary"
+                            className={cn(
+                                "w-full gap-2",
+                                showOnHover &&
+                                    "opacity-0 transition-opacity group-hover:opacity-100",
+                            )}
+                            title={t("cart.addToCart")}
+                        >
+                            {buttonText}
+                        </Button>
+                    )}
                 </Dialog.Trigger>
             </Dialog.Root>
             <ModalContainer

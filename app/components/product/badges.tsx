@@ -35,7 +35,7 @@ function Badge({
                 textTransform: badgeTextTransform,
             }}
             className={cn(
-                "pointer-events-none select-none bg-(--bg-color) px-2 py-1 text-xs uppercase tracking-wider shadow-xs transition-colors duration-300",
+                "pointer-events-none select-none bg-(--bg-color) px-2.5 py-1 font-medium text-[11px] uppercase tracking-wide transition-colors duration-200",
                 className,
             )}
         >

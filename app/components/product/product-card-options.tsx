@@ -4,14 +4,16 @@ import type {
     ProductCardFragment,
     ProductVariantFragment,
 } from "storefront-api.generated";
-import { Button } from "~/components/button";
 import { Link } from "~/components/link";
-import { RevealUnderline } from "~/components/reveal-underline";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/utils/cn";
 import { isLightColor, isValidColor } from "~/utils/misc";
 import { OPTIONS_AS_SWATCH } from "./product-option-values";
 
+/**
+ * Displays product variant options as swatches or buttons on product cards.
+ * Clean minimal design with subtle interactions.
+ */
 export function ProductCardOptions({
     product,
     selectedVariant,
@@ -43,25 +45,23 @@ export function ProductCardOptions({
     const asSwatch = OPTIONS_AS_SWATCH.includes(pcardOptionToShow);
 
     return (
-        <div
-            className={cn("flex flex-wrap items-center gap-1 pt-1", className)}
-        >
+        <div className={cn("flex flex-wrap items-center gap-2", className)}>
             {optionValues
                 .slice(0, pcardMaxOptionValues)
                 .map(({ name, swatch, firstSelectableVariant }) => {
                     if (asSwatch) {
                         const swatchColor = swatch?.color || name;
+                        const isSelected = selectedValue === name;
                         return (
                             <Tooltip key={name}>
-                                <TooltipTrigger>
+                                <TooltipTrigger asChild>
                                     <button
                                         type="button"
                                         className={cn(
-                                            "flex aspect-square size-4.5 rounded-full",
-                                            "border border-transparent transition-all",
-                                            selectedValue === name
-                                                ? "border-gray-800 p-0.5"
-                                                : "p-0",
+                                            "relative flex h-6 w-6 items-center justify-center rounded-full transition-all duration-200",
+                                            isSelected
+                                                ? "ring-2 ring-foreground ring-offset-2"
+                                                : "hover:ring-1 hover:ring-line hover:ring-offset-1",
                                         )}
                                         onClick={() => {
                                             if (!firstSelectableVariant) return;
@@ -99,21 +99,21 @@ export function ProductCardOptions({
                                         )}
                                     </button>
                                 </TooltipTrigger>
-                                <TooltipContent sideOffset={6}>
+                                <TooltipContent sideOffset={8}>
                                     {name}
                                 </TooltipContent>
                             </Tooltip>
                         );
                     }
                     return (
-                        <Button
+                        <button
                             key={name}
-                            variant="outline"
-                            animate={false}
+                            type="button"
                             className={cn(
-                                "border border-line-subtle px-2 py-1 text-center text-sm transition-colors",
-                                selectedValue === name &&
-                                    "border-body bg-body text-body-inverse",
+                                "rounded-md border px-2.5 py-1 font-medium text-[11px] transition-all duration-200",
+                                selectedValue === name
+                                    ? "border-foreground bg-foreground text-background"
+                                    : "border-line-subtle bg-background text-body hover:border-line",
                             )}
                             onClick={() => {
                                 if (!firstSelectableVariant) return;
@@ -121,12 +121,15 @@ export function ProductCardOptions({
                             }}
                         >
                             {name}
-                        </Button>
+                        </button>
                     );
                 })}
             {restCount > 0 && (
-                <Link to={`/products/${handle}`} className="mt-1 pl-0.5">
-                    <RevealUnderline>+{restCount}</RevealUnderline>
+                <Link
+                    to={`/products/${handle}`}
+                    className="font-medium text-[11px] text-body-subtle hover:text-foreground"
+                >
+                    +{restCount}
                 </Link>
             )}
         </div>

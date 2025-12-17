@@ -1,5 +1,4 @@
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { cva } from "class-variance-authority";
 import { useTranslation } from "react-i18next";
 import type { ProductCardFragment } from "storefront-api.generated";
 import { cn } from "~/utils/cn";
@@ -8,23 +7,6 @@ import {
     getMetafieldValue,
     type MetafieldArray,
 } from "~/utils/metafields";
-
-/**
- * CVA variant definition for attribute pill styling.
- */
-const pillVariants = cva(
-    "rounded-full bg-background font-medium text-gray-700 text-xs",
-    {
-        variants: {
-            size: {
-                sm: "px-2.5 py-1",
-            },
-        },
-        defaultVariants: {
-            size: "sm",
-        },
-    },
-);
 
 /**
  * Props for the AttributePills component.
@@ -38,9 +20,8 @@ interface AttributePillsProps {
 
 /**
  * Displays product attribute pills from metafields.
- * Reads the metafield keys from theme settings and displays their values as rounded pill badges.
- * Values are automatically formatted based on the metafield key using i18n translations.
- * Uses shared metafield utilities for consistent value extraction and formatting.
+ * Shows key product attributes like nicotine strength in compact pill format.
+ * Clean minimal design with subtle borders and refined typography.
  *
  * @param props - The component props
  * @returns A div containing attribute pills, or null if no attributes exist
@@ -60,14 +41,14 @@ export function AttributePills({ product, className }: AttributePillsProps) {
     if (!attribute1 && !attribute2) return null;
 
     return (
-        <div className={cn("flex flex-wrap gap-2", className)}>
+        <div className={cn("flex flex-wrap gap-1.5", className)}>
             {attribute1 && (
-                <span className={pillVariants({ size: "sm" })}>
+                <span className="rounded-full bg-gray-100 px-2.5 py-1 font-medium text-body-subtle text-xs">
                     {formatMetafieldValue(t, key1, attribute1)}
                 </span>
             )}
             {attribute2 && (
-                <span className={pillVariants({ size: "sm" })}>
+                <span className="rounded-full bg-gray-100 px-2.5 py-1 font-medium text-body-subtle text-xs">
                     {formatMetafieldValue(t, key2, attribute2)}
                 </span>
             )}
