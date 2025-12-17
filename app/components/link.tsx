@@ -16,7 +16,7 @@ import { cn } from "~/utils/cn";
 
 export const variants = cva(
     [
-        "inline-flex transition-all duration-200 active:scale-95",
+        "inline-flex rounded-full transition-all duration-200 active:scale-95",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
     ],
     {
@@ -187,7 +187,7 @@ export const Link = ({
             viewTransition={enableViewTransition}
             to={href}
             style={style}
-            className={cn(variants({ variant }), className)}
+            className={cn("rounded-full", variants({ variant }), className)}
             target={
                 target !== undefined
                     ? target

@@ -52,7 +52,7 @@ export function FilterItem({
                     <Link
                         to={link}
                         className={cn(
-                            "block h-10 w-10 disabled:cursor-not-allowed",
+                            "block h-10 w-10 rounded-full disabled:cursor-not-allowed",
                             "border hover:border-body",
                             checked ? "border-line p-1" : "border-line-subtle",
                             option.count === 0 && "diagonal",
@@ -60,7 +60,7 @@ export function FilterItem({
                         preventScrollReset
                     >
                         <span
-                            className="inline-block h-full w-full"
+                            className="inline-block h-full w-full rounded-full"
                             style={{
                                 backgroundImage: swatchImage?.value
                                     ? `url(${swatchImage?.value})`
@@ -88,7 +88,7 @@ export function FilterItem({
             <Link
                 to={link}
                 className={cn(
-                    "block border px-3 py-1.5 text-center disabled:cursor-not-allowed",
+                    "block rounded-full border px-3 py-1.5 text-center disabled:cursor-not-allowed",
                     option.count === 0 && "diagonal text-body-subtle",
                     checked
                         ? "border-line bg-body text-background"

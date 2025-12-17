@@ -82,7 +82,7 @@ export function CountrySelector({ className }: { className?: string }) {
                 <Popover.Trigger asChild>
                     <button
                         type="button"
-                        className="flex w-full cursor-pointer items-center gap-2 overflow-clip border border-line-subtle px-4 py-3 text-left outline-hidden"
+                        className="flex w-full cursor-pointer items-center gap-2 overflow-clip rounded-full border border-line-subtle px-4 py-3 text-left outline-hidden"
                         aria-label="Select country"
                     >
                         <ReactCountryFlag

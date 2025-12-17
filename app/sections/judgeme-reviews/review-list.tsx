@@ -68,7 +68,7 @@ export function ReviewsPagination() {
                 type="button"
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1}
-                className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-full px-1 py-2 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
             >
                 <CaretDoubleLeftIcon className="h-4 w-4" />
             </button>
@@ -77,7 +77,7 @@ export function ReviewsPagination() {
                 type="button"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-full px-1 py-2 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
             >
                 <CaretLeftIcon className="h-4 w-4" />
             </button>
@@ -93,10 +93,8 @@ export function ReviewsPagination() {
                         type="button"
                         onClick={() => handlePageChange(page as number)}
                         className={cn(
-                            "p-2 leading-4 underline-offset-4",
-                            currentPage === page
-                                ? "font-semibold underline"
-                                : "hover:underline",
+                            "rounded-full p-2 leading-4 transition-colors hover:bg-gray-100",
+                            currentPage === page && "bg-gray-100 font-semibold",
                         )}
                     >
                         {page}
@@ -108,7 +106,7 @@ export function ReviewsPagination() {
                 type="button"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPage}
-                className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-full px-1 py-2 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
             >
                 <CaretRightIcon className="h-4 w-4" />
             </button>
@@ -117,7 +115,7 @@ export function ReviewsPagination() {
                 type="button"
                 onClick={() => handlePageChange(totalPage)}
                 disabled={currentPage === totalPage}
-                className="px-1 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-full px-1 py-2 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
             >
                 <CaretDoubleRightIcon className="h-4 w-4" />
             </button>

@@ -115,22 +115,7 @@ export function Navigation({ children }: { children: ReactNode }) {
                                                                         }
                                                                         className="flex flex-col gap-2"
                                                                     >
-                                                                        <Link
-                                                                            to={
-                                                                                menuItem.to
-                                                                            }
-                                                                            onClick={() =>
-                                                                                setIsDrawerOpen(
-                                                                                    false,
-                                                                                )
-                                                                            }
-                                                                            className="font-semibold text-base text-body"
-                                                                        >
-                                                                            {
-                                                                                menuItem.title
-                                                                            }
-                                                                        </Link>
-                                                                        {hasChildren && (
+                                                                        {hasChildren ? (
                                                                             <MegaMenuContent
                                                                                 items={
                                                                                     isMega
@@ -145,6 +130,22 @@ export function Navigation({ children }: { children: ReactNode }) {
                                                                                           ]
                                                                                 }
                                                                             />
+                                                                        ) : (
+                                                                            <Link
+                                                                                to={
+                                                                                    menuItem.to
+                                                                                }
+                                                                                onClick={() =>
+                                                                                    setIsDrawerOpen(
+                                                                                        false,
+                                                                                    )
+                                                                                }
+                                                                                className="font-semibold text-base text-body"
+                                                                            >
+                                                                                {
+                                                                                    menuItem.title
+                                                                                }
+                                                                            </Link>
                                                                         )}
                                                                     </div>
                                                                 );

@@ -110,7 +110,7 @@ export function ProductCardOptions({
                             key={name}
                             type="button"
                             className={cn(
-                                "rounded-md border px-2.5 py-1 font-medium text-[11px] transition-all duration-200",
+                                "rounded-full border px-2.5 py-1 font-medium text-[11px] transition-all duration-200",
                                 selectedValue === name
                                     ? "border-foreground bg-foreground text-background"
                                     : "border-line-subtle bg-background text-body hover:border-line",

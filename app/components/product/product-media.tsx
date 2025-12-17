@@ -21,18 +21,17 @@ import { ZoomButton, ZoomModal } from "./media-zoom";
 
 const variants = cva(
     [
-        "grid w-full justify-start gap-2 lg:gap-1",
+        "grid w-full gap-2 lg:gap-1",
         "lg:grid-cols-1",
         "grid-flow-col lg:grid-flow-row",
-        "scroll-px-6 overflow-x-scroll md:overflow-x-auto",
-        "snap-x snap-mandatory",
+        "snap-x snap-mandatory scroll-px-6",
     ],
     {
         variants: {
             gridSize: {
-                "1x1": "",
-                "2x2": "2xl:grid-cols-2",
-                mix: "2xl:grid-cols-2",
+                "1x1": "justify-items-center overflow-visible lg:justify-items-stretch [&>*]:w-full",
+                "2x2": "justify-start overflow-x-scroll md:overflow-x-auto 2xl:grid-cols-2",
+                mix: "justify-start overflow-x-scroll md:overflow-x-auto 2xl:grid-cols-2",
             },
         },
     },
@@ -99,6 +98,7 @@ export function ProductMedia(props: ProductMediaProps) {
                                 key={med.id}
                                 className={cn(
                                     "group relative",
+                                    gridSize === "1x1" ? "w-full" : "lg:w-full",
                                     gridSize === "mix" &&
                                         idx % 3 === 0 &&
                                         "lg:col-span-2",
@@ -122,7 +122,10 @@ export function ProductMedia(props: ProductMediaProps) {
                                         imageAspectRatio={imageAspectRatio}
                                         index={idx}
                                         className={cn(
-                                            "w-[80vw] max-w-none object-cover lg:h-full lg:w-full",
+                                            "max-w-none object-cover lg:h-full lg:w-full",
+                                            gridSize === "1x1"
+                                                ? "w-full"
+                                                : "w-[80vw]",
                                             idx === 0 &&
                                                 "[&_img]:[view-transition-name:image-expand]",
                                         )}

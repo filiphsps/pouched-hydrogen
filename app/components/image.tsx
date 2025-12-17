@@ -64,7 +64,7 @@ export function Image({
             <HydrogenImage
                 ref={hydrogenImageRef}
                 className={cn(
-                    "size-full object-center [transition:filter_500ms_cubic-bezier(.4,0,.2,1)]",
+                    "size-full object-cover object-center [transition:filter_500ms_cubic-bezier(.4,0,.2,1)]",
                     imageClassName,
                     loaded ? "blur-0" : "blur-xl",
                 )}

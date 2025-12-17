@@ -95,7 +95,7 @@ function AddToCartButtonContent({
                 variant="primary"
                 type="submit"
                 className={cn(
-                    "relative h-12 hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
+                    "relative h-12 rounded-full hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
                     className,
                 )}
                 disabled={disabled ?? isLoading}

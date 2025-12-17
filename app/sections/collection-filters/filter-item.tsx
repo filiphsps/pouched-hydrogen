@@ -64,7 +64,7 @@ export function FilterItem({
                     <button
                         type="button"
                         className={cn(
-                            "h-10 w-10 disabled:cursor-not-allowed",
+                            "h-10 w-10 rounded-full disabled:cursor-not-allowed",
                             "border hover:border-body",
                             checked ? "border-line p-1" : "border-line-subtle",
                             option.count === 0 && "diagonal",
@@ -73,7 +73,7 @@ export function FilterItem({
                         disabled={option.count === 0}
                     >
                         <span
-                            className="inline-block h-full w-full"
+                            className="inline-block h-full w-full rounded-full"
                             style={{
                                 backgroundImage: swatchImage?.value
                                     ? `url(${swatchImage?.value})`
@@ -101,7 +101,7 @@ export function FilterItem({
             <button
                 type="button"
                 className={cn(
-                    "border px-3 py-1.5 text-center disabled:cursor-not-allowed",
+                    "rounded-full border px-3 py-1.5 text-center disabled:cursor-not-allowed",
                     option.count === 0 && "diagonal text-body-subtle",
                     checked
                         ? "border-line bg-body text-background"

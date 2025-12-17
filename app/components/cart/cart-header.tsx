@@ -49,10 +49,8 @@ export function CartHeader({ totalQuantity, layout }: CartHeaderProps) {
                 <button
                     type="button"
                     className={cn(
-                        "p-2",
+                        "rounded-full p-2 transition-colors hover:bg-gray-100",
                         layout === "drawer" && "translate-x-2",
-                        layout === "modal" &&
-                            "rounded-full transition-colors hover:bg-gray-100",
                     )}
                     aria-label={t("cart.closeDrawer")}
                 >

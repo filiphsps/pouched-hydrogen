@@ -53,17 +53,6 @@ export function GlobalStyle() {
             :root {
               /* Layout */
               --height-nav: 4rem;
-              @media (min-width: 32em) {
-                  body {
-                      --height-nav: 6rem;
-                  }
-              }
-              @media (min-width: 48em) {
-                  body {
-                      --height-nav: 6rem;
-                  }
-              }
-
               --page-width: ${pageWidth}px;
 
               /* Colors (general) */
