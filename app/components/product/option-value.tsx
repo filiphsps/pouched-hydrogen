@@ -1,4 +1,5 @@
 import { Image } from "@shopify/hydrogen";
+import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/utils/cn";
 import { isLightColor, isValidColor } from "~/utils/misc";
 
@@ -293,4 +294,111 @@ export function OptionValue({
                 />
             );
     }
+}
+
+/**
+ * Normalized option value data structure.
+ * This interface abstracts the common properties needed to render an option value,
+ * allowing both ProductOptionValues and ProductCardOptions to share rendering logic.
+ */
+export interface NormalizedOptionValue {
+    /** The display name of the option value */
+    name: string;
+    /** Whether this option is currently selected */
+    selected: boolean;
+    /** Whether this option is available for purchase (in stock) */
+    available: boolean;
+    /** Whether this option combination exists (for variant matrix) */
+    exists: boolean;
+    /** Color value for swatch display */
+    color?: string;
+    /** Swatch image data */
+    swatchImage?: SwatchImage | null;
+    /** Tooltip text to display (defaults to name if not provided) */
+    tooltipText?: string;
+}
+
+/** Props for OptionValueList component */
+export interface OptionValueListProps {
+    /** The option name to determine display type (e.g., "Color", "Size") */
+    optionName: string;
+    /** List of normalized option values to render */
+    values: NormalizedOptionValue[];
+    /** Click handler called with the option value name when clicked */
+    onSelect: (valueName: string) => void;
+    /** Size variant for the option buttons/swatches */
+    size?: "sm" | "md";
+    /** Whether to show tooltips on hover */
+    showTooltips?: boolean;
+    /** Additional CSS classes for the container */
+    className?: string;
+}
+
+/**
+ * Renders a list of option values as swatches, buttons, or default style
+ * based on the option name configuration. This is the unified abstraction
+ * used by both ProductOptionValues (PDP) and ProductCardOptions (cards).
+ */
+export function OptionValueList({
+    optionName,
+    values,
+    onSelect,
+    size = "md",
+    showTooltips = true,
+    className,
+}: OptionValueListProps) {
+    const displayType = getOptionDisplayType(optionName);
+    const isSwatch = displayType === "swatch";
+
+    return (
+        <div
+            className={cn(
+                "flex flex-wrap gap-3",
+                isSwatch && size === "md" && "pt-0.5",
+                size === "sm" && "gap-2",
+                className,
+            )}
+        >
+            {values.map((value) => {
+                const tooltipText =
+                    value.tooltipText ||
+                    (value.exists
+                        ? value.name
+                        : `${value.name} (Not available)`);
+
+                const optionElement = (
+                    <OptionValue
+                        optionName={optionName}
+                        name={value.name}
+                        color={value.color}
+                        swatchImage={value.swatchImage}
+                        selected={value.selected}
+                        available={value.available}
+                        disabled={!value.exists}
+                        onClick={() => onSelect(value.name)}
+                        size={size}
+                    />
+                );
+
+                if (!showTooltips) {
+                    return (
+                        <div key={value.name} className="inline-flex">
+                            {optionElement}
+                        </div>
+                    );
+                }
+
+                return (
+                    <Tooltip key={value.name}>
+                        <TooltipTrigger asChild>
+                            <div>{optionElement}</div>
+                        </TooltipTrigger>
+                        <TooltipContent sideOffset={size === "sm" ? 8 : 6}>
+                            {tooltipText}
+                        </TooltipContent>
+                    </Tooltip>
+                );
+            })}
+        </div>
+    );
 }

@@ -4,17 +4,15 @@ import type {
     ProductVariantFragment,
 } from "storefront-api.generated";
 import { Link } from "~/components/link";
-import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/utils/cn";
-import {
-    getOptionDisplayType,
-    OptionButton,
-    OptionSwatch,
-} from "./option-value";
+import { type NormalizedOptionValue, OptionValueList } from "./option-value";
 
 /**
  * Displays product variant options as swatches or buttons on product cards.
  * Clean minimal design with subtle interactions.
+ *
+ * Uses the unified OptionValueList component for rendering, providing
+ * consistent styling with the PDP variant selector.
  */
 export function ProductCardOptions({
     product,
@@ -30,78 +28,68 @@ export function ProductCardOptions({
     const { pcardShowOptionValues, pcardOptionToShow, pcardMaxOptionValues } =
         useThemeSettings();
     const { handle, options } = product;
-    const { optionValues } =
-        options.find(({ name }) => name === pcardOptionToShow) || {};
+    const option = options.find(({ name }) => name === pcardOptionToShow);
+    const optionValues = option?.optionValues;
     const restCount = (optionValues?.length || 0) - pcardMaxOptionValues;
 
     if (!(pcardShowOptionValues && optionValues?.length)) {
         return null;
     }
 
-    let selectedValue: string | undefined | null;
-    if (selectedVariant) {
-        selectedValue = selectedVariant.selectedOptions?.find(
-            ({ name }) => name === pcardOptionToShow,
-        )?.value;
+    // Get the currently selected value for this option
+    const selectedValue = selectedVariant?.selectedOptions?.find(
+        ({ name }) => name === pcardOptionToShow,
+    )?.value;
+
+    // Create a lookup map for quick variant access by option value name
+    const variantByValueName = new Map<string, ProductVariantFragment>();
+    for (const optionValue of optionValues) {
+        if (optionValue.firstSelectableVariant) {
+            variantByValueName.set(
+                optionValue.name,
+                optionValue.firstSelectableVariant,
+            );
+        }
     }
 
-    const displayType = getOptionDisplayType(pcardOptionToShow);
-    const isSwatch = displayType === "swatch";
+    // Normalize option values for the unified component
+    const normalizedValues: NormalizedOptionValue[] = optionValues
+        .slice(0, pcardMaxOptionValues)
+        .map((optionValue) => ({
+            name: optionValue.name,
+            selected: selectedValue === optionValue.name,
+            available: true, // Product cards always show available variants
+            exists: Boolean(optionValue.firstSelectableVariant),
+            color: optionValue.swatch?.color ?? undefined,
+            swatchImage: optionValue.swatch?.image?.previewImage
+                ? {
+                      url: optionValue.swatch.image.previewImage.url,
+                      altText: optionValue.swatch.image.previewImage.altText,
+                  }
+                : undefined,
+        }));
+
+    /**
+     * Handle option value selection.
+     * Finds the variant associated with the selected value and updates state.
+     */
+    const handleSelect = (valueName: string) => {
+        const variant = variantByValueName.get(valueName);
+        if (variant) {
+            setSelectedVariant(variant);
+        }
+    };
 
     return (
         <div className={cn("flex flex-wrap items-center gap-2", className)}>
-            {optionValues
-                .slice(0, pcardMaxOptionValues)
-                .map(({ name, swatch, firstSelectableVariant }) => {
-                    const isSelected = selectedValue === name;
-                    const handleClick = () => {
-                        if (!firstSelectableVariant) return;
-                        setSelectedVariant(firstSelectableVariant);
-                    };
-
-                    if (isSwatch) {
-                        return (
-                            <Tooltip key={name}>
-                                <TooltipTrigger asChild>
-                                    <div>
-                                        <OptionSwatch
-                                            name={name}
-                                            color={swatch?.color}
-                                            swatchImage={
-                                                swatch?.image?.previewImage
-                                                    ? {
-                                                          url: swatch.image
-                                                              .previewImage.url,
-                                                          altText:
-                                                              swatch.image
-                                                                  .previewImage
-                                                                  .altText,
-                                                      }
-                                                    : undefined
-                                            }
-                                            selected={isSelected}
-                                            onClick={handleClick}
-                                            size="sm"
-                                        />
-                                    </div>
-                                </TooltipTrigger>
-                                <TooltipContent sideOffset={8}>
-                                    {name}
-                                </TooltipContent>
-                            </Tooltip>
-                        );
-                    }
-
-                    return (
-                        <OptionButton
-                            key={name}
-                            name={name}
-                            selected={isSelected}
-                            onClick={handleClick}
-                            size="sm"
-                        />
-                    );
-                })}
+            <OptionValueList
+                optionName={pcardOptionToShow}
+                values={normalizedValues}
+                onSelect={handleSelect}
+                size="sm"
+                showTooltips={true}
+                className="gap-2"
+            />
             {restCount > 0 && (
                 <Link
                     to={`/products/${handle}`}
