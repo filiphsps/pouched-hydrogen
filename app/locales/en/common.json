@@ -131,7 +131,11 @@
         "products": "Products",
         "collections": "Collections",
         "pages": "Pages",
-        "suggestions": "Suggestions"
+        "suggestions": "Suggestions",
+        "recentSearches": "Recent searches",
+        "popularSearches": "Popular searches",
+        "clearRecent": "Clear",
+        "removeSearch": "Remove {{term}} from recent searches"
     },
     "account": {
         "title": "Account",

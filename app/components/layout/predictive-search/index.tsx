@@ -12,6 +12,7 @@ import { IconButton } from "~/components/icon-button";
 import { Input } from "~/components/input";
 import Link from "~/components/link";
 import { usePredictiveSearch } from "~/hooks/use-predictive-search";
+import { useRecentSearches } from "~/hooks/use-recent-searches";
 import { cn } from "~/utils/cn";
 import { PopularKeywords } from "./popular-keywords";
 import { PredictiveSearchResult } from "./predictive-search-result";
@@ -22,6 +23,7 @@ export function PredictiveSearchButton() {
     const location = useLocation();
     const params = useParams();
     const { t } = useTranslation();
+    const { addSearch } = useRecentSearches();
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: close the dialog when the location changes, aka when the user navigates to a search result page
     useEffect(() => {
@@ -96,6 +98,8 @@ export function PredictiveSearchButton() {
                                                     const query =
                                                         e.currentTarget.value.trim();
                                                     if (query) {
+                                                        // Track the search in recent searches
+                                                        addSearch(query);
                                                         const locale =
                                                             params.locale
                                                                 ? `/${params.locale}`
@@ -148,9 +152,19 @@ export function PredictiveSearchButton() {
 function PredictiveSearchResults() {
     const { t } = useTranslation();
     const { results, totalResults, searchTerm } = usePredictiveSearch();
+    const { addSearch } = useRecentSearches();
     const queries = results?.find(({ type }) => type === "queries");
     const articles = results?.find(({ type }) => type === "articles");
     const products = results?.find(({ type }) => type === "products");
+
+    /**
+     * Track search when user clicks "View all results".
+     */
+    const handleViewAllClick = () => {
+        if (searchTerm.current) {
+            addSearch(searchTerm.current);
+        }
+    };
 
     if (!totalResults) {
         return (
@@ -187,6 +201,7 @@ function PredictiveSearchResults() {
                                 to={`/search?q=${searchTerm.current}`}
                                 variant="underline"
                                 className="flex w-fit items-center gap-2"
+                                onClick={handleViewAllClick}
                             >
                                 <span>{t("search.viewAllResults")}</span>
                                 <ArrowRightIcon className="h-4 w-4" />

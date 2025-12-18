@@ -27,6 +27,8 @@ const defaultThemeSettings = {
     lowStockBadgeEnabled: true,
     lowStockThreshold: 10,
     lowStockBadgeColor: "#FEF3C7",
+    // Search settings
+    popularSearchKeywords: "Snus, Nicotine Pouches, Mint, Strong",
 };
 
 export const useThemeSettings = () => defaultThemeSettings;

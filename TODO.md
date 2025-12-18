@@ -304,30 +304,46 @@ However, several critical features from `mission.md` are missing or incomplete.
 
 ### 3.1 Popular & Recent Searches
 
-**Status:** ⚠️ PARTIAL
+**Status:** ✅ IMPLEMENTED (2024-12-18)
 
-**Required from mission.md:**
+**Implementation:**
 
-- "Popular Searches" suggestions
-- "Recent Searches" history
+- Created `useRecentSearches` hook for localStorage-persisted search history
+- Enhanced `PopularKeywords` component to display both recent and popular searches
+- Integrated search tracking in predictive search (Enter key and "View all results" click)
+- Added i18n translations for EN and DE
 
-**Current state:**
+**Files created:**
 
-- Predictive search exists (`app/components/layout/predictive-search/`)
-- `popular-keywords.tsx` exists but may not be dynamic
+- `app/hooks/use-recent-searches.ts` - Hook for managing recent searches with localStorage
+- `app/hooks/use-recent-searches.test.ts` (23 tests)
+- `app/components/layout/predictive-search/popular-keywords.test.tsx` (15 tests)
 
-**Files to modify:**
+**Files modified:**
 
-- `app/components/layout/predictive-search/popular-keywords.tsx`
-- `app/hooks/use-predictive-search.ts`
+- `app/components/layout/predictive-search/popular-keywords.tsx` - Enhanced with recent searches display, clear/remove functionality
+- `app/components/layout/predictive-search/index.tsx` - Integrated search tracking
+- `app/components/icon-button.tsx` - Added `xs` size variant
+- `app/locales/en/common.json` - Added search translations (recentSearches, popularSearches, clearRecent, removeSearch)
+- `app/locales/de/common.json` - Added German translations
+- `tests/mocks/weaverse.tsx` - Added popularSearchKeywords to mock settings
+
+**Features:**
+
+- Recent searches with individual remove buttons
+- Clear all recent searches option
+- Popular searches from Weaverse theme settings
+- Case-insensitive duplicate detection
+- Maximum 10 searches stored (configurable)
+- Minimum 2-character search length filter
 
 **Acceptance Criteria:**
 
-- [ ] Track and display user's recent searches
-- [ ] Show trending/popular searches
-- [ ] Clear recent searches option
-- [ ] localStorage persistence
-- [ ] Has tests
+- [x] Track and display user's recent searches
+- [x] Show trending/popular searches (from Weaverse settings)
+- [x] Clear recent searches option
+- [x] localStorage persistence
+- [x] Has tests (38 tests total)
 
 **Priority:** P2 - Improves search UX
 
@@ -600,7 +616,7 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 
 - [ ] Bundle builder interface
 - [ ] Wishlist sharing
-- [ ] Popular/Recent searches
+- [x] Popular/Recent searches
 - [ ] Post-purchase upsells
 
 ---
@@ -668,7 +684,10 @@ DONE: app/components/cart/cart-upsells.tsx
 DONE: app/components/cart/upsell-product-card.tsx
 DONE: app/components/cart/upsell-product-card.test.tsx
 DONE: app/routes/api/cart-upsells.ts
-MODIFY: app/components/layout/predictive-search/popular-keywords.tsx
+DONE: app/components/layout/predictive-search/popular-keywords.tsx
+DONE: app/components/layout/predictive-search/popular-keywords.test.tsx
+DONE: app/hooks/use-recent-searches.ts
+DONE: app/hooks/use-recent-searches.test.ts
 MODIFY: app/sections/main-product/product-shipping-estimate.tsx
 DONE: app/utils/cache.ts
 DONE: app/utils/cache.test.ts
