@@ -13,7 +13,7 @@ However, several critical features from `mission.md` are missing or incomplete.
 | Category | Implemented | Missing/Incomplete |
 |----------|-------------|-------------------|
 | Core Routes | 95% | Gift cards, wishlist page |
-| Components | 90% | Stock urgency |
+| Components | 95% | - |
 | Integrations | 75% | Bundles builder, back-in-stock |
 | SEO | 80% | Some structured data |
 | Testing | 45% | Many critical components |
@@ -135,25 +135,38 @@ However, several critical features from `mission.md` are missing or incomplete.
 
 ### 2.3 Stock Urgency Indicators
 
-**Status:** ❌ NOT IMPLEMENTED
+**Status:** ✅ IMPLEMENTED (2024-12-18)
 
-**Required from mission.md:**
+**Implementation:**
 
-- Visual indicators (e.g., "Only 3 left") for low-stock items
+- Reusable `StockUrgency` component with CVA variants
+- Integrated into product cards (grid/featured layouts)
+- Weaverse section `mp--stock-urgency` for product page
+- Uses existing i18n translations (`product.onlyXLeft`)
+- Uses existing Weaverse theme settings (`lowStockBadgeEnabled`, `lowStockThreshold`, `lowStockBadgeColor`)
 
-**Files to create/modify:**
+**Files created:**
 
 - `app/components/product/stock-urgency.tsx`
-- Modify `app/components/product/product-card.tsx` to include urgency
-- Modify `app/sections/main-product/index.tsx` to show urgency
+- `app/components/product/stock-urgency.test.tsx` (17 tests)
+- `app/sections/main-product/product-stock-urgency.tsx`
+- `app/sections/main-product/product-stock-urgency.test.tsx` (12 tests)
+
+**Files modified:**
+
+- `app/components/product/product-card.tsx` - Added stock urgency to grid/featured variants
+- `app/components/product/product-card.test.tsx` - Added 6 integration tests for stock urgency
+- `app/sections/main-product/index.tsx` - Added `mp--stock-urgency` to childTypes
+- `app/weaverse/components.ts` - Registered ProductStockUrgency component
+- `tests/mocks/weaverse.tsx` - Added stock urgency settings to mock
 
 **Acceptance Criteria:**
 
-- [ ] Shows "Only X left" when inventory < threshold
-- [ ] Configurable threshold via Weaverse settings
-- [ ] Different visual treatments (low stock, very low stock)
-- [ ] Hidden when stock is adequate
-- [ ] Has tests
+- [x] Shows "Only X left" when inventory < threshold
+- [x] Configurable threshold via Weaverse settings
+- [x] Different visual treatments (low stock, very low stock with pulse animation)
+- [x] Hidden when stock is adequate
+- [x] Has tests (35 tests: 17 component + 12 section + 6 product-card integration)
 
 **Priority:** P1 - Drives urgency and conversions
 
@@ -539,7 +552,7 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 ### Phase 2: Core Commerce (Week 2-3)
 
 - [ ] Back-in-stock notifications
-- [ ] Stock urgency indicators
+- [x] Stock urgency indicators
 - [ ] Cart gift wrapping
 - [ ] Enhanced cart upsells
 
@@ -590,6 +603,7 @@ app/components/product/quantity-break-button.test.tsx
 app/components/product/quantity-break-selector.test.tsx
 app/components/product/quantity.test.tsx
 app/components/product/selling-plan-selector.test.tsx
+app/components/product/stock-urgency.test.tsx
 app/components/product/wishlist-button.test.tsx
 app/components/title.test.tsx
 app/hooks/use-age-verification.test.ts
@@ -615,7 +629,10 @@ DONE: app/utils/consent-mode.ts
 DONE: app/utils/consent-mode.test.ts
 NEW: app/components/compliance/age-verification-gate.test.tsx
 NEW: app/components/product/back-in-stock-form.tsx
-NEW: app/components/product/stock-urgency.tsx
+DONE: app/components/product/stock-urgency.tsx
+DONE: app/components/product/stock-urgency.test.tsx
+DONE: app/sections/main-product/product-stock-urgency.tsx
+DONE: app/sections/main-product/product-stock-urgency.test.tsx
 NEW: app/components/cart/cart-gift-wrap.tsx
 NEW: app/components/bundles/bundle-builder.tsx
 NEW: app/routes/wishlist/index.tsx

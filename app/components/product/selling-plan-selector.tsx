@@ -62,7 +62,7 @@ export default function SellingPlanSelector() {
                 {/* One-time Purchase Option */}
                 <label
                     className={cn(
-                        "flex cursor-pointer items-center justify-between rounded-full border border-line-subtle p-4 transition-colors hover:bg-muted/50",
+                        "flex cursor-pointer items-center justify-between rounded-2xl border border-line-subtle p-4 transition-colors",
                         selectedValue === "onetime" ? "bg-primary/5" : "",
                     )}
                 >
@@ -85,7 +85,7 @@ export default function SellingPlanSelector() {
 
                 <div
                     className={cn(
-                        "flex flex-col items-stretch justify-start gap-6 rounded-2xl border border-line-subtle p-4 transition-colors hover:bg-muted/50",
+                        "flex flex-col items-stretch justify-start gap-6 rounded-2xl border border-line-subtle p-4 transition-colors",
                         selectedValue === "onetime" ? "bg-primary/5" : "",
                     )}
                 >

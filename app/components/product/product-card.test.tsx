@@ -71,6 +71,24 @@ const mockProduct: any = {
     badges: [],
 };
 
+/**
+ * Creates a mock product with a variant that has specific quantity available.
+ */
+function createMockProductWithStock(quantityAvailable: number | null): any {
+    return {
+        ...mockProduct,
+        selectedOrFirstAvailableVariant: {
+            id: "gid://shopify/ProductVariant/1",
+            availableForSale:
+                quantityAvailable !== null && quantityAvailable > 0,
+            quantityAvailable,
+            selectedOptions: [],
+            price: { amount: "10.00", currencyCode: "USD" },
+            compareAtPrice: null,
+        },
+    };
+}
+
 describe("ProductCard", () => {
     const Wrapper = ({ children }: { children: React.ReactNode }) => {
         const router = createMemoryRouter([

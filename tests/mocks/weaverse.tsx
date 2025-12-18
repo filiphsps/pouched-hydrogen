@@ -23,6 +23,10 @@ const defaultThemeSettings = {
     pcardShowWishlist: true,
     pcardShowSubtitle: true,
     pcardShowAttributePills: true,
+    // Stock urgency settings
+    lowStockBadgeEnabled: true,
+    lowStockThreshold: 10,
+    lowStockBadgeColor: "#FEF3C7",
 };
 
 export const useThemeSettings = () => defaultThemeSettings;

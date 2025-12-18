@@ -8,20 +8,20 @@ import type {
     ProductVariantFragment,
 } from "storefront-api.generated";
 import { Link } from "~/components/link";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
-import { cn } from "~/utils/cn";
-import { isCombinedListing } from "~/utils/combined-listings";
-import { calculateAspectRatio } from "~/utils/image";
-import { AttributePills } from "./attribute-pills";
+import { AttributePills } from "~/components/product/attribute-pills";
 import {
     CardActions,
     CardBadges,
     CardImage,
     CardInfo,
     CardPrice,
-} from "./card-parts";
-import { ProductCardOptions } from "./product-card-options";
-import { useWishlistStore } from "./wishlist-store";
+} from "~/components/product/card-parts";
+import { ProductCardOptions } from "~/components/product/product-card-options";
+import { useWishlistStore } from "~/components/product/wishlist-store";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import { cn } from "~/utils/cn";
+import { isCombinedListing } from "~/utils/combined-listings";
+import { calculateAspectRatio } from "~/utils/image";
 
 /**
  * Layout variant for the ProductCard.
@@ -41,6 +41,7 @@ const VARIANT_FEATURES = {
         showActions: true,
         showPills: true,
         showWishlistOnHover: true,
+        showStockUrgency: true,
         imageAspect: "square",
         infoSize: "md",
     },
@@ -52,6 +53,7 @@ const VARIANT_FEATURES = {
         showActions: true,
         showPills: false,
         showWishlistOnHover: false,
+        showStockUrgency: false, // Hidden in list variant for cleaner look
         imageAspect: "square",
         infoSize: "sm", // Smaller text for compact layout
     },
@@ -63,6 +65,7 @@ const VARIANT_FEATURES = {
         showActions: false,
         showPills: false,
         showWishlistOnHover: false,
+        showStockUrgency: false, // Hidden in compact variant
         imageAspect: "square",
         infoSize: "sm",
     },
@@ -74,6 +77,7 @@ const VARIANT_FEATURES = {
         showActions: true,
         showPills: false,
         showWishlistOnHover: true,
+        showStockUrgency: true,
         imageAspect: "landscape",
         infoSize: "lg",
     },
