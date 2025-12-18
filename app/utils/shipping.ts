@@ -1021,27 +1021,45 @@ export function getUpcomingHolidays(
     const endDate = new Date(referenceDate);
     endDate.setDate(endDate.getDate() + days);
 
-    // Normalize dates to start of day for consistent comparison across timezones
-    const normalizeToStartOfDay = (date: Date): number => {
-        return new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate(),
-        ).getTime();
+    // Normalize dates to a day number (days since epoch) for timezone-safe comparison.
+    // We use UTC to ensure consistent comparison across timezones.
+    // For holiday dates, we add 12 hours before extracting UTC components to handle
+    // the case where a holiday at midnight local time (e.g., CET) appears as the
+    // previous day in UTC (e.g., New Year's at 00:00 CET = Dec 31 23:00 UTC).
+    const normalizeToDay = (date: Date, isHoliday = false): number => {
+        const d = isHoliday
+            ? new Date(date.getTime() + 12 * 60 * 60 * 1000)
+            : date;
+        return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
     };
 
-    const refDateNormalized = normalizeToStartOfDay(referenceDate);
-    const endDateNormalized = normalizeToStartOfDay(endDate);
+    // Create a normalized holiday date at noon UTC on the correct calendar day.
+    // This ensures getMonth()/getDate() return the expected values regardless of timezone.
+    const createNormalizedHolidayDate = (holidayStart: Date): Date => {
+        const shifted = new Date(holidayStart.getTime() + 12 * 60 * 60 * 1000);
+        return new Date(
+            Date.UTC(
+                shifted.getUTCFullYear(),
+                shifted.getUTCMonth(),
+                shifted.getUTCDate(),
+                12,
+                0,
+                0,
+            ),
+        );
+    };
 
-    const year = referenceDate.getFullYear();
+    const refDateNormalized = normalizeToDay(referenceDate);
+    const endDateNormalized = normalizeToDay(endDate);
+
+    const year = referenceDate.getUTCFullYear();
     const allHolidays = [
         ...holidays.getHolidays(year),
         ...holidays.getHolidays(year + 1),
     ];
 
     for (const holiday of allHolidays) {
-        const holidayDate = holiday.start;
-        const holidayDateNormalized = normalizeToStartOfDay(holidayDate);
+        const holidayDateNormalized = normalizeToDay(holiday.start, true);
         if (
             holidayDateNormalized >= refDateNormalized &&
             holidayDateNormalized <= endDateNormalized &&
@@ -1049,7 +1067,7 @@ export function getUpcomingHolidays(
         ) {
             upcomingHolidays.push({
                 name: holiday.name,
-                date: holidayDate,
+                date: createNormalizedHolidayDate(holiday.start),
                 type: holiday.type,
             });
         }
