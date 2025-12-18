@@ -118,6 +118,7 @@ export default defineConfig(async ({isSsrBuild, mode}) => {
       noExternal: ['remix-i18next'],
       optimizeDeps: {
         include: [
+          'currency-symbol-map/map',
           'react',
           'react/compiler-runtime',
           'react-i18next',

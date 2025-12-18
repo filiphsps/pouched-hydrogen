@@ -7,7 +7,12 @@ import { useThemeSettings, withWeaverse } from "@weaverse/hydrogen";
 
 import type { CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
-import type { AppLoadContext, LinksFunction, MetaArgs } from "react-router";
+import type {
+    AppLoadContext,
+    LinksFunction,
+    MetaArgs,
+    ShouldRevalidateFunction,
+} from "react-router";
 import {
     isRouteErrorResponse,
     Links,
@@ -73,6 +78,28 @@ export async function loader(args: Route.LoaderArgs) {
         publicDoNotIndex: Boolean(context.env.PUBLIC_DO_NOT_INDEX),
     };
 }
+
+/**
+ * Controls when the root loader should revalidate.
+ * This ensures cart data and other deferred data is refreshed after mutations.
+ */
+export const shouldRevalidate: ShouldRevalidateFunction = ({
+    formMethod,
+    currentUrl,
+    nextUrl,
+}) => {
+    // Revalidate when a mutation is performed (e.g., add to cart, login, etc.)
+    if (formMethod && formMethod !== "GET") {
+        return true;
+    }
+
+    // Revalidate when manually revalidating via useRevalidator
+    if (currentUrl.toString() === nextUrl.toString()) {
+        return true;
+    }
+
+    return false;
+};
 
 export const meta = ({ data }: MetaArgs<typeof loader>) => {
     const loaderData = data as Awaited<ReturnType<typeof loader>> | undefined;

@@ -78,9 +78,9 @@ describe("FreeShippingProgress utilities", () => {
         });
 
         it("should return EUR as fallback for unknown values", () => {
-            expect(normalizeCurrencyCode("¥")).toBe("EUR");
             expect(normalizeCurrencyCode("unknown")).toBe("EUR");
             expect(normalizeCurrencyCode("")).toBe("EUR");
+            expect(normalizeCurrencyCode("🪙")).toBe("EUR");
         });
 
         it("should not match lowercase ISO codes", () => {
@@ -153,7 +153,7 @@ describe("FreeShippingProgress utilities", () => {
 
         it("should fallback to EUR for unknown currency symbols", () => {
             // Unknown symbol should be normalized to EUR
-            const formatted = formatCurrency(50, "¥", "de-DE");
+            const formatted = formatCurrency(50, "🪙", "de-DE");
             expect(formatted).toContain("€");
             expect(formatted).toContain("50");
         });

@@ -11,6 +11,7 @@
 import { PackageIcon, TruckIcon } from "@phosphor-icons/react";
 import type { MoneyV2 } from "@shopify/hydrogen/storefront-api-types";
 import { useThemeSettings } from "@weaverse/hydrogen";
+import currencyToSymbolMap from "currency-symbol-map/map";
 import { useTranslation } from "react-i18next";
 import { cn } from "~/utils/cn";
 
@@ -37,16 +38,33 @@ function calculateProgress(currentAmount: number, threshold: number): number {
 }
 
 /**
- * Maps currency symbols to ISO currency codes.
- * Used for backwards compatibility with old theme settings.
+ * Default mappings for ambiguous currency symbols.
+ * Since symbols like $ and kr are used by multiple currencies,
+ * we define explicit defaults for backwards compatibility.
  */
-const SYMBOL_TO_CODE: Record<string, string> = {
-    "€": "EUR",
-    "$": "USD",
+const AMBIGUOUS_SYMBOL_DEFAULTS: Record<string, string> = {
+    $: "USD",
     "£": "GBP",
-    "kr": "SEK",
-    CHF: "CHF",
+    kr: "SEK",
 };
+
+/**
+ * Maps currency symbols to ISO currency codes.
+ * Built from the currency-symbol-map package with explicit defaults
+ * for ambiguous symbols. Used for backwards compatibility with old theme settings.
+ */
+const SYMBOL_TO_CODE: Record<string, string> = (
+    Object.entries(currencyToSymbolMap) as [string, string][]
+).reduce<Record<string, string>>(
+    (acc, [code, symbol]) => {
+        // Only set if not already defined (prefer our explicit defaults)
+        if (!acc[symbol]) {
+            acc[symbol] = code;
+        }
+        return acc;
+    },
+    { ...AMBIGUOUS_SYMBOL_DEFAULTS },
+);
 
 /**
  * Normalizes a currency value to an ISO currency code.
