@@ -118,7 +118,7 @@ export default function SellingPlanSelector() {
                                         <span className="cursor-pointer font-medium text-sm leading-none">
                                             Subscribe & Save
                                         </span>
-                                        <span className="mt-1 text-muted-foreground text-xs">
+                                        <span className="mt-1 text-muted-foreground text-xs leading-tight">
                                             {group.name} - {firstPlan.name}
                                         </span>
                                     </div>
