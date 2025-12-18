@@ -70,9 +70,19 @@ declare global {
 }
 
 /**
- * Default consent state - all denied for GDPR compliance.
+ * Default consent state - all granted when no user interaction has occurred.
+ * Per business requirement: treat no-interaction as accepting all cookies.
  */
 export const DEFAULT_CONSENT_STATE: ConsentState = {
+    analytics: true,
+    marketing: true,
+    functional: true,
+};
+
+/**
+ * Denied consent state - used when user explicitly rejects cookies.
+ */
+export const DENIED_CONSENT_STATE: ConsentState = {
     analytics: false,
     marketing: false,
     functional: false,
@@ -104,7 +114,8 @@ export function mapConsentToGoogle(consent: ConsentState): GoogleConsentParams {
 }
 
 /**
- * Initialize Google Consent Mode v2 with default denied state.
+ * Initialize Google Consent Mode v2 with default granted state.
+ * Per business requirement: treat no-interaction as accepting all cookies.
  * Should be called as early as possible in the page lifecycle.
  *
  * @param waitForUpdate - Time in milliseconds to wait for consent update (default: 500)
@@ -125,7 +136,7 @@ export function initConsentMode(waitForUpdate = 500): void {
         };
     }
 
-    // Set default consent to denied
+    // Set default consent to granted (per business requirement: no interaction = accept all)
     const defaultParams = mapConsentToGoogle(DEFAULT_CONSENT_STATE);
 
     window.gtag("consent", "default", {

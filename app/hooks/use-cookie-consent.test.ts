@@ -60,18 +60,20 @@ describe("useCookieConsent", () => {
             });
         });
 
-        it("should resolve to hasConsented false when no stored consent", async () => {
+        it("should resolve to hasConsented false when no stored consent but with granted default", async () => {
             const { result } = renderHook(() => useCookieConsent());
 
             await vi.waitFor(() => {
                 expect(result.current.isLoading).toBe(false);
             });
 
+            // hasConsented is false (user hasn't explicitly chosen)
+            // but consent defaults to all granted per business requirement
             expect(result.current.hasConsented).toBe(false);
             expect(result.current.consent).toEqual({
-                analytics: false,
-                marketing: false,
-                functional: false,
+                analytics: true,
+                marketing: true,
+                functional: true,
             });
         });
 
@@ -343,30 +345,36 @@ describe("useCookieConsent", () => {
     });
 
     describe("clearConsent", () => {
-        it("should clear stored consent", async () => {
+        it("should clear stored consent and reset to granted default", async () => {
             const { result } = renderHook(() => useCookieConsent());
 
             await vi.waitFor(() => {
                 expect(result.current.isLoading).toBe(false);
             });
 
-            // First accept
+            // First reject (to change from default)
             act(() => {
-                result.current.acceptAll();
+                result.current.rejectAll();
             });
 
             expect(result.current.hasConsented).toBe(true);
+            expect(result.current.consent).toEqual({
+                analytics: false,
+                marketing: false,
+                functional: false,
+            });
 
-            // Then clear
+            // Then clear - should reset to granted default
             act(() => {
                 result.current.clearConsent();
             });
 
             expect(result.current.hasConsented).toBe(false);
+            // Consent resets to granted (no interaction = accept all)
             expect(result.current.consent).toEqual({
-                analytics: false,
-                marketing: false,
-                functional: false,
+                analytics: true,
+                marketing: true,
+                functional: true,
             });
             expect(localStorageMock.removeItem).toHaveBeenCalledWith(
                 "cookie-consent",

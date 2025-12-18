@@ -309,6 +309,7 @@
         "preferencesDescription": "Wählen Sie, welche Cookies Sie zulassen möchten. Wesentliche Cookies sind immer aktiviert, da sie für das ordnungsgemäße Funktionieren der Website erforderlich sind.",
         "close": "Schließen",
         "required": "Erforderlich",
+        "settingsLink": "Cookie-Einstellungen",
         "categories": {
             "essential": {
                 "title": "Wesentliche Cookies",

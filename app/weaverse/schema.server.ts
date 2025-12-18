@@ -1456,6 +1456,18 @@ export const themeSchema: HydrogenThemeSchema = {
                     defaultValue:
                         "© 2024 {{root.layout.shop.name}}. All rights reserved.",
                 },
+                {
+                    type: "heading",
+                    label: "Cookie settings",
+                },
+                {
+                    type: "switch",
+                    name: "footerShowCookieSettings",
+                    label: "Show cookie settings link",
+                    defaultValue: true,
+                    helpText:
+                        "Display a link to manage cookie preferences in the footer.",
+                },
             ],
         },
         {

@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useFetcher, useRouteLoaderData } from "react-router";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
+import { CookieSettingsPopup } from "~/components/compliance/cookie-settings-popup";
 import Link from "~/components/link";
 import { useShopMenu } from "~/hooks/use-shop-menu";
 import { cn } from "~/utils/cn";
@@ -54,6 +55,8 @@ export function Footer() {
         newsletterDescription,
         newsletterPlaceholder,
         newsletterButtonText,
+        cookieConsentEnabled = true,
+        footerShowCookieSettings = true,
     } = useThemeSettings();
     const fetcher = useFetcher<{ ok: boolean; error: string }>();
 
@@ -205,8 +208,11 @@ export function Footer() {
                     <FooterMenu />
                 </div>
                 <div className="flex flex-col items-center justify-between gap-4 border-line-subtle border-t py-9 lg:flex-row">
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-4 [&>*:not(:first-child)]:before:mr-4 [&>*:not(:first-child)]:before:text-line-subtle [&>*:not(:first-child)]:before:content-['|']">
                         <CountrySelector />
+                        {cookieConsentEnabled && footerShowCookieSettings && (
+                            <CookieSettingsPopup />
+                        )}
                     </div>
                     <div
                         dangerouslySetInnerHTML={{ __html: resolvedCopyright }}

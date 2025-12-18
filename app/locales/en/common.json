@@ -312,6 +312,7 @@
         "preferencesDescription": "Choose which cookies you want to allow. Essential cookies are always enabled as they are necessary for the website to function properly.",
         "close": "Close",
         "required": "Required",
+        "settingsLink": "Cookie Settings",
         "categories": {
             "essential": {
                 "title": "Essential Cookies",

@@ -23,6 +23,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
     type ConsentState,
     DEFAULT_CONSENT_STATE,
+    DENIED_CONSENT_STATE,
     initConsentMode,
     pushConsentEvent,
     updateConsentMode,
@@ -238,11 +239,7 @@ export function useCookieConsent(
      * Note: Essential cookies are always allowed and don't require consent.
      */
     const rejectAll = useCallback(() => {
-        saveConsent({
-            analytics: false,
-            marketing: false,
-            functional: false,
-        });
+        saveConsent(DENIED_CONSENT_STATE);
     }, [saveConsent]);
 
     /**
@@ -271,12 +268,14 @@ export function useCookieConsent(
 
     /**
      * Clear consent (for testing/debugging).
+     * Resets to default granted state since no-interaction = accept all.
      */
     const clearConsent = useCallback(() => {
         clearStoredConsent();
         setConsent(DEFAULT_CONSENT_STATE);
         setHasConsented(false);
 
+        // Keep granted state when cleared since no-interaction = accept all
         if (enableGoogleConsent) {
             updateConsentMode(DEFAULT_CONSENT_STATE);
         }

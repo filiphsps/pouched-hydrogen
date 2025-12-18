@@ -4,6 +4,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     DEFAULT_CONSENT_STATE,
+    DENIED_CONSENT_STATE,
     hasAnyConsent,
     hasFullConsent,
     initConsentMode,
@@ -36,8 +37,18 @@ describe("consent-mode", () => {
     });
 
     describe("DEFAULT_CONSENT_STATE", () => {
-        it("should have all consents denied by default", () => {
+        it("should have all consents granted by default (no interaction = accept all)", () => {
             expect(DEFAULT_CONSENT_STATE).toEqual({
+                analytics: true,
+                marketing: true,
+                functional: true,
+            });
+        });
+    });
+
+    describe("DENIED_CONSENT_STATE", () => {
+        it("should have all consents denied", () => {
+            expect(DENIED_CONSENT_STATE).toEqual({
                 analytics: false,
                 marketing: false,
                 functional: false,
@@ -134,19 +145,19 @@ describe("consent-mode", () => {
             expect(typeof window.gtag).toBe("function");
         });
 
-        it("should call gtag with default denied consent", () => {
+        it("should call gtag with default granted consent (no interaction = accept all)", () => {
             window.gtag = mockGtag;
             window.dataLayer = [];
 
             initConsentMode();
 
             expect(mockGtag).toHaveBeenCalledWith("consent", "default", {
-                analytics_storage: "denied",
-                ad_storage: "denied",
-                ad_user_data: "denied",
-                ad_personalization: "denied",
-                functionality_storage: "denied",
-                personalization_storage: "denied",
+                analytics_storage: "granted",
+                ad_storage: "granted",
+                ad_user_data: "granted",
+                ad_personalization: "granted",
+                functionality_storage: "granted",
+                personalization_storage: "granted",
                 security_storage: "granted",
                 wait_for_update: 500,
             });
@@ -272,7 +283,11 @@ describe("consent-mode", () => {
         });
 
         it("should return false when all consents denied", () => {
-            expect(hasFullConsent(DEFAULT_CONSENT_STATE)).toBe(false);
+            expect(hasFullConsent(DENIED_CONSENT_STATE)).toBe(false);
+        });
+
+        it("should return true for DEFAULT_CONSENT_STATE (all granted)", () => {
+            expect(hasFullConsent(DEFAULT_CONSENT_STATE)).toBe(true);
         });
     });
 
@@ -304,7 +319,7 @@ describe("consent-mode", () => {
         });
 
         it("should return false when all consents denied", () => {
-            expect(hasAnyConsent(DEFAULT_CONSENT_STATE)).toBe(false);
+            expect(hasAnyConsent(DENIED_CONSENT_STATE)).toBe(false);
         });
 
         it("should return true when all consents granted", () => {
@@ -315,6 +330,10 @@ describe("consent-mode", () => {
                     functional: true,
                 }),
             ).toBe(true);
+        });
+
+        it("should return true for DEFAULT_CONSENT_STATE (all granted)", () => {
+            expect(hasAnyConsent(DEFAULT_CONSENT_STATE)).toBe(true);
         });
     });
 });
