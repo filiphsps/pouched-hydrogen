@@ -7,7 +7,7 @@ import {
 import { getSelectedProductOptions } from "@weaverse/hydrogen";
 import { useEffect } from "react";
 import type { MetaArgs } from "react-router";
-import { useLoaderData } from "react-router";
+import { data, useLoaderData } from "react-router";
 import type { ProductQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import {
@@ -18,7 +18,7 @@ import { seoPayload } from "~/.server/seo";
 import { StructuredData } from "~/components/structured-data";
 import { COLLECTION_EXISTS_QUERY, PRODUCT_QUERY } from "~/graphql/queries";
 import { getContext } from "~/types/context";
-import { routeHeaders } from "~/utils/cache";
+import { getLoaderCacheHeaders, routeHeaders } from "~/utils/cache";
 import {
     COMBINED_LISTINGS_CONFIGS,
     isCombinedListing,
@@ -93,17 +93,22 @@ export async function loader({
     // Use Hydrogen/Remix streaming for recommended products
     const recommended = getRecommendedProducts(storefront, product.id);
 
-    return {
-        shop,
-        product,
-        weaverseData,
-        storeDomain: shop.primaryDomain.url,
-        vendorCollectionUrl,
-        seo: seoPayload.product({ product, url: request.url }),
-        recommended,
-        selectedOptions,
-        url: request.url,
-    };
+    return data(
+        {
+            shop,
+            product,
+            weaverseData,
+            storeDomain: shop.primaryDomain.url,
+            vendorCollectionUrl,
+            seo: seoPayload.product({ product, url: request.url }),
+            recommended,
+            selectedOptions,
+            url: request.url,
+        },
+        {
+            headers: getLoaderCacheHeaders("product"),
+        },
+    );
 }
 
 export const meta = ({ matches }: MetaArgs<typeof loader>) => {

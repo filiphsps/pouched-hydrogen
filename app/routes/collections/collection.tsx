@@ -6,14 +6,14 @@ import {
 } from "@shopify/hydrogen";
 import type { ProductFilter } from "@shopify/hydrogen/storefront-api-types";
 import type { MetaArgs } from "react-router";
-import { redirect, useLoaderData } from "react-router";
+import { data, redirect, useLoaderData } from "react-router";
 import type { CollectionQuery } from "storefront-api.generated";
 import invariant from "tiny-invariant";
 import { redirectIfHandleIsLocalized } from "~/.server/redirect";
 import { seoPayload } from "~/.server/seo";
 import { getContext } from "~/types/context";
 import type { SortParam } from "~/types/others";
-import { routeHeaders } from "~/utils/cache";
+import { getLoaderCacheHeaders, routeHeaders } from "~/utils/cache";
 import { FILTER_URL_PREFIX } from "~/utils/const";
 import { getWeaverseLocale } from "~/utils/locale";
 import { WeaverseContent } from "~/weaverse";
@@ -155,13 +155,18 @@ export async function loader({
             (filter): filter is NonNullable<typeof filter> => filter !== null,
         );
 
-    return {
-        collection,
-        appliedFilters,
-        collections: flattenConnection(collections),
-        seo,
-        weaverseData,
-    };
+    return data(
+        {
+            collection,
+            appliedFilters,
+            collections: flattenConnection(collections),
+            seo,
+            weaverseData,
+        },
+        {
+            headers: getLoaderCacheHeaders("collection"),
+        },
+    );
 }
 
 export default function Collection() {

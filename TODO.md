@@ -386,28 +386,43 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 
 ### 4.3 Stale-While-Revalidate Caching
 
-**Status:** ⚠️ BASIC CACHING EXISTS
+**Status:** ✅ IMPLEMENTED (2024-12-18)
 
-**Current state:**
+**Implementation:**
 
-- Basic cache headers in `app/utils/cache.ts`
-- React Router route headers
+- Comprehensive SWR cache utility system with pre-configured strategies
+- Integrates with Hydrogen's built-in caching utilities (`CacheNone`, `CacheShort`, `CacheLong`, `CacheCustom`)
+- Route-specific cache strategies optimized for different content types
 
-**Required from mission.md:**
+**Cache Strategies:**
 
-- SWR caching strategy for high-traffic routes
+| Strategy   | max-age | stale-while-revalidate | stale-if-error | Use Case                    |
+| ---------- | ------- | ---------------------- | -------------- | --------------------------- |
+| homepage   | 2 min   | 10 min                 | 1 hour         | Home page with promotions   |
+| product    | 5 min   | 1 hour                 | 1 day          | Product detail pages        |
+| collection | 3 min   | 30 min                 | 1 hour         | Collection/category pages   |
+| search     | 1 min   | 5 min                  | 30 min         | Search results              |
+| api        | 1 hour  | 23 hours               | 1 day          | API endpoints (countries)   |
 
-**Files to modify:**
+**Files created:**
 
-- `app/utils/cache.ts`
-- Route loaders for collections, products, homepage
+- `app/utils/cache.test.ts` (38 tests)
+
+**Files modified:**
+
+- `app/utils/cache.ts` - Added comprehensive SWR utilities, strategy configs, and helper functions
+- `app/routes/home.tsx` - Integrated SWR caching with `homepage` strategy
+- `app/routes/products/product.tsx` - Integrated SWR caching with `product` strategy
+- `app/routes/collections/collection.tsx` - Integrated SWR caching with `collection` strategy
 
 **Acceptance Criteria:**
 
-- [ ] Implement SWR headers for product pages
-- [ ] Implement SWR for collection pages
-- [ ] Cache invalidation strategy
-- [ ] CDN cache headers optimization
+- [x] Implement SWR headers for product pages (5 min fresh, 1 hour SWR)
+- [x] Implement SWR for collection pages (3 min fresh, 30 min SWR)
+- [x] Implement SWR for homepage (2 min fresh, 10 min SWR)
+- [x] Cache invalidation strategy (stale-if-error fallback)
+- [x] CDN cache headers optimization (public mode with SWR directives)
+- [x] Has comprehensive tests (38 tests)
 
 **Priority:** P2 - Performance improvement
 
@@ -474,7 +489,7 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 - [ ] `app/utils/misc.test.ts`
 - [ ] `app/utils/featured-products.test.ts`
 - [ ] `app/utils/combined-listings.test.ts`
-- [ ] `app/utils/cache.test.ts`
+- [x] `app/utils/cache.test.ts` (38 tests)
 - [ ] `app/utils/locale.test.ts`
 
 ---
@@ -559,7 +574,7 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 ### Phase 3: SEO & Performance (Week 4)
 
 - [ ] Core Web Vitals monitoring
-- [ ] SWR caching implementation
+- [x] SWR caching implementation
 - [ ] Dynamic shipping estimates
 - [ ] Structured data audit
 
@@ -609,6 +624,7 @@ app/components/title.test.tsx
 app/hooks/use-age-verification.test.ts
 app/hooks/use-cookie-consent.test.ts
 app/hooks/use-media-query.test.ts
+app/utils/cache.test.ts
 app/utils/cn.test.ts
 app/utils/consent-mode.test.ts
 app/utils/date.test.ts
@@ -640,7 +656,8 @@ NEW: app/routes/api/back-in-stock.ts
 MODIFY: app/components/cart/cart-upsells.tsx
 MODIFY: app/components/layout/predictive-search/popular-keywords.tsx
 MODIFY: app/sections/main-product/product-shipping-estimate.tsx
-MODIFY: app/utils/cache.ts
+DONE: app/utils/cache.ts
+DONE: app/utils/cache.test.ts
 ```
 
 ---

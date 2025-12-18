@@ -2,10 +2,11 @@ import type { SeoConfig } from "@shopify/hydrogen";
 import { AnalyticsPageType, getSeoMeta } from "@shopify/hydrogen";
 import type { PageType } from "@weaverse/hydrogen";
 import type { MetaFunction } from "react-router";
+import { data } from "react-router";
 import type { ShopQuery } from "storefront-api.generated";
 import { seoPayload } from "~/.server/seo";
 import { getContext } from "~/types/context";
-import { routeHeaders } from "~/utils/cache";
+import { getLoaderCacheHeaders, routeHeaders } from "~/utils/cache";
 import { getWeaverseLocale } from "~/utils/locale";
 import { validateWeaverseData, WeaverseContent } from "~/weaverse";
 import type { Route } from "./+types/home";
@@ -39,19 +40,24 @@ export async function loader(args: Route.LoaderArgs) {
     // Check weaverseData after parallel loading
     validateWeaverseData(weaverseData);
 
-    return {
-        shop,
-        weaverseData,
-        analytics: {
-            pageType: AnalyticsPageType.home,
+    return data(
+        {
+            shop,
+            weaverseData,
+            analytics: {
+                pageType: AnalyticsPageType.home,
+            },
+            seo,
         },
-        seo,
-    };
+        {
+            headers: getLoaderCacheHeaders("homepage"),
+        },
+    );
 }
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-    if (!data) return;
-    return getSeoMeta(data?.seo as SeoConfig);
+export const meta: MetaFunction<typeof loader> = ({ data: loaderData }) => {
+    if (!loaderData) return;
+    return getSeoMeta(loaderData?.seo as SeoConfig);
 };
 export default function Homepage() {
     return <WeaverseContent />;
