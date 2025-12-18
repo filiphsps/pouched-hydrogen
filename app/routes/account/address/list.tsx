@@ -161,12 +161,6 @@ export async function action({ request, context }: Route.ActionArgs) {
                         );
                     }
 
-                    if (
-                        !updateData?.customerAddressUpdate?.userErrors?.length
-                    ) {
-                        throw new Error("Customer address update failed.");
-                    }
-
                     return {
                         error: null,
                         updatedAddress: address,
@@ -365,6 +359,7 @@ function ExistingAddresses({
                             <div className="flex gap-3">
                                 <Button
                                     disabled={stateForMethod("PUT") !== "idle"}
+                                    formMethod="PUT"
                                     variant="primary"
                                     type="submit"
                                 >
@@ -376,6 +371,7 @@ function ExistingAddresses({
                                     disabled={
                                         stateForMethod("DELETE") !== "idle"
                                     }
+                                    formMethod="DELETE"
                                     type="submit"
                                     variant="outline"
                                 >
