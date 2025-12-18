@@ -20,6 +20,7 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { Button } from "~/components/button";
+import { CountryPicker } from "~/components/country-picker";
 import Link from "~/components/link";
 import type { AccountOutletContext } from "~/routes/account/edit";
 import { getContext } from "~/types/context";
@@ -360,16 +361,12 @@ export default function AccountEditAddressForm() {
                     </div>
                     <div className="space-y-1">
                         <label htmlFor="territoryCode">Country</label>
-                        <input
-                            className="w-full appearance-none border border-line p-3 focus:outline-hidden"
-                            id="territoryCode"
+                        <CountryPicker
                             name="territoryCode"
-                            type="text"
-                            autoComplete="country"
-                            placeholder="Country (Territory) Code"
-                            required
-                            aria-label="Country (Territory) Code"
+                            id="territoryCode"
                             defaultValue={address?.territoryCode ?? ""}
+                            required
+                            className="w-full border border-line p-3 focus:outline-hidden"
                         />
                     </div>
                     <div className="space-y-1">

@@ -13,6 +13,7 @@ import {
     useOutletContext,
 } from "react-router";
 import { Button } from "~/components/button";
+import { CountryPicker } from "~/components/country-picker";
 import { Input } from "~/components/input";
 import { Section } from "~/components/section";
 import { Title } from "~/components/title";
@@ -538,18 +539,13 @@ export function AddressForm({
                     </div>
                     <div>
                         <label htmlFor="territoryCode" className="mb-1">
-                            Country Code*
+                            Country*
                         </label>
-                        <Input
-                            aria-label="territoryCode"
-                            autoComplete="country"
-                            defaultValue={address?.territoryCode ?? ""}
-                            id="territoryCode"
+                        <CountryPicker
                             name="territoryCode"
-                            placeholder="Country"
+                            id="territoryCode"
+                            defaultValue={address?.territoryCode ?? ""}
                             required
-                            type="text"
-                            maxLength={2}
                         />
                     </div>
                 </div>
