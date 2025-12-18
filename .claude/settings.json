@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+    "enableAllProjectMcpServers": true,
+    "includeCoAuthoredBy": false,
+    "permissions": {
+        "deny": [],
+        "allow": [
+            "Bash(pnpm run build)",
+            "Bash(pnpm run biome)",
+            "Bash(pnpm run typecheck)",
+            "Bash(pnpm run test)",
+            "Bash(pnpm run test:*)",
+            "Bash(pnpm run e2e)",
+            "Bash(pnpm run e2e:*)",
+            "Bash(pnpm run format)",
+            "Bash(pnpm run codegen)"
+        ]
+    },
+    "hooks": {
+        "Stop": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "pnpm run format"
+                    }
+                ]
+            }
+        ]
+    },
+    "env": {
+        "ANTHROPIC_CUSTOM_HEADERS": "anthropic-beta: context-management-2025-06-27",
+        "MAX_THINKING_TOKENS": "31999",
+        "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "32000"
+    }
+}

@@ -15,7 +15,7 @@ node_modules
 /playwright/.cache/
 .DS_Store
 .react-router
-.claude/
+.claude/*.local.*
 .github/copilot-instructions.md
 memory/
 scripts/

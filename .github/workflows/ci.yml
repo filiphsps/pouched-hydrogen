@@ -88,71 +88,18 @@ jobs:
               uses: ./.github/common/bootstrap
 
             - name: 🧪 Test
-              run: pnpm run test
+              run: pnpm run test:coverage
 
             - name: 🦺 Codecov coverage reports
               if: ${{ !cancelled() }}
               uses: codecov/codecov-action@v5
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  slug: filiphsps/AdaptiveShell
+                  slug: filiphsps/pouched-hydrogen
 
             - name: 🦺 Upload test results to Codecov
               if: ${{ !cancelled() }}
               uses: codecov/test-results-action@v1
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  slug: filiphsps/AdaptiveShell
-
-    release:
-        name: 🚢 Release
-        needs: [build, test]
-        runs-on: ubuntu-latest
-        if: github.ref == 'refs/heads/master'
-        permissions: write-all
-        concurrency:
-            group: ${{ github.workflow }}-${{ github.ref }}
-        env:
-            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            - name: 🕶️ Checkout repository
-              uses: actions/checkout@v6
-              with:
-                  fetch-depth: 0
-                  submodules: 'recursive'
-
-            - name: 🚀 Bootstrap
-              uses: ./.github/common/bootstrap
-
-            - name: 🔬 Verify integrity
-              run: npm audit signatures
-
-            - name: 🔨 Build all
-              run: pnpm run build:packages
-
-            - name: 📦 Generate changeset(s) from commit messages
-              run: pnpm changeset:conventional
-
-            - name: 🤝 Create release PR or 📦 Publish
-              id: changesets
-              uses: changesets/action@v1
-              with:
-                  createGithubReleases: true
-                  version: pnpm run version
-                  publish: pnpm run release
-                  setupGitUser: true
-                  commit: |
-                      ci(release): Release packages and bump versions
-
-                      Congratulations on the new release! 🎉
-                      This is an automated commit triggered by the `release` workflow.
-                  title: 🚀 Release packages
-
-            - name: 🫨 Create Unstable Release
-              if: steps.changesets.outputs.published != 'true'
-              run: |
-                  git checkout master
-                  pnpm run version:unstable
-                  pnpm run release:unstable
+                  slug: filiphsps/pouched-hydrogen
