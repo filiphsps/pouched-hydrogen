@@ -21,3 +21,4 @@ memory/
 scripts/
 specs/
 templates/
+.playwright-mcp/

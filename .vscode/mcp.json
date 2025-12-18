@@ -1,0 +1,53 @@
+{
+    "inputs": [
+        {
+            "type": "promptString",
+            "id": "github-token",
+            "description": "GitHub Personal Access Token",
+            "password": true
+        }
+    ],
+    "servers": {
+        "context7": {
+            "args": [
+                "@upstash/context7-mcp@latest",
+                "--api-key",
+                "ctx7sk-fdd32fe5-46f0-435a-8cf0-1930e499c520"
+            ],
+            "command": "bunx",
+            "env": {}
+        },
+        "desktop-commander": {
+            "args": ["@wonderwhy-er/desktop-commander@latest"],
+            "command": "bunx",
+        },
+        "octocode": {
+            "args": ["octocode-mcp@latest"],
+            "command": "bunx",
+            "env": {}
+        },
+        "sequential-thinking": {
+            "args": ["@modelcontextprotocol/server-sequential-thinking@latest"],
+            "command": "bunx",
+            "env": {}
+        },
+        "shadcn": {
+            "args": ["shadcn@latest", "mcp"],
+            "command": "bunx",
+            "env": {}
+        },
+        "radix-ui": {
+            "args": ["@gianpieropuleo/radix-mcp-server@latest"],
+            "command": "bunx",
+            "env": {
+                "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github-token}",
+                "LOG_LEVEL": "error"
+            }
+        },
+        "tailwindcss": {
+            "args": ["tailwindcss-mcp-server@latest"],
+            "command": "bunx",
+            "env": {}
+        }
+    }
+}
