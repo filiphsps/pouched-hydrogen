@@ -1,4 +1,3 @@
-import { Image } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import type {
     ProductCardFragment,
@@ -7,8 +6,11 @@ import type {
 import { Link } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/utils/cn";
-import { isLightColor, isValidColor } from "~/utils/misc";
-import { OPTIONS_AS_SWATCH } from "./product-option-values";
+import {
+    getOptionDisplayType,
+    OptionButton,
+    OptionSwatch,
+} from "./option-value";
 
 /**
  * Displays product variant options as swatches or buttons on product cards.
@@ -42,62 +44,46 @@ export function ProductCardOptions({
             ({ name }) => name === pcardOptionToShow,
         )?.value;
     }
-    const asSwatch = OPTIONS_AS_SWATCH.includes(pcardOptionToShow);
+
+    const displayType = getOptionDisplayType(pcardOptionToShow);
+    const isSwatch = displayType === "swatch";
 
     return (
         <div className={cn("flex flex-wrap items-center gap-2", className)}>
             {optionValues
                 .slice(0, pcardMaxOptionValues)
                 .map(({ name, swatch, firstSelectableVariant }) => {
-                    if (asSwatch) {
-                        const swatchColor = swatch?.color || name;
-                        const isSelected = selectedValue === name;
+                    const isSelected = selectedValue === name;
+                    const handleClick = () => {
+                        if (!firstSelectableVariant) return;
+                        setSelectedVariant(firstSelectableVariant);
+                    };
+
+                    if (isSwatch) {
                         return (
                             <Tooltip key={name}>
                                 <TooltipTrigger asChild>
-                                    <button
-                                        type="button"
-                                        className={cn(
-                                            "relative flex h-6 w-6 items-center justify-center rounded-full transition-all duration-200",
-                                            isSelected
-                                                ? "ring-2 ring-foreground ring-offset-2"
-                                                : "hover:ring-1 hover:ring-line hover:ring-offset-1",
-                                        )}
-                                        onClick={() => {
-                                            if (!firstSelectableVariant) return;
-                                            setSelectedVariant(
-                                                firstSelectableVariant,
-                                            );
-                                        }}
-                                    >
-                                        {swatch?.image?.previewImage ? (
-                                            <Image
-                                                data={swatch.image.previewImage}
-                                                className="h-full w-full rounded-full object-cover object-center"
-                                                width={200}
-                                                sizes="auto"
-                                            />
-                                        ) : (
-                                            <span
-                                                className={cn(
-                                                    "inline-block h-full w-full rounded-full text-[0px]",
-                                                    (!isValidColor(
-                                                        swatchColor,
-                                                    ) ||
-                                                        isLightColor(
-                                                            swatchColor,
-                                                        )) &&
-                                                        "border border-line-subtle",
-                                                )}
-                                                style={{
-                                                    backgroundColor:
-                                                        swatchColor,
-                                                }}
-                                            >
-                                                {name}
-                                            </span>
-                                        )}
-                                    </button>
+                                    <div>
+                                        <OptionSwatch
+                                            name={name}
+                                            color={swatch?.color}
+                                            swatchImage={
+                                                swatch?.image?.previewImage
+                                                    ? {
+                                                          url: swatch.image
+                                                              .previewImage.url,
+                                                          altText:
+                                                              swatch.image
+                                                                  .previewImage
+                                                                  .altText,
+                                                      }
+                                                    : undefined
+                                            }
+                                            selected={isSelected}
+                                            onClick={handleClick}
+                                            size="sm"
+                                        />
+                                    </div>
                                 </TooltipTrigger>
                                 <TooltipContent sideOffset={8}>
                                     {name}
@@ -105,23 +91,15 @@ export function ProductCardOptions({
                             </Tooltip>
                         );
                     }
+
                     return (
-                        <button
+                        <OptionButton
                             key={name}
-                            type="button"
-                            className={cn(
-                                "rounded-full border px-2.5 py-1 font-medium text-[11px] transition-all duration-200",
-                                selectedValue === name
-                                    ? "border-foreground bg-foreground text-background"
-                                    : "border-line-subtle bg-background text-body hover:border-line",
-                            )}
-                            onClick={() => {
-                                if (!firstSelectableVariant) return;
-                                setSelectedVariant(firstSelectableVariant);
-                            }}
-                        >
-                            {name}
-                        </button>
+                            name={name}
+                            selected={isSelected}
+                            onClick={handleClick}
+                            size="sm"
+                        />
                     );
                 })}
             {restCount > 0 && (

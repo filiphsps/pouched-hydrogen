@@ -8,26 +8,21 @@ import Link, { type LinkProps } from "~/components/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/tooltip";
 import { cn } from "~/utils/cn";
 import { isLightColor, isValidColor } from "~/utils/misc";
+import {
+    getOptionDisplayType,
+    OPTIONS_AS_DROPDOWN,
+    OPTIONS_AS_IMAGE,
+    OPTIONS_AS_SWATCH,
+} from "./option-value";
 
-/*
- * Configure how different product option types are rendered by adding the option name to the appropriate array:
- * - OPTIONS_AS_SWATCH: Renders as color swatches (circular buttons with image/color)
- * - OPTIONS_AS_BUTTON: Renders as rectangular buttons
- * - OPTIONS_AS_IMAGE: Renders as image thumbnails
- * - OPTIONS_AS_DROPDOWN: Renders as a dropdown select menu
- *
- * If an option name is not found in any of these arrays, it will render with the default UI (underlined links).
+// Re-export configuration for backwards compatibility
+export { OPTIONS_AS_SWATCH } from "./option-value";
+
+/**
+ * Renders product option values with support for multiple display types.
+ * Handles both combined listings (navigation to different products) and
+ * variant selection (URL parameter updates or callback).
  */
-export const OPTIONS_AS_SWATCH: string[] = [
-    "Color",
-    "Colors",
-    "Colour",
-    "Colours",
-];
-const OPTIONS_AS_BUTTON: string[] = ["Size"];
-const OPTIONS_AS_IMAGE: string[] = [];
-const OPTIONS_AS_DROPDOWN: string[] = [];
-
 export function ProductOptionValues({
     option,
     onVariantChange,
@@ -148,6 +143,10 @@ export function ProductOptionValues({
     );
 }
 
+/**
+ * Renders a single option value with polymorphic Link/button support.
+ * Uses Link for combined listing navigation, button for variant selection.
+ */
 function OptionValue({
     optionName,
     value,
@@ -212,7 +211,9 @@ function OptionValue({
           ? linkProps
           : buttonProps;
 
-    if (OPTIONS_AS_SWATCH.includes(optionName)) {
+    const displayType = getOptionDisplayType(optionName);
+
+    if (displayType === "swatch") {
         const swatchColor = swatch?.color || name;
         return (
             // @ts-expect-error: TypeScript cannot infer the correct props for variable component
@@ -240,7 +241,7 @@ function OptionValue({
                             "block h-full w-full rounded-full text-[0px]",
                             (!isValidColor(swatchColor) ||
                                 isLightColor(swatchColor)) &&
-                                "border border-line-subtle",
+                                "border border-line",
                         )}
                         style={{ backgroundColor: swatchColor }}
                     >
@@ -251,7 +252,7 @@ function OptionValue({
         );
     }
 
-    if (OPTIONS_AS_BUTTON.includes(optionName)) {
+    if (displayType === "button") {
         return (
             // @ts-expect-error: TypeScript cannot infer the correct props for variable component
             <Component
@@ -281,8 +282,7 @@ function OptionValue({
             <Component
                 {...componentProps}
                 className={cn(
-                    "flex h-auto w-(--option-image-width) items-center justify-center p-1",
-                    "border border-line-subtle text-center transition-colors",
+                    "flex h-auto w-(--option-image-width) items-center justify-center border border-line-subtle p-1 text-center transition-colors",
                     !exists && "cursor-not-allowed",
                     selected && !combinedListing
                         ? [
