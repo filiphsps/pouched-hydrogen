@@ -584,14 +584,18 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 
 ### 5.2 Utilities Missing Tests
 
-- [ ] `app/utils/judgeme.test.ts`
-- [ ] `app/utils/structured-data.test.ts`
-- [ ] `app/utils/weaverse.test.ts`
-- [ ] `app/utils/misc.test.ts`
-- [ ] `app/utils/featured-products.test.ts`
-- [ ] `app/utils/combined-listings.test.ts`
+**Status:** ✅ IMPLEMENTED (2024-12-18)
+
+- [x] `app/utils/judgeme.test.ts` (27 tests)
+- [x] `app/utils/structured-data.test.ts` (39 tests)
+- [x] `app/utils/weaverse.test.ts` (49 tests)
+- [x] `app/utils/misc.test.ts` (55 tests)
+- [x] `app/utils/featured-products.test.ts` (13 tests)
+- [x] `app/utils/combined-listings.test.ts` (28 tests)
 - [x] `app/utils/cache.test.ts` (38 tests)
-- [ ] `app/utils/locale.test.ts`
+- [x] `app/utils/locale.test.ts` (25 tests)
+
+**Total:** 274 utility tests
 
 ---
 
@@ -682,7 +686,7 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 ### Phase 4: Test Coverage (Ongoing)
 
 - [x] Critical component tests (139 tests across 9 files - completed 2024-12-18)
-- [ ] Utility function tests
+- [x] Utility function tests (274 tests across 8 files - completed 2024-12-18)
 - [x] Hook tests (108 tests across 7 files)
 - [ ] E2E test expansion
 
@@ -742,12 +746,19 @@ app/hooks/use-shop-menu.test.ts
 app/hooks/use-weaverse-studio-check.test.ts
 app/utils/cache.test.ts
 app/utils/cn.test.ts
+app/utils/combined-listings.test.ts
 app/utils/consent-mode.test.ts
 app/utils/date.test.ts
+app/utils/featured-products.test.ts
 app/utils/image.test.ts
+app/utils/judgeme.test.ts
+app/utils/locale.test.ts
 app/utils/metafields.test.ts
+app/utils/misc.test.ts
 app/utils/product.test.ts
+app/utils/structured-data.test.ts
 app/utils/text.test.ts
+app/utils/weaverse.test.ts
 ```
 
 ### Key Files to Modify/Create
@@ -797,6 +808,13 @@ DONE: app/hooks/use-prefix-path-with-locale.test.ts (19 tests)
 DONE: app/hooks/use-predictive-search.test.ts (17 tests)
 DONE: app/hooks/use-weaverse-studio-check.test.ts (10 tests)
 DONE: app/hooks/use-closest-weaverse-item.test.ts (12 tests)
+DONE: app/utils/judgeme.test.ts (27 tests)
+DONE: app/utils/structured-data.test.ts (39 tests)
+DONE: app/utils/weaverse.test.ts (49 tests)
+DONE: app/utils/misc.test.ts (55 tests)
+DONE: app/utils/featured-products.test.ts (13 tests)
+DONE: app/utils/combined-listings.test.ts (28 tests)
+DONE: app/utils/locale.test.ts (25 tests)
 ```
 
 ---
