@@ -46,14 +46,14 @@ const VARIANT_FEATURES = {
     },
     list: {
         showVendor: true,
-        showRating: true,
-        showBadges: true,
+        showRating: false, // Hidden in list variant to save space
+        showBadges: false, // Hidden in list variant for cleaner look
         showOptions: false,
         showActions: true,
         showPills: false,
         showWishlistOnHover: false,
         imageAspect: "square",
-        infoSize: "md",
+        infoSize: "sm", // Smaller text for compact layout
     },
     compact: {
         showVendor: false,
@@ -430,13 +430,22 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                             />
                         )}
 
-                        {/* Price Row */}
-                        <div className="mt-auto">
+                        {/* Price Row - with button inline for list layout */}
+                        <div
+                            className={cn(
+                                "mt-auto",
+                                isListLayout &&
+                                    "flex items-center justify-between gap-2",
+                            )}
+                        >
                             {pcardShowLowestPrice ||
                             isCombinedListing(product) ? (
                                 <CardPrice
                                     price={minVariantPrice}
                                     showCompareAt={false}
+                                    size={
+                                        features.infoSize as "sm" | "md" | "lg"
+                                    }
                                 />
                             ) : (
                                 <CardPrice
@@ -452,10 +461,23 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                                     }
                                 />
                             )}
+
+                            {/* Button inline for list layout */}
+                            {isListLayout && features.showActions && (
+                                <CardActions
+                                    productHandle={product.handle}
+                                    productId={product.id}
+                                    showQuickAdd={true}
+                                    showWishlist={false}
+                                    buttonType="icon"
+                                    quickShopPanelType={pcardQuickShopPanelType}
+                                    layout="inline"
+                                />
+                            )}
                         </div>
 
-                        {/* Always-visible Add Button */}
-                        {features.showActions && (
+                        {/* Full-width button for non-list layouts */}
+                        {!isListLayout && features.showActions && (
                             <CardActions
                                 productHandle={product.handle}
                                 productId={product.id}
