@@ -37,10 +37,38 @@ function calculateProgress(currentAmount: number, threshold: number): number {
 }
 
 /**
+ * Maps currency symbols to ISO currency codes.
+ * Used for backwards compatibility with old theme settings.
+ */
+const SYMBOL_TO_CODE: Record<string, string> = {
+    "€": "EUR",
+    "$": "USD",
+    "£": "GBP",
+    "kr": "SEK",
+    CHF: "CHF",
+};
+
+/**
+ * Normalizes a currency value to an ISO currency code.
+ * Handles both ISO codes (EUR) and symbols (€) for backwards compatibility.
+ *
+ * @param {string} currency - Currency code or symbol
+ * @returns {string} ISO currency code
+ */
+export function normalizeCurrencyCode(currency: string): string {
+    // Already a valid 3-letter ISO code
+    if (/^[A-Z]{3}$/.test(currency)) {
+        return currency;
+    }
+    // Try to map symbol to code
+    return SYMBOL_TO_CODE[currency] || "EUR";
+}
+
+/**
  * Formats a number as currency.
  *
  * @param {number} amount - Amount to format
- * @param {string} currencyCode - ISO currency code (e.g., "EUR")
+ * @param {string} currencyCode - ISO currency code (e.g., "EUR") or symbol (e.g., "€")
  * @param {string} locale - Locale string for formatting (e.g., "de-DE")
  * @returns {string} Formatted currency string
  */
@@ -49,9 +77,10 @@ export function formatCurrency(
     currencyCode: string,
     locale: string,
 ): string {
+    const normalizedCode = normalizeCurrencyCode(currencyCode);
     return new Intl.NumberFormat(locale, {
         style: "currency",
-        currency: currencyCode,
+        currency: normalizedCode,
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
     }).format(amount);

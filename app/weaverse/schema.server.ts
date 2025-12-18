@@ -1148,11 +1148,20 @@ export const themeSchema: HydrogenThemeSchema = {
                         theme.freeShippingEnabled === true,
                 },
                 {
-                    type: "text",
-                    label: "Currency symbol",
+                    type: "select",
+                    label: "Currency",
                     name: "freeShippingCurrency",
-                    defaultValue: "€",
-                    placeholder: "€",
+                    helpText: "Currency for free shipping threshold display",
+                    configs: {
+                        options: [
+                            { value: "EUR", label: "Euro (€)" },
+                            { value: "USD", label: "US Dollar ($)" },
+                            { value: "GBP", label: "British Pound (£)" },
+                            { value: "CHF", label: "Swiss Franc (CHF)" },
+                            { value: "SEK", label: "Swedish Krona (kr)" },
+                        ],
+                    },
+                    defaultValue: "EUR",
                     condition: (theme: Record<string, any>) =>
                         theme.freeShippingEnabled === true,
                 },
@@ -1172,6 +1181,42 @@ export const themeSchema: HydrogenThemeSchema = {
                     name: "cartUpsellsHeading",
                     defaultValue: "Pairs well with",
                     placeholder: "Pairs well with",
+                    condition: (theme: Record<string, any>) =>
+                        theme.cartUpsellsEnabled === true,
+                },
+                {
+                    type: "select",
+                    label: "Recommendation algorithm",
+                    name: "cartUpsellsAlgorithm",
+                    helpText:
+                        "Select the algorithm for product recommendations. Use different values for A/B testing.",
+                    configs: {
+                        options: [
+                            {
+                                value: "hybrid",
+                                label: "Hybrid (Recommended)",
+                            },
+                            {
+                                value: "shopify",
+                                label: "Shopify Recommendations Only",
+                            },
+                            {
+                                value: "popularity",
+                                label: "Best Sellers Priority",
+                            },
+                        ],
+                    },
+                    defaultValue: "hybrid",
+                    condition: (theme: Record<string, any>) =>
+                        theme.cartUpsellsEnabled === true,
+                },
+                {
+                    type: "switch",
+                    label: "Enable quick add button",
+                    name: "cartUpsellsQuickAdd",
+                    helpText:
+                        "Show a one-click add to cart button for upsell products",
+                    defaultValue: true,
                     condition: (theme: Record<string, any>) =>
                         theme.cartUpsellsEnabled === true,
                 },

@@ -205,31 +205,42 @@ However, several critical features from `mission.md` are missing or incomplete.
 
 ### 2.5 Dynamic Cart Upsells (Intelligent Cross-sells)
 
-**Status:** ⚠️ BASIC IMPLEMENTATION EXISTS
+**Status:** ✅ IMPLEMENTED (2024-12-18)
 
-**Current state:**
+**Implementation:**
 
-- `app/components/cart/cart-upsells.tsx` exists
-- Basic product recommendations
+- Enhanced API to consider ALL products in cart (not just first one)
+- Product scoring system: recommendations for multiple cart items get boosted
+- Three algorithms for A/B testing: `hybrid` (default), `shopify`, `popularity`
+- New `UpsellProductCard` component with one-click quick add to cart
+- Algorithm tracked in data attribute for analytics
+- Configurable via Weaverse theme settings
 
-**Required from mission.md:**
+**Files created:**
 
-- Intelligent cross-sells (e.g., "Pairs well with")
-- Personalized recommendations
+- `app/components/cart/upsell-product-card.tsx`
+- `app/components/cart/upsell-product-card.test.tsx` (12 tests)
 
-**Files to modify:**
+**Files modified:**
 
-- `app/components/cart/cart-upsells.tsx`
-- `app/routes/api/cart-upsells.ts`
+- `app/routes/api/cart-upsells.ts` - Enhanced with multi-product scoring, algorithm support
+- `app/components/cart/cart-upsells.tsx` - Added algorithm support, tracking callback
+- `app/components/cart/cart-upsells.test.tsx` - Updated with 7 comprehensive tests
+- `app/weaverse/schema.server.ts` - Added algorithm and quick-add settings
+
+**Weaverse Settings Added:**
+
+- `cartUpsellsAlgorithm`: Select recommendation algorithm (hybrid, shopify, popularity)
+- `cartUpsellsQuickAdd`: Enable/disable one-click add to cart button
 
 **Acceptance Criteria:**
 
-- [ ] Recommendations based on cart contents
-- [ ] "Pairs well with" product relationships
-- [ ] Excludes products already in cart
-- [ ] One-click add to cart
-- [ ] A/B testing capability
-- [ ] Has tests
+- [x] Recommendations based on cart contents (considers ALL cart products)
+- [x] "Pairs well with" product relationships (Shopify productRecommendations API)
+- [x] Excludes products already in cart
+- [x] One-click add to cart (UpsellProductCard with QuickAddButton)
+- [x] A/B testing capability (algorithm selection + tracking)
+- [x] Has tests (19 tests total: 7 cart-upsells + 12 upsell-product-card)
 
 **Priority:** P2 - Increases AOV
 
@@ -569,7 +580,7 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 - [ ] Back-in-stock notifications
 - [x] Stock urgency indicators
 - [ ] Cart gift wrapping
-- [ ] Enhanced cart upsells
+- [x] Enhanced cart upsells
 
 ### Phase 3: SEO & Performance (Week 4)
 
@@ -653,7 +664,10 @@ NEW: app/components/cart/cart-gift-wrap.tsx
 NEW: app/components/bundles/bundle-builder.tsx
 NEW: app/routes/wishlist/index.tsx
 NEW: app/routes/api/back-in-stock.ts
-MODIFY: app/components/cart/cart-upsells.tsx
+DONE: app/components/cart/cart-upsells.tsx
+DONE: app/components/cart/upsell-product-card.tsx
+DONE: app/components/cart/upsell-product-card.test.tsx
+DONE: app/routes/api/cart-upsells.ts
 MODIFY: app/components/layout/predictive-search/popular-keywords.tsx
 MODIFY: app/sections/main-product/product-shipping-estimate.tsx
 DONE: app/utils/cache.ts

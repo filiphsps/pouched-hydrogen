@@ -3,6 +3,12 @@
  * Displays intelligent product recommendations inside the cart
  * based on items currently in the cart ("Pairs well with").
  *
+ * Features:
+ * - Intelligent recommendations based on ALL cart items
+ * - Multiple algorithms for A/B testing (hybrid, shopify, popularity)
+ * - One-click quick add to cart functionality
+ * - Tracks algorithm used for analytics
+ *
  * @example
  * ```tsx
  * <CartUpsells cartLineItems={cart.lines.nodes} />
@@ -13,15 +19,21 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect, useId } from "react";
 import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
-import type { ProductCardFragment } from "storefront-api.generated";
-import { ProductCard } from "~/components/product/product-card";
 import { Skeleton } from "~/components/skeleton";
 import { Title } from "~/components/title";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import type {
+    CartUpsellsResponse,
+    UpsellAlgorithm,
+} from "~/routes/api/cart-upsells";
 import type { CartLayoutType } from "~/types/others";
 import { cn } from "~/utils/cn";
+import { UpsellProductCard } from "./upsell-product-card";
 
-interface CartUpsellsProps {
+/**
+ * Props for the CartUpsells component.
+ */
+export interface CartUpsellsProps {
     /** Cart line items to get recommendations for */
     cartLineItems: Array<{
         merchandise: {
@@ -36,25 +48,29 @@ interface CartUpsellsProps {
     layout?: CartLayoutType;
     /** Optional additional CSS classes */
     className?: string;
-}
-
-interface CartUpsellsResponse {
-    products: ProductCardFragment[];
+    /** Callback when algorithm is tracked (for A/B testing analytics) */
+    onAlgorithmTrack?: (algorithm: UpsellAlgorithm) => void;
 }
 
 /**
  * Cart Upsells Component.
- * Fetches and displays product recommendations for items in cart.
+ * Fetches and displays intelligent product recommendations for items in cart.
+ * Supports A/B testing with configurable recommendation algorithms.
  */
 export function CartUpsells({
     cartLineItems,
     count = 4,
     layout = "drawer",
     className,
+    onAlgorithmTrack,
 }: CartUpsellsProps) {
     const { t } = useTranslation();
-    const { cartUpsellsEnabled = true, cartUpsellsHeading } =
-        useThemeSettings();
+    const {
+        cartUpsellsEnabled = true,
+        cartUpsellsHeading,
+        cartUpsellsAlgorithm = "hybrid",
+        cartUpsellsQuickAdd = true,
+    } = useThemeSettings();
     const { load, data, state } = useFetcher<CartUpsellsResponse>();
 
     // Extract product IDs from cart
@@ -62,11 +78,12 @@ export function CartUpsells({
         .map((line) => line.merchandise?.product?.id)
         .filter(Boolean);
 
-    // Build query params
+    // Build query params with algorithm for A/B testing
     const queryParams = new URLSearchParams({
         productIds: productIds.join(","),
-        excludeIds: productIds.join(","), // Exclude products already in cart
+        excludeIds: productIds.join(","),
         count: String(count),
+        algorithm: cartUpsellsAlgorithm as string,
     });
 
     const upsellsApiPath = usePrefixPathWithLocale(
@@ -74,12 +91,19 @@ export function CartUpsells({
     );
 
     // Fetch upsells when cart changes
-    // biome-ignore lint/correctness/useExhaustiveDependencies: only refetch when product IDs change
+    // biome-ignore lint/correctness/useExhaustiveDependencies: only refetch when product IDs or algorithm change
     useEffect(() => {
         if (cartUpsellsEnabled && productIds.length > 0) {
             load(upsellsApiPath);
         }
-    }, [productIds.join(","), cartUpsellsEnabled]);
+    }, [productIds.join(","), cartUpsellsEnabled, cartUpsellsAlgorithm]);
+
+    // Track algorithm used for A/B testing analytics
+    useEffect(() => {
+        if (data?.algorithm && onAlgorithmTrack) {
+            onAlgorithmTrack(data.algorithm);
+        }
+    }, [data?.algorithm, onAlgorithmTrack]);
 
     // Don't render if disabled or no products in cart
     if (!cartUpsellsEnabled || productIds.length === 0) {
@@ -95,8 +119,10 @@ export function CartUpsells({
         return null;
     }
 
+    const displayCount = layout === "drawer" || layout === "modal" ? 2 : count;
+
     return (
-        <div className={cn(className)}>
+        <div className={cn(className)} data-upsell-algorithm={data?.algorithm}>
             <Title as="h3" className="mb-3 font-medium" size="base">
                 {cartUpsellsHeading || t("cart.upsells.heading")}
             </Title>
@@ -113,18 +139,12 @@ export function CartUpsells({
                     <CartUpsellsSkeleton count={Math.min(count, 2)} />
                 ) : (
                     products
-                        .slice(
-                            0,
-                            layout === "drawer" || layout === "modal"
-                                ? 2
-                                : count,
-                        )
+                        .slice(0, displayCount)
                         .map((product) => (
-                            <ProductCard
+                            <UpsellProductCard
                                 key={product.id}
                                 product={product}
-                                variant="list"
-                                className="[&_.best-seller-badge,&_.bundle-badge,&_.new-badge]:hidden"
+                                showQuickAdd={cartUpsellsQuickAdd}
                             />
                         ))
                 )}
