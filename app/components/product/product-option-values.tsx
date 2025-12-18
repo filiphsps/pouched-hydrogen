@@ -49,17 +49,17 @@ export function ProductOptionValues({
                         ({ name: value }) => value === v,
                     );
                     if (found) {
-                        if (onVariantChange && found.firstSelectableVariant) {
-                            onVariantChange(found.firstSelectableVariant);
+                        // Always use variantUriQuery to preserve other selected options
+                        const to = found.isDifferentProduct
+                            ? `/products/${found.handle}?${found.variantUriQuery}`
+                            : `?${found.variantUriQuery}`;
+                        if (found.isDifferentProduct) {
+                            window.location.href = to;
                         } else {
-                            const to = found.isDifferentProduct
-                                ? `/products/${found.handle}?${found.variantUriQuery}`
-                                : `?${found.variantUriQuery}`;
-                            if (found.isDifferentProduct) {
-                                window.location.href = to;
-                            } else {
-                                navigate(to, { replace: true });
-                            }
+                            navigate(to, {
+                                replace: true,
+                                preventScrollReset: true,
+                            });
                         }
                     }
                 }}
@@ -184,11 +184,13 @@ function OptionValue({
         type: "button" as const,
         disabled: !exists,
         onClick: () => {
-            if (onVariantChange && firstSelectableVariant) {
-                onVariantChange(firstSelectableVariant);
-            } else if (!selected && exists) {
-                navigate(to, { replace: true });
-            }
+            // Skip if already selected or doesn't exist
+            if (selected || !exists) return;
+
+            // Always use variantUriQuery for navigation to preserve other selected options.
+            // Using firstSelectableVariant would reset other options because it may have
+            // different values for options the user didn't click on.
+            navigate(to, { replace: true, preventScrollReset: true });
         },
     };
 
