@@ -1021,6 +1021,18 @@ export function getUpcomingHolidays(
     const endDate = new Date(referenceDate);
     endDate.setDate(endDate.getDate() + days);
 
+    // Normalize dates to start of day for consistent comparison across timezones
+    const normalizeToStartOfDay = (date: Date): number => {
+        return new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+        ).getTime();
+    };
+
+    const refDateNormalized = normalizeToStartOfDay(referenceDate);
+    const endDateNormalized = normalizeToStartOfDay(endDate);
+
     const year = referenceDate.getFullYear();
     const allHolidays = [
         ...holidays.getHolidays(year),
@@ -1029,9 +1041,10 @@ export function getUpcomingHolidays(
 
     for (const holiday of allHolidays) {
         const holidayDate = holiday.start;
+        const holidayDateNormalized = normalizeToStartOfDay(holidayDate);
         if (
-            holidayDate >= referenceDate &&
-            holidayDate <= endDate &&
+            holidayDateNormalized >= refDateNormalized &&
+            holidayDateNormalized <= endDateNormalized &&
             (holiday.type === "public" || holiday.type === "bank")
         ) {
             upcomingHolidays.push({
