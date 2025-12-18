@@ -40,7 +40,6 @@ import {
     useShouldRenderNewsletterPopup,
 } from "./components/root/newsletter-popup";
 import { NotFound } from "./components/root/not-found";
-import { WebVitalsMonitor } from "./components/root/web-vitals-monitor";
 import { JsonLd } from "./components/seo/json-ld";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";
@@ -229,8 +228,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                             </div>
                             {shouldShowNewsletterPopup && <NewsletterPopup />}
                         </TooltipProvider>
+
                         <CustomAnalytics />
-                        <WebVitalsMonitor />
                     </Analytics.Provider>
                 ) : (
                     children

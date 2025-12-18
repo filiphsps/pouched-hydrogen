@@ -76,20 +76,26 @@ export function useWebVitals(
     const [report, setReport] = useState<WebVitalsReport>({});
     const [isCollecting, setIsCollecting] = useState(true);
     const unsubscribeRef = useRef<(() => void) | null>(null);
+    const reportRef = useRef<WebVitalsReport>({});
 
     /**
      * Updates the report with a new metric value.
      */
     const updateReport = useCallback((metric: WebVitalMetric) => {
-        setReport((prev) => ({
-            ...prev,
-            [metric.name]: metric,
-            url:
-                typeof window !== "undefined"
-                    ? window.location.href
-                    : undefined,
-            timestamp: prev.timestamp ?? Date.now(),
-        }));
+        setReport((prev) => {
+            const newReport = {
+                ...prev,
+                [metric.name]: metric,
+                url:
+                    typeof window !== "undefined"
+                        ? window.location.href
+                        : undefined,
+                timestamp: prev.timestamp ?? Date.now(),
+            };
+            // Keep ref in sync for use in reportFinal callback
+            reportRef.current = newReport;
+            return newReport;
+        });
     }, []);
 
     useEffect(() => {
@@ -134,11 +140,11 @@ export function useWebVitals(
                 if (reportOnUnload) {
                     const reportFinal = () => {
                         // Send final metrics on page unload using sendBeacon if available
+                        // Use ref to get current report value without stale closure
                         if (navigator.sendBeacon && sendToAnalytics) {
-                            const currentReport = report;
                             const beacon = JSON.stringify({
                                 event: "web_vitals_final",
-                                metrics: currentReport,
+                                metrics: reportRef.current,
                             });
                             navigator.sendBeacon("/api/analytics", beacon);
                         }
@@ -161,6 +167,8 @@ export function useWebVitals(
             mounted = false;
             unsubscribeRef.current?.();
         };
+        // Note: report is intentionally excluded to prevent infinite re-renders.
+        // The reportRef is used instead for accessing current report in callbacks.
     }, [
         enabled,
         sendToAnalytics,
@@ -168,7 +176,6 @@ export function useWebVitals(
         onMetric,
         reportOnUnload,
         updateReport,
-        report,
     ]);
 
     // Calculate derived values
