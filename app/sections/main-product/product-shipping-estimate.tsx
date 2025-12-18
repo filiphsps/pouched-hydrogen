@@ -24,6 +24,7 @@ import {
     formatShortDate,
     getHoursUntilCutoff,
 } from "~/utils/date";
+import { filterDOMProps } from "~/utils/weaverse";
 
 interface ShippingEstimateProps extends HydrogenComponentProps {
     ref: React.Ref<HTMLDivElement>;
@@ -35,6 +36,7 @@ interface ShippingEstimateProps extends HydrogenComponentProps {
  */
 export default function ShippingEstimate(props: ShippingEstimateProps) {
     const { ref, ...rest } = props;
+    const domProps = filterDOMProps(rest);
     const { t } = useTranslation();
     const loaderData = useLoaderData<typeof productRouteLoader>();
     const rootData = useRouteLoaderData<RootLoader>("root");
@@ -84,9 +86,10 @@ export default function ShippingEstimate(props: ShippingEstimateProps) {
     return (
         <div
             ref={ref}
-            {...rest}
+            {...domProps}
             className={cn(
                 "flex flex-col gap-2 border-line border-y py-3 text-sm",
+                domProps.className,
             )}
         >
             {/* Delivery estimate */}

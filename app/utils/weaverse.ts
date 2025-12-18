@@ -1,6 +1,166 @@
 // Basic implementation of Weaverse's internal data resolution logic
 // Adapted to work with the Footer's theme settings requirement.
 
+/**
+ * Known Weaverse props that should not be passed to DOM elements.
+ * These are custom props that Weaverse passes to components for configuration,
+ * but they cause React warnings if spread onto HTML elements.
+ */
+const WEAVERSE_NON_DOM_PROPS = new Set([
+    "maxDays",
+    "minDays",
+    "cutoffHour",
+    "freeShippingThreshold",
+    "loaderData",
+    "weaverseData",
+]);
+
+/**
+ * Filters props to only include DOM-safe attributes.
+ * Keeps: standard HTML attributes, data-* attributes, aria-* attributes, event handlers.
+ * Removes: custom Weaverse props that would cause React hydration warnings.
+ *
+ * @param props - The props object to filter
+ * @returns A new object containing only DOM-safe props
+ */
+export function filterDOMProps<T extends Record<string, unknown>>(
+    props: T,
+): Partial<T> {
+    const filtered: Record<string, unknown> = {};
+
+    for (const [key, value] of Object.entries(props)) {
+        // Skip known Weaverse non-DOM props
+        if (WEAVERSE_NON_DOM_PROPS.has(key)) {
+            continue;
+        }
+
+        // Keep data-* and aria-* attributes
+        if (key.startsWith("data-") || key.startsWith("aria-")) {
+            filtered[key] = value;
+            continue;
+        }
+
+        // Keep event handlers (on*)
+        if (key.startsWith("on") && typeof value === "function") {
+            filtered[key] = value;
+            continue;
+        }
+
+        // Keep standard DOM props
+        if (isDOMProp(key)) {
+            filtered[key] = value;
+        }
+    }
+
+    return filtered as Partial<T>;
+}
+
+/**
+ * Checks if a prop name is a valid DOM attribute.
+ */
+function isDOMProp(name: string): boolean {
+    const domProps = new Set([
+        "className",
+        "style",
+        "id",
+        "ref",
+        "key",
+        "children",
+        "dangerouslySetInnerHTML",
+        "suppressHydrationWarning",
+        "suppressContentEditableWarning",
+        // Common HTML attributes
+        "title",
+        "lang",
+        "dir",
+        "hidden",
+        "tabIndex",
+        "accessKey",
+        "draggable",
+        "spellCheck",
+        "contentEditable",
+        "role",
+        // Form attributes
+        "name",
+        "value",
+        "defaultValue",
+        "checked",
+        "defaultChecked",
+        "disabled",
+        "readOnly",
+        "required",
+        "placeholder",
+        "autoComplete",
+        "autoFocus",
+        "form",
+        "formAction",
+        "formMethod",
+        "formTarget",
+        "formNoValidate",
+        "formEncType",
+        "maxLength",
+        "minLength",
+        "pattern",
+        "size",
+        "min",
+        "max",
+        "step",
+        "multiple",
+        "accept",
+        "list",
+        // Link/media attributes
+        "href",
+        "target",
+        "rel",
+        "download",
+        "src",
+        "srcSet",
+        "sizes",
+        "alt",
+        "width",
+        "height",
+        "loading",
+        "decoding",
+        "crossOrigin",
+        "referrerPolicy",
+        "type",
+        "media",
+        "poster",
+        "preload",
+        "controls",
+        "autoPlay",
+        "loop",
+        "muted",
+        "playsInline",
+        // Table attributes
+        "colSpan",
+        "rowSpan",
+        "headers",
+        "scope",
+        // Other common attributes
+        "htmlFor",
+        "open",
+        "cite",
+        "dateTime",
+        "high",
+        "low",
+        "optimum",
+        "coords",
+        "shape",
+        "usemap",
+        "sandbox",
+        "allow",
+        "allowFullScreen",
+        "seamless",
+        "scrolling",
+        "marginWidth",
+        "marginHeight",
+        "frameBorder",
+    ]);
+
+    return domProps.has(name);
+}
+
 const TEMPLATE_REGEX = /\{\{([^}]+)\}\}/g;
 const ARRAY_INDEX_REGEX = /^(\w+)\[(\d+)\]$/;
 
