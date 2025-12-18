@@ -28,7 +28,7 @@ export function AddToCartButton({
     analytics,
     ...props
 }: {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     lines: OptimisticCartLineInput[];
     className?: string;
     width?: "auto" | "full";
