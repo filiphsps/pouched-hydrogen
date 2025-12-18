@@ -41,13 +41,7 @@ type SingleProductProps = HydrogenComponentProps<
     };
 
 export default function SingleProduct(props: SingleProductProps) {
-    const {
-        ref,
-        loaderData,
-        product: _product,
-        showThumbnails,
-        ...rest
-    } = props;
+    const { ref, loaderData, showThumbnails, ...rest } = props;
     const { storeDomain, product } = loaderData || {};
     const [quantity, setQuantity] = useState<number>(1);
     const [selectedVariant, setSelectedVariant] =

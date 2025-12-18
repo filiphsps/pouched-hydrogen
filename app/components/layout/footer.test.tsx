@@ -32,11 +32,11 @@ vi.mock("@phosphor-icons/react", () => ({
 // Mock @shopify/hydrogen
 vi.mock("@shopify/hydrogen", () => ({
     Image: ({ data, className }: { data: any; className?: string }) => (
-        <img
-            src={data?.url}
-            alt={data?.altText || ""}
-            className={className}
+        <div
             data-testid="footer-logo"
+            className={className}
+            data-src={data?.url}
+            data-alt={data?.altText || ""}
         />
     ),
 }));

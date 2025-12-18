@@ -29,7 +29,6 @@ vi.mock("@radix-ui/react-dialog", () => ({
     Root: ({
         children,
         open,
-        onOpenChange,
     }: {
         children: React.ReactNode;
         open?: boolean;
@@ -41,7 +40,6 @@ vi.mock("@radix-ui/react-dialog", () => ({
     ),
     Trigger: ({
         children,
-        asChild,
         className,
     }: {
         children: React.ReactNode;
@@ -76,13 +74,9 @@ vi.mock("@radix-ui/react-dialog", () => ({
 
 // Mock Radix VisuallyHidden
 vi.mock("@radix-ui/react-visually-hidden", () => ({
-    Root: ({
-        children,
-        asChild,
-    }: {
-        children: React.ReactNode;
-        asChild?: boolean;
-    }) => <span data-testid="visually-hidden">{children}</span>,
+    Root: ({ children }: { children: React.ReactNode; asChild?: boolean }) => (
+        <span data-testid="visually-hidden">{children}</span>
+    ),
 }));
 
 // Mock react-i18next

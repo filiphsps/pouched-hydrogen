@@ -84,7 +84,8 @@ import { GenericError } from "./generic-error";
 describe("GenericError", () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        vi.spyOn(console, "error").mockImplementation(() => {});
+        // Suppress console.error output during tests
+        vi.spyOn(console, "error").mockImplementation(() => undefined);
     });
 
     describe("Rendering", () => {
