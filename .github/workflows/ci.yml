@@ -1,50 +1,157 @@
 name: CI
 
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    pull_request:
+    push:
+        branches:
+            - master
+            - main
+            - staging
+            - 'dev/*'
+            - 'fix/*'
+        paths-ignore:
+            - '**.md'
+            - '**.txt'
+            - 'LICENSE'
+
+env:
+    CI: true
+    # Make sure we disable husky as it might interfere with some operations here
+    HUSKY: 0
+    # Storefront config.
+    SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+    PUBLIC_STORE_DOMAIN: ${{ secrets.PUBLIC_STORE_DOMAIN }}
+    PUBLIC_STOREFRONT_API_TOKEN: ${{ secrets.PUBLIC_STOREFRONT_API_TOKEN }}
+    WEAVERSE_PROJECT_ID: ${{ secrets.WEAVERSE_PROJECT_ID }}
+    WEAVERSE_API_KEY: ${{ secrets.WEAVERSE_API_KEY }}
+    JUDGEME_PRIVATE_API_TOKEN: ${{ secrets.JUDGEME_PRIVATE_API_TOKEN }}
+    KLAVIYO_PRIVATE_API_TOKEN: ${{ secrets.KLAVIYO_PRIVATE_API_TOKEN }}
+    PUBLIC_GOOGLE_GTM_ID: ${{ secrets.PUBLIC_GOOGLE_GTM_ID }}
+    PUBLIC_SHOPIFY_INBOX_SHOP_ID: ${{ secrets.PUBLIC_SHOPIFY_INBOX_SHOP_ID }}
+
+
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    env:
-      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-      PUBLIC_STORE_DOMAIN: ${{ secrets.PUBLIC_STORE_DOMAIN }}
-      PUBLIC_STOREFRONT_API_TOKEN: ${{ secrets.PUBLIC_STOREFRONT_API_TOKEN }}
-      WEAVERSE_PROJECT_ID: ${{ secrets.WEAVERSE_PROJECT_ID }}
-      WEAVERSE_API_KEY: ${{ secrets.WEAVERSE_API_KEY }}
-      JUDGEME_PRIVATE_API_TOKEN: ${{ secrets.JUDGEME_PRIVATE_API_TOKEN }}
-      KLAVIYO_PRIVATE_API_TOKEN: ${{ secrets.KLAVIYO_PRIVATE_API_TOKEN }}
-      PUBLIC_GOOGLE_GTM_ID: ${{ secrets.PUBLIC_GOOGLE_GTM_ID }}
-      PUBLIC_SHOPIFY_INBOX_SHOP_ID: ${{ secrets.PUBLIC_SHOPIFY_INBOX_SHOP_ID }}
+    lint:
+        name: 📋 Lint
+        runs-on: ubuntu-latest
+        steps:
+            - name: 🕶️ Checkout repository
+              uses: actions/checkout@v6
 
-    steps:
-    - uses: actions/checkout@v4
+            - name: 🚀 Bootstrap
+              uses: ./.github/common/bootstrap
 
-    - name: Install pnpm
-      uses: pnpm/action-setup@v3
-      with:
-        version: 10
+            - name: 📋 Lint
+              run: pnpm run biome
 
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '24'
-        cache: 'pnpm'
+    typecheck:
+        name: ✅ Typecheck
+        runs-on: ubuntu-latest
+        steps:
+            - name: 🕶️ Checkout repository
+              uses: actions/checkout@v6
 
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+            - name: 🚀 Bootstrap
+              uses: ./.github/common/bootstrap
 
-    - name: Lint
-      run: pnpm run biome
+            - name: ✅ Typecheck
+              run: pnpm run typecheck
 
-    - name: Build
-      run: pnpm run build
+    build:
+        name: 🔨 Build
+        needs: [lint, typecheck]
+        runs-on: ubuntu-latest
+        steps:
+            - name: 🕶️ Checkout repository
+              uses: actions/checkout@v6
 
-    - name: Typecheck
-      run: pnpm run typecheck
+            - name: 🚀 Bootstrap
+              uses: ./.github/common/bootstrap
 
-    - name: Test
-      run: pnpm run test
+            - name: 🔬 Verify integrity
+              run: npm audit signatures
+
+            - name: 🔨 Build all
+              run: pnpm run build
+
+    test:
+        name: 🧪 Test
+        needs: [lint, typecheck]
+        runs-on: ubuntu-latest
+        steps:
+            - name: 🕶️ Checkout repository
+              uses: actions/checkout@v6
+
+            - name: 🚀 Bootstrap
+              uses: ./.github/common/bootstrap
+
+            - name: 🧪 Test
+              run: pnpm run test
+
+            - name: 🦺 Codecov coverage reports
+              if: ${{ !cancelled() }}
+              uses: codecov/codecov-action@v5
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  slug: filiphsps/AdaptiveShell
+
+            - name: 🦺 Upload test results to Codecov
+              if: ${{ !cancelled() }}
+              uses: codecov/test-results-action@v1
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  slug: filiphsps/AdaptiveShell
+
+    release:
+        name: 🚢 Release
+        needs: [build, test]
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/master'
+        permissions: write-all
+        concurrency:
+            group: ${{ github.workflow }}-${{ github.ref }}
+        env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        steps:
+            - name: 🕶️ Checkout repository
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+                  submodules: 'recursive'
+
+            - name: 🚀 Bootstrap
+              uses: ./.github/common/bootstrap
+
+            - name: 🔬 Verify integrity
+              run: npm audit signatures
+
+            - name: 🔨 Build all
+              run: pnpm run build:packages
+
+            - name: 📦 Generate changeset(s) from commit messages
+              run: pnpm changeset:conventional
+
+            - name: 🤝 Create release PR or 📦 Publish
+              id: changesets
+              uses: changesets/action@v1
+              with:
+                  createGithubReleases: true
+                  version: pnpm run version
+                  publish: pnpm run release
+                  setupGitUser: true
+                  commit: |
+                      ci(release): Release packages and bump versions
+
+                      Congratulations on the new release! 🎉
+                      This is an automated commit triggered by the `release` workflow.
+                  title: 🚀 Release packages
+
+            - name: 🫨 Create Unstable Release
+              if: steps.changesets.outputs.published != 'true'
+              run: |
+                  git checkout master
+                  pnpm run version:unstable
+                  pnpm run release:unstable
