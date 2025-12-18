@@ -92,8 +92,7 @@ export function AgeVerificationGate() {
                             {/* 18+ Badge */}
                             <div
                                 className={cn(
-                                    "mb-6 flex h-20 w-20 items-center justify-center rounded-full",
-                                    "bg-primary font-bold text-2xl text-primary-foreground",
+                                    "mb-6 flex size-16 items-center justify-center rounded-full border-2 border-red-700 bg-red-500 font-bold text-2xl text-white",
                                 )}
                                 aria-hidden="true"
                             >
