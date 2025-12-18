@@ -300,5 +300,35 @@
         "confirm": "Yes, I am 18+",
         "deny": "No, I am under 18",
         "disclaimer": "By entering, you confirm that you are of legal age to purchase nicotine products in your country."
+    },
+    "cookieConsent": {
+        "title": "We value your privacy",
+        "description": "We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking \"Accept All\", you consent to our use of cookies.",
+        "acceptAll": "Accept All",
+        "rejectAll": "Reject All",
+        "managePreferences": "Manage Preferences",
+        "savePreferences": "Save Preferences",
+        "preferencesTitle": "Cookie Preferences",
+        "preferencesDescription": "Choose which cookies you want to allow. Essential cookies are always enabled as they are necessary for the website to function properly.",
+        "close": "Close",
+        "required": "Required",
+        "categories": {
+            "essential": {
+                "title": "Essential Cookies",
+                "description": "These cookies are necessary for the website to function and cannot be switched off. They are usually set in response to actions made by you, such as setting your privacy preferences, logging in, or filling in forms."
+            },
+            "functional": {
+                "title": "Functional Cookies",
+                "description": "These cookies enable the website to provide enhanced functionality and personalization, such as remembering your preferences and language settings."
+            },
+            "analytics": {
+                "title": "Analytics Cookies",
+                "description": "These cookies help us understand how visitors interact with our website by collecting and reporting information anonymously. This helps us improve our website and services."
+            },
+            "marketing": {
+                "title": "Marketing Cookies",
+                "description": "These cookies are used to deliver advertisements more relevant to you and your interests. They may also be used to limit the number of times you see an advertisement."
+            }
+        }
     }
 }

@@ -23,6 +23,7 @@ import { useChangeLanguage } from "remix-i18next/react";
 import { loadCriticalData, loadDeferredData } from "./.server/root";
 import type { Route } from "./+types/root";
 import { AgeVerificationGate } from "./components/compliance/age-verification-gate";
+import { CookieConsentBanner } from "./components/compliance/cookie-consent-banner";
 import { Footer } from "./components/layout/footer";
 import { Header } from "./components/layout/header";
 import { ScrollingAnnouncement } from "./components/layout/scrolling-announcement";
@@ -201,6 +202,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <GlobalLoading />
                 {/* Age verification gate - blocks all content until verified */}
                 <AgeVerificationGate />
+                {/* Cookie consent banner - GDPR/DSGVO compliant */}
+                <CookieConsentBanner />
                 <ScrollRestoration nonce={nonce} />
                 <Scripts nonce={nonce} />
             </body>

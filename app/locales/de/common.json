@@ -297,5 +297,35 @@
         "confirm": "Ja, ich bin 18+",
         "deny": "Nein, ich bin unter 18",
         "disclaimer": "Mit dem Betreten bestätigen Sie, dass Sie in Ihrem Land das gesetzliche Mindestalter für den Kauf von Nikotinprodukten erreicht haben."
+    },
+    "cookieConsent": {
+        "title": "Wir schätzen Ihre Privatsphäre",
+        "description": "Wir verwenden Cookies, um Ihr Surferlebnis zu verbessern, personalisierte Inhalte bereitzustellen und unseren Datenverkehr zu analysieren. Durch Klicken auf „Alle akzeptieren“ stimmen Sie unserer Verwendung von Cookies zu.",
+        "acceptAll": "Alle akzeptieren",
+        "rejectAll": "Alle ablehnen",
+        "managePreferences": "Einstellungen verwalten",
+        "savePreferences": "Einstellungen speichern",
+        "preferencesTitle": "Cookie-Einstellungen",
+        "preferencesDescription": "Wählen Sie, welche Cookies Sie zulassen möchten. Wesentliche Cookies sind immer aktiviert, da sie für das ordnungsgemäße Funktionieren der Website erforderlich sind.",
+        "close": "Schließen",
+        "required": "Erforderlich",
+        "categories": {
+            "essential": {
+                "title": "Wesentliche Cookies",
+                "description": "Diese Cookies sind für das Funktionieren der Website erforderlich und können nicht deaktiviert werden. Sie werden normalerweise als Reaktion auf Ihre Aktionen gesetzt, wie das Festlegen Ihrer Datenschutzeinstellungen, das Anmelden oder das Ausfüllen von Formularen."
+            },
+            "functional": {
+                "title": "Funktionale Cookies",
+                "description": "Diese Cookies ermöglichen der Website erweiterte Funktionalität und Personalisierung, wie das Speichern Ihrer Präferenzen und Spracheinstellungen."
+            },
+            "analytics": {
+                "title": "Analyse-Cookies",
+                "description": "Diese Cookies helfen uns zu verstehen, wie Besucher mit unserer Website interagieren, indem sie Informationen anonym sammeln und melden. Dies hilft uns, unsere Website und Dienste zu verbessern."
+            },
+            "marketing": {
+                "title": "Marketing-Cookies",
+                "description": "Diese Cookies werden verwendet, um Werbung zu liefern, die für Sie und Ihre Interessen relevanter ist. Sie können auch verwendet werden, um die Anzahl der Male zu begrenzen, die Sie eine Werbung sehen."
+            }
+        }
     }
 }

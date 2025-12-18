@@ -990,6 +990,105 @@ export const themeSchema: HydrogenThemeSchema = {
             ],
         },
         {
+            group: "Cookie Consent",
+            inputs: [
+                {
+                    type: "switch",
+                    label: "Enable cookie consent banner",
+                    name: "cookieConsentEnabled",
+                    defaultValue: true,
+                    helpText:
+                        "Show GDPR-compliant cookie consent banner. Disable for markets that don't require it.",
+                },
+                {
+                    type: "heading",
+                    label: "Appearance",
+                },
+                {
+                    type: "select",
+                    label: "Banner position",
+                    name: "cookieConsentPosition",
+                    configs: {
+                        options: [
+                            { value: "bottom", label: "Bottom" },
+                            { value: "bottom-left", label: "Bottom Left" },
+                            { value: "bottom-right", label: "Bottom Right" },
+                        ],
+                    },
+                    defaultValue: "bottom",
+                    condition: (theme: Record<string, any>) =>
+                        theme.cookieConsentEnabled === true,
+                },
+            ],
+        },
+        {
+            group: "Age Verification",
+            inputs: [
+                {
+                    type: "switch",
+                    label: "Enable age verification",
+                    name: "ageVerificationEnabled",
+                    defaultValue: true,
+                    helpText:
+                        "Require users to verify they are 18+ before accessing the site.",
+                },
+                {
+                    type: "image",
+                    label: "Image",
+                    name: "ageVerificationImage",
+                    defaultValue: "",
+                    condition: (theme: Record<string, any>) =>
+                        theme.ageVerificationEnabled === true,
+                },
+                {
+                    type: "text",
+                    label: "Heading",
+                    name: "ageVerificationHeading",
+                    defaultValue: "",
+                    placeholder: "Are you 18 or older?",
+                    condition: (theme: Record<string, any>) =>
+                        theme.ageVerificationEnabled === true,
+                },
+                {
+                    type: "textarea",
+                    label: "Description",
+                    name: "ageVerificationDescription",
+                    defaultValue: "",
+                    placeholder: "This website sells nicotine products...",
+                    condition: (theme: Record<string, any>) =>
+                        theme.ageVerificationEnabled === true,
+                },
+                {
+                    type: "text",
+                    label: "Confirm button text",
+                    name: "ageVerificationConfirmText",
+                    defaultValue: "",
+                    placeholder: "Yes, I am 18+",
+                    condition: (theme: Record<string, any>) =>
+                        theme.ageVerificationEnabled === true,
+                },
+                {
+                    type: "text",
+                    label: "Deny button text",
+                    name: "ageVerificationDenyText",
+                    defaultValue: "",
+                    placeholder: "No, I am under 18",
+                    condition: (theme: Record<string, any>) =>
+                        theme.ageVerificationEnabled === true,
+                },
+                {
+                    type: "text",
+                    label: "Deny redirect URL",
+                    name: "ageVerificationDenyUrl",
+                    defaultValue: "https://www.google.com",
+                    placeholder: "https://www.google.com",
+                    helpText: "URL to redirect users who are under 18",
+                    condition: (theme: Record<string, any>) =>
+                        theme.ageVerificationEnabled === true,
+                },
+            ],
+        },
+        {
             group: "Search",
             inputs: [
                 {
