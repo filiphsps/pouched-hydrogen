@@ -40,6 +40,7 @@ import {
     useShouldRenderNewsletterPopup,
 } from "./components/root/newsletter-popup";
 import { NotFound } from "./components/root/not-found";
+import { WebVitalsMonitor } from "./components/root/web-vitals-monitor";
 import { JsonLd } from "./components/seo/json-ld";
 import styles from "./styles/app.css?url";
 import { DEFAULT_LOCALE } from "./utils/const";
@@ -49,6 +50,7 @@ export type RootLoader = typeof loader;
 
 export const links: LinksFunction = () => {
     return [
+        // Preconnect to critical third-party origins for faster resource fetching
         {
             rel: "preconnect",
             href: "https://cdn.shopify.com",
@@ -56,6 +58,12 @@ export const links: LinksFunction = () => {
         {
             rel: "preconnect",
             href: "https://shop.app",
+        },
+        // Preload the main stylesheet for faster LCP
+        {
+            rel: "preload",
+            href: styles,
+            as: "style",
         },
         { rel: "icon", type: "image/svg+xml", href: "/favicon.ico" },
     ];
@@ -222,6 +230,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                             {shouldShowNewsletterPopup && <NewsletterPopup />}
                         </TooltipProvider>
                         <CustomAnalytics />
+                        <WebVitalsMonitor />
                     </Analytics.Provider>
                 ) : (
                     children

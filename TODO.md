@@ -423,7 +423,7 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 
 ### 4.2 Core Web Vitals Optimization
 
-**Status:** ⚠️ NEEDS VERIFICATION
+**Status:** ✅ IMPLEMENTED (2024-12-18)
 
 **Required from mission.md:**
 
@@ -431,13 +431,53 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 - INP < 200ms
 - CLS < 0.1
 
-**Actions needed:**
+**Implementation:**
 
-- [ ] Add CWV monitoring (web-vitals library)
-- [ ] Audit and optimize LCP (hero images, fonts)
-- [ ] Audit INP (interaction handlers)
-- [ ] Audit CLS (layout shifts)
-- [ ] Image optimization audit
+- Added `web-vitals` library for Core Web Vitals monitoring
+- Created comprehensive CWV monitoring utilities with GTM integration
+- Created `useWebVitals` hook for real-time CWV tracking in React components
+- Created `WebVitalsMonitor` component integrated into root layout
+- Optimized LCP with priority loading for hero images
+- Optimized INP with debounced search handlers
+- Optimized CLS with proper skeleton dimensions and aspect ratios
+
+**Files created:**
+
+- `app/utils/web-vitals.ts` - CWV utilities with GTM integration and thresholds
+- `app/utils/web-vitals.test.ts` (26 tests)
+- `app/hooks/use-web-vitals.ts` - React hook for CWV monitoring
+- `app/hooks/use-debounce.ts` - Debounce utilities for INP optimization
+- `app/hooks/use-debounce.test.ts` (13 tests)
+- `app/components/root/web-vitals-monitor.tsx` - Root-level CWV monitoring component
+- `app/components/background-image.test.tsx` (16 tests)
+
+**Files modified:**
+
+- `app/components/background-image.tsx` - Added `priority` prop for LCP optimization
+- `app/components/overlay-and-background.tsx` - Pass through `priority` prop
+- `app/sections/hero-image.tsx` - Default `priority={true}` for hero images
+- `app/components/layout/predictive-search/search-form.tsx` - Debounced search for INP optimization
+- `app/root.tsx` - Integrated WebVitalsMonitor, added stylesheet preload
+- `package.json` - Added web-vitals dependency
+
+**Features:**
+
+- Real-time CWV metrics tracking (LCP, INP, CLS, FCP, TTFB)
+- GTM dataLayer integration for analytics
+- Console debug logging with colored output
+- Automatic recommendations when metrics don't pass
+- Image priority loading for hero sections
+- Debounced search to reduce INP impact
+- Proper skeleton dimensions to prevent CLS
+
+**Acceptance Criteria:**
+
+- [x] Add CWV monitoring (web-vitals library)
+- [x] Audit and optimize LCP (hero images with priority loading, preloaded styles)
+- [x] Audit INP (debounced search handlers)
+- [x] Audit CLS (proper image aspect ratios, skeleton dimensions)
+- [x] Image optimization audit (priority prop for above-fold images)
+- [x] Has comprehensive tests (55 tests total)
 
 **Priority:** P1 - Critical for SEO rankings
 

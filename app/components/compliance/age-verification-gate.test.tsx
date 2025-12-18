@@ -77,6 +77,13 @@ vi.mock("react-i18next", () => ({
     }),
 }));
 
+// Mock react-router
+vi.mock("react-router", () => ({
+    useRouteLoaderData: () => ({
+        isBot: false,
+    }),
+}));
+
 // Mock useAgeVerification hook
 const mockVerifyAge = vi.fn();
 let mockIsVerified = false;

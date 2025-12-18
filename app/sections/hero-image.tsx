@@ -61,6 +61,12 @@ const variants = cva("flex flex-col [&_.paragraph]:mx-[unset]", {
     },
 });
 
+/**
+ * Hero image section optimized for Core Web Vitals.
+ *
+ * This section sets `priority={true}` by default to optimize LCP (Largest Contentful Paint)
+ * since hero images are typically the largest visible content on initial page load.
+ */
 export default function HeroImage(props: HeroImageProps & SectionProps) {
     const { ref, children, height, contentPosition, ...rest } = props;
     const { enableTransparentHeader } = useThemeSettings();
@@ -68,6 +74,8 @@ export default function HeroImage(props: HeroImageProps & SectionProps) {
         <Section
             ref={ref}
             {...rest}
+            // Hero images are typically the LCP element - prioritize loading
+            priority={rest.priority ?? true}
             containerClassName={variants({
                 contentPosition,
                 height,

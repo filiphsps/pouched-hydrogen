@@ -16,9 +16,11 @@ import { useThemeSettings } from "@weaverse/hydrogen";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouteLoaderData } from "react-router";
 import { Button } from "~/components/button";
 import { Title } from "~/components/title";
 import { useCookieConsent } from "~/hooks/use-cookie-consent";
+import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 import type { ConsentState } from "~/utils/consent-mode";
 
@@ -71,6 +73,7 @@ export function CookieConsentBanner() {
         openPreferences,
         closePreferences,
     } = useCookieConsent();
+    const rootData = useRouteLoaderData<RootLoader>("root");
 
     // Get theme settings
     const { cookieConsentEnabled = true } = useThemeSettings();
@@ -78,8 +81,8 @@ export function CookieConsentBanner() {
     // Local state for preferences editing
     const [localConsent, setLocalConsent] = useState<ConsentState>(consent);
 
-    // Don't render if disabled, already consented, or still loading
-    if (!cookieConsentEnabled || hasConsented || isLoading) {
+    // Don't render if disabled, already consented, still loading, or bot (SEO)
+    if (!cookieConsentEnabled || hasConsented || isLoading || rootData?.isBot) {
         return null;
     }
 

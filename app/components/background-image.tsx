@@ -30,10 +30,37 @@ const variants = cva("absolute inset-0 z-[-1] h-full w-full", {
 
 export type BackgroundImageProps = VariantProps<typeof variants> & {
     backgroundImage?: WeaverseImage | string;
+    /**
+     * Whether this image is likely the LCP element (hero/banner images).
+     * When true, sets loading="eager" and fetchPriority="high" for faster LCP.
+     * @default false
+     */
+    priority?: boolean;
 };
 
+/**
+ * Background image component optimized for Core Web Vitals.
+ *
+ * For hero sections and above-the-fold images, set `priority={true}` to:
+ * - Load eagerly instead of lazily
+ * - Set high fetch priority for faster LCP
+ *
+ * @example
+ * ```tsx
+ * // Hero section - priority for LCP optimization
+ * <BackgroundImage backgroundImage={heroImage} priority />
+ *
+ * // Below-the-fold section - default lazy loading
+ * <BackgroundImage backgroundImage={featureImage} />
+ * ```
+ */
 export function BackgroundImage(props: BackgroundImageProps) {
-    const { backgroundImage, backgroundFit, backgroundPosition } = props;
+    const {
+        backgroundImage,
+        backgroundFit,
+        backgroundPosition,
+        priority = false,
+    } = props;
     if (backgroundImage) {
         const data =
             typeof backgroundImage === "string"
@@ -44,6 +71,9 @@ export function BackgroundImage(props: BackgroundImageProps) {
                 className={variants({ backgroundFit, backgroundPosition })}
                 data={data}
                 sizes="100vw"
+                loading={priority ? "eager" : "lazy"}
+                // fetchPriority is supported by Hydrogen's Image component
+                {...(priority ? { fetchPriority: "high" } : {})}
             />
         );
     }

@@ -12,6 +12,7 @@ import type {
     ParentEnhancedMenuItem,
 } from "~/types/menu";
 import type { I18nLocale } from "~/types/others";
+import { isBotRequest } from "~/utils/bot-detection";
 import { getCachedShippingZones, type ShippingZone } from "~/utils/shipping";
 import { seoPayload } from "./seo";
 
@@ -37,10 +38,14 @@ export async function loadCriticalData({
 
     const seo = seoPayload.root({ shop: layout.shop, url: request.url });
 
+    // Detect if request is from a bot/crawler (for SEO - hide compliance overlays)
+    const isBot = isBotRequest(request);
+
     const { storefront, env } = context;
     return {
         layout,
         seo,
+        isBot,
         shop: getShopAnalytics({
             storefront,
             publicStorefrontId: env.PUBLIC_STOREFRONT_ID,

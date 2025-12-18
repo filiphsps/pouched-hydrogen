@@ -1,6 +1,19 @@
-import { type ReactNode, type RefObject, useEffect, useRef } from "react";
+import {
+    type ReactNode,
+    type RefObject,
+    useCallback,
+    useEffect,
+    useRef,
+} from "react";
 import { type FormProps, useFetcher, useParams } from "react-router";
+import { useDebouncedCallback } from "~/hooks/use-debounce";
 import type { NormalizedPredictiveSearchResults } from "~/types/predictive-search";
+
+/**
+ * Debounce delay for predictive search in milliseconds.
+ * Optimized for INP - balances responsiveness with reducing main thread work.
+ */
+const SEARCH_DEBOUNCE_MS = 150;
 
 type ChildrenRenderProps = {
     fetchResults: (event: string) => void;
@@ -17,7 +30,10 @@ type SearchFromProps = {
 };
 
 /**
- *  Search form component that posts search requests to the `/search` route
+ * Search form component that posts search requests to the `/api/predictive-search` route.
+ *
+ * Optimized for Core Web Vitals (INP) with debounced search requests.
+ * Search requests are debounced to reduce main thread work during typing.
  */
 export function PredictiveSearchForm({
     action,
@@ -30,16 +46,31 @@ export function PredictiveSearchForm({
     const fetcher = useFetcher<NormalizedPredictiveSearchResults>();
     const inputRef = useRef<HTMLInputElement | null>(null);
 
-    function fetchResults(searchTerm: string) {
-        const searchAction = action ?? "/api/predictive-search";
-        const localizedAction = params.locale
-            ? `/${params.locale}${searchAction}`
-            : searchAction;
-        fetcher.submit(
-            { q: searchTerm, limit: "6" },
-            { method, action: localizedAction },
-        );
-    }
+    /**
+     * Performs the actual search fetch.
+     */
+    const performSearch = useCallback(
+        (searchTerm: string) => {
+            const searchAction = action ?? "/api/predictive-search";
+            const localizedAction = params.locale
+                ? `/${params.locale}${searchAction}`
+                : searchAction;
+            fetcher.submit(
+                { q: searchTerm, limit: "6" },
+                { method, action: localizedAction },
+            );
+        },
+        [action, params.locale, fetcher, method],
+    );
+
+    /**
+     * Debounced fetch results to optimize INP.
+     * Prevents excessive network requests and main thread work during rapid typing.
+     */
+    const fetchResults = useDebouncedCallback(
+        performSearch,
+        SEARCH_DEBOUNCE_MS,
+    );
 
     // ensure the passed input has a type of search, because SearchResults
     // will select the element based on the input

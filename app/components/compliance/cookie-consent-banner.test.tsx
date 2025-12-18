@@ -47,6 +47,20 @@ vi.mock("@weaverse/hydrogen", () => ({
     })),
 }));
 
+// Mock react-router
+vi.mock("react-router", () => ({
+    useRouteLoaderData: () => ({
+        isBot: false,
+    }),
+}));
+
+// Mock react-i18next
+vi.mock("react-i18next", () => ({
+    useTranslation: () => ({
+        t: (key: string) => key,
+    }),
+}));
+
 describe("CookieConsentBanner", () => {
     beforeEach(() => {
         localStorageMock.clear();

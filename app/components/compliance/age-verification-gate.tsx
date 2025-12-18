@@ -12,10 +12,12 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useTranslation } from "react-i18next";
+import { useRouteLoaderData } from "react-router";
 import { Button } from "~/components/button";
 import { Image } from "~/components/image";
 import { Title } from "~/components/title";
 import { useAgeVerification } from "~/hooks/use-age-verification";
+import type { RootLoader } from "~/root";
 import { cn } from "~/utils/cn";
 
 /**
@@ -28,6 +30,7 @@ import { cn } from "~/utils/cn";
 export function AgeVerificationGate() {
     const { t } = useTranslation();
     const { isVerified, isLoading, verifyAge } = useAgeVerification();
+    const rootData = useRouteLoaderData<RootLoader>("root");
 
     // Get theme settings for customization
     const {
@@ -40,8 +43,8 @@ export function AgeVerificationGate() {
         ageVerificationDenyUrl,
     } = useThemeSettings();
 
-    // Don't render if disabled, verified, or still loading (prevent flash)
-    if (!ageVerificationEnabled || isVerified || isLoading) {
+    // Don't render if disabled, verified, still loading (prevent flash), or bot (SEO)
+    if (!ageVerificationEnabled || isVerified || isLoading || rootData?.isBot) {
         return null;
     }
 
