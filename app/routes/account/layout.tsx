@@ -74,12 +74,13 @@ export default function AccountLayout() {
                             className={cn([
                                 "fixed inset-0 z-10 w-screen p-4",
                                 "flex items-center justify-center",
+                                "overflow-y-auto",
                                 "[--slide-up-from:20px]",
                                 "data-[state=open]:animate-slide-up",
                             ])}
                             aria-describedby={undefined}
                         >
-                            <div className="relative w-[500px] max-w-[90vw] bg-(--color-background) px-6 py-3">
+                            <div className="relative my-auto max-h-[calc(100vh-2rem)] w-[500px] max-w-[90vw] overflow-y-auto bg-(--color-background) px-6 py-3">
                                 <VisuallyHidden.Root asChild>
                                     <Dialog.Title>
                                         {t("account.accountModal")}
