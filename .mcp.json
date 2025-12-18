@@ -36,6 +36,21 @@
         "shadcn": {
             "args": ["shadcn@latest", "mcp"],
             "command": "bunx",
+            "disabled": true,
+            "env": {}
+        },
+        "radix-ui": {
+            "args": ["@gianpieropuleo/radix-mcp-server@latest"],
+            "command": "bunx",
+            "disabled": false,
+            "env": {
+                "GITHUB_PERSONAL_ACCESS_TOKEN": "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",
+                "LOG_LEVEL": "error"
+            }
+        },
+        "tailwindcss": {
+            "args": ["tailwindcss-mcp-server@latest"],
+            "command": "bunx",
             "disabled": false,
             "env": {}
         }
