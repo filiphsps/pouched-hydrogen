@@ -36,8 +36,8 @@ export interface CardPriceProps {
 }
 
 /**
- * Price display with optional compare-at price for sales.
- * Clean minimal design with clear price hierarchy.
+ * Price display with premium sale styling.
+ * Features prominent current price, subtle compare-at, and eye-catching discount badge.
  *
  * @param props - Component props
  * @returns Price display with optional sale styling
@@ -61,21 +61,31 @@ export function CardPrice({
             : 0;
 
     const sizeClasses = {
-        sm: "text-sm",
-        md: "text-base",
-        lg: "text-lg",
+        sm: "text-[13px]",
+        md: "text-[15px]",
+        lg: "text-base",
+    };
+
+    const compareSizeClasses = {
+        sm: "text-[11px]",
+        md: "text-[13px]",
+        lg: "text-sm",
     };
 
     return (
         <div
-            className={cn("flex flex-wrap items-baseline gap-2", className)}
+            className={cn("flex flex-wrap items-center gap-2", className)}
             itemProp="offers"
             itemScope
             itemType="https://schema.org/Offer"
         >
-            {/* Current price */}
+            {/* Current price - prominent and bold */}
             <span
-                className={cn("font-bold text-foreground", sizeClasses[size])}
+                className={cn(
+                    "font-bold tracking-tight",
+                    sizeClasses[size],
+                    isOnSale ? "text-rose-600" : "text-gray-900",
+                )}
                 itemProp="price"
                 content={price.amount}
             >
@@ -83,16 +93,21 @@ export function CardPrice({
             </span>
             <meta itemProp="priceCurrency" content={price.currencyCode} />
 
-            {/* Compare at price */}
+            {/* Compare at price - subtle strikethrough */}
             {isOnSale && compareAtPrice && (
-                <span className="text-body-subtle text-sm line-through">
+                <span
+                    className={cn(
+                        "text-gray-400 line-through decoration-gray-300",
+                        compareSizeClasses[size],
+                    )}
+                >
                     <Money withoutTrailingZeros data={compareAtPrice} />
                 </span>
             )}
 
-            {/* Discount percentage badge */}
+            {/* Discount percentage badge - eye-catching */}
             {showPercentage && discountPercentage > 0 && (
-                <span className="rounded-full bg-red-500 px-2 py-0.5 font-semibold text-white text-xs">
+                <span className="rounded-md bg-rose-100 px-1.5 py-0.5 font-bold text-[11px] text-rose-600">
                     -{discountPercentage}%
                 </span>
             )}

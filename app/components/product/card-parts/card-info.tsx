@@ -29,7 +29,7 @@ export interface CardInfoProps {
 
 /**
  * Product card info section with title, vendor, and rating.
- * Clean minimal design with clear typography hierarchy.
+ * Premium typography with refined hierarchy and hover effects.
  *
  * @param props - Component props
  * @returns Info section with title, vendor, and optional extras
@@ -53,28 +53,37 @@ export function CardInfo({
     );
 
     const titleSizeClasses = {
-        sm: "text-sm leading-tight",
-        md: "text-base leading-snug",
-        lg: "text-lg leading-snug",
+        sm: "text-[13px] leading-snug",
+        md: "text-[15px] leading-snug",
+        lg: "text-base leading-snug",
+    };
+
+    const vendorSizeClasses = {
+        sm: "text-[10px]",
+        md: "text-[11px]",
+        lg: "text-xs",
     };
 
     return (
-        <div className={cn("space-y-0.5", className)}>
-            {/* Vendor/Brand - subtle but readable */}
+        <div className={cn("space-y-1", className)}>
+            {/* Vendor/Brand - refined and elegant */}
             {showVendor && vendor && (
                 <span
-                    className="block font-medium text-body-subtle text-xs uppercase tracking-wide"
+                    className={cn(
+                        "block font-semibold text-gray-400 uppercase tracking-widest",
+                        vendorSizeClasses[size],
+                    )}
                     itemProp="brand"
                 >
                     {vendor}
                 </span>
             )}
 
-            {/* Product Title - prominent and clear */}
+            {/* Product Title - bold and clear with subtle hover */}
             <Link to={productUrl} prefetch="intent" className="block">
                 <h3
                     className={cn(
-                        "line-clamp-2 font-semibold text-foreground transition-colors duration-200 group-hover:text-foreground/70",
+                        "line-clamp-2 font-semibold text-gray-900 tracking-tight transition-colors duration-200 group-hover:text-gray-600",
                         titleSizeClasses[size],
                     )}
                     itemProp="name"
@@ -83,9 +92,9 @@ export function CardInfo({
                 </h3>
             </Link>
 
-            {/* Rating */}
+            {/* Rating - with subtle styling */}
             {showRating && (
-                <div className="pt-1">
+                <div className="pt-0.5">
                     <JudgemeStarsRating
                         productHandle={handle}
                         ratingText="{{rating}} ({{total_reviews}})"

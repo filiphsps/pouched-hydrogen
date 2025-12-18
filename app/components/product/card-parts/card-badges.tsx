@@ -34,8 +34,7 @@ export interface CardBadgesProps {
 
 /**
  * Container for product card status badges (new, bundle, bestseller, sold out).
- * Sale percentage is now shown inline with price for cleaner design.
- * Positioned over the image area with clean minimal styling.
+ * Premium positioning with refined shadow effects for depth.
  *
  * @param props - Component props
  * @returns Badge container with visible badges
@@ -52,13 +51,21 @@ export function CardBadges({
     position = "top-left",
     className,
 }: CardBadgesProps) {
-    // Position inside the image area
+    // Position with refined spacing
     const positionClasses = {
-        "top-left": "top-3 left-3",
-        "top-right": "top-3 right-3",
-        "bottom-left": "bottom-3 left-3",
-        "bottom-right": "bottom-3 right-3",
+        "top-left": "top-2.5 left-2.5",
+        "top-right": "top-2.5 right-2.5",
+        "bottom-left": "bottom-2.5 left-2.5",
+        "bottom-right": "bottom-2.5 right-2.5",
     };
+
+    const hasBadges =
+        (showSoldOut && isSoldOut) ||
+        (showBundle && isBundle) ||
+        (showBestseller && isBestseller) ||
+        (showNew && publishedAt);
+
+    if (!hasBadges) return null;
 
     return (
         <div
@@ -68,10 +75,14 @@ export function CardBadges({
                 className,
             )}
         >
-            {showSoldOut && isSoldOut && <SoldOutBadge />}
-            {showBundle && isBundle && <BundleBadge />}
-            {showBestseller && isBestseller && <BestSellerBadge />}
-            {showNew && publishedAt && <NewBadge publishedAt={publishedAt} />}
+            {showSoldOut && isSoldOut && <SoldOutBadge className="shadow-sm" />}
+            {showBundle && isBundle && <BundleBadge className="shadow-sm" />}
+            {showBestseller && isBestseller && (
+                <BestSellerBadge className="shadow-sm" />
+            )}
+            {showNew && publishedAt && (
+                <NewBadge publishedAt={publishedAt} className="shadow-sm" />
+            )}
         </div>
     );
 }

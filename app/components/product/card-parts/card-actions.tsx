@@ -5,7 +5,7 @@ import { cn } from "~/utils/cn";
 import { QuickShopTrigger } from "../quick-shop";
 import { WishlistButton } from "../wishlist-button";
 
-const variants = cva("", {
+const variants = cva("transition-all duration-300", {
     variants: {
         layout: {
             inline: "flex items-center gap-2",
@@ -40,11 +40,13 @@ export interface CardActionsProps extends VariantProps<typeof variants> {
     className?: string;
     /** Callback when add to cart is clicked */
     onAddToCart?: () => void;
+    /** Whether to animate on hover */
+    showOnHover?: boolean;
 }
 
 /**
  * Product card actions component with quick shop, wishlist, and add to cart.
- * Supports multiple layout styles for different card variants.
+ * Features refined styling and smooth hover reveal animations.
  *
  * @param props - Component props
  * @returns Action buttons container
@@ -60,11 +62,19 @@ export function CardActions({
     layout = "inline",
     className,
     onAddToCart,
+    showOnHover = false,
 }: CardActionsProps) {
     const { t } = useTranslation();
 
     return (
-        <div className={cn(variants({ layout }), className)}>
+        <div
+            className={cn(
+                variants({ layout }),
+                showOnHover &&
+                    "translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100",
+                className,
+            )}
+        >
             {showQuickAdd && (
                 <QuickShopTrigger
                     productHandle={productHandle}

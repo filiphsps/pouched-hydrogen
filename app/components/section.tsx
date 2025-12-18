@@ -92,6 +92,7 @@ export function Section(props: SectionProps) {
         backgroundImage,
         backgroundFit,
         backgroundPosition,
+        priority,
         enableOverlay,
         overlayColor,
         overlayColorHover,

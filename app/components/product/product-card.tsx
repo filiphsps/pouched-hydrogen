@@ -85,19 +85,19 @@ const VARIANT_FEATURES = {
 
 /**
  * CVA variants for the card wrapper.
- * Cards with clear boundaries that stand out from the background.
+ * Premium card design with refined shadows and smooth transitions.
  */
 const cardVariants = cva(
-    "group relative flex bg-background transition-all duration-200",
+    "group relative flex bg-background transition-all duration-300 ease-out",
     {
         variants: {
             layout: {
-                grid: "flex-col rounded-xl border border-line-subtle hover:border-line hover:shadow-md",
-                list: "h-28 flex-row rounded-lg border border-line-subtle hover:border-line",
+                grid: "flex-col overflow-hidden rounded-2xl border border-gray-100 shadow-sm hover:border-gray-200 hover:shadow-gray-200/50 hover:shadow-lg",
+                list: "h-28 flex-row overflow-hidden rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-md",
                 compact:
-                    "flex-col rounded-lg border border-line-subtle hover:shadow-sm",
+                    "flex-col overflow-hidden rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-md",
                 featured:
-                    "flex-col rounded-xl border border-line-subtle hover:shadow-lg",
+                    "flex-col overflow-hidden rounded-2xl border border-gray-100 shadow-sm hover:border-gray-200 hover:shadow-gray-200/60 hover:shadow-xl",
             },
         },
         defaultVariants: {
@@ -108,15 +108,15 @@ const cardVariants = cva(
 
 /**
  * CVA variants for the content/info section.
- * Comfortable spacing with clear visual hierarchy.
+ * Refined spacing with clear visual hierarchy.
  */
 const contentVariants = cva("flex flex-col", {
     variants: {
         layout: {
-            grid: "flex-1 gap-3 p-4",
+            grid: "flex-1 gap-2.5 p-4 pt-3",
             list: "min-w-0 flex-1 justify-center gap-1.5 p-3",
             compact: "gap-2 p-3",
-            featured: "gap-4 p-5",
+            featured: "gap-3 p-5 pt-4",
         },
     },
     defaultVariants: {
@@ -185,9 +185,17 @@ function useProductCard(
     const isBundle = Boolean(product?.isBundle?.requiresComponents);
     const isSoldOut = !currentVariant?.availableForSale;
 
-    let [image] = images.nodes;
+    let [image, secondaryImage] = images.nodes;
     if (selectedVariant?.image) {
         image = selectedVariant.image;
+        // Use the next image in sequence as secondary, or fall back to original first
+        const variantImageIndex = images.nodes.findIndex(
+            (img) => img.url === selectedVariant.image?.url,
+        );
+        secondaryImage =
+            images.nodes[variantImageIndex + 1] ||
+            images.nodes[0] ||
+            secondaryImage;
     }
 
     const cardStyles = {
@@ -223,6 +231,7 @@ function useProductCard(
         isBundle,
         isSoldOut,
         image,
+        secondaryImage,
         cardStyles,
         minVariantPrice,
         maxVariantPrice,
@@ -245,6 +254,7 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
         hoverEffect,
         buttonType,
         image,
+        secondaryImage,
         isImageLoading,
         setIsImageLoading,
         isHovered,
@@ -316,6 +326,11 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                 >
                     <CardImage
                         image={image}
+                        secondaryImage={
+                            secondaryImage?.url !== image?.url
+                                ? secondaryImage
+                                : undefined
+                        }
                         aspectRatio={imageAspect}
                         hoverEffect={hoverEffect}
                         isLoading={isImageLoading}

@@ -220,22 +220,22 @@ export function QuickShopTrigger({
                         <button
                             type="button"
                             className={cn(
-                                "flex items-center justify-center rounded-full bg-gray-100 p-2.5 transition-colors hover:bg-gray-200",
+                                "flex items-center justify-center rounded-full bg-gray-900 p-2.5 text-white shadow-sm transition-all duration-300 hover:bg-gray-700 hover:shadow-md active:scale-95",
                                 showOnHover &&
-                                    "opacity-0 transition-opacity group-hover:opacity-100",
+                                    "translate-y-1 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100",
                             )}
                             title={t("cart.addToCart")}
                         >
-                            <HandbagSimpleIcon size={18} />
+                            <HandbagSimpleIcon size={18} weight="bold" />
                         </button>
                     ) : (
                         <Button
                             animate={false}
                             variant="primary"
                             className={cn(
-                                "w-full gap-2",
+                                "w-full gap-2 shadow-sm hover:shadow-md",
                                 showOnHover &&
-                                    "opacity-0 transition-opacity group-hover:opacity-100",
+                                    "translate-y-1 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100",
                             )}
                             title={t("cart.addToCart")}
                         >

@@ -16,8 +16,7 @@ interface WishlistButtonProps {
 
 /**
  * A wishlist button component that displays a heart icon.
- * Toggles between filled (wishlisted) and outline (not wishlisted) states.
- * Clean minimal design with subtle hover effects.
+ * Premium design with smooth animations and satisfying feedback.
  *
  * @param props - The component props
  * @returns A button element with a heart icon
@@ -53,11 +52,11 @@ export function WishlistButton({
             type="button"
             onClick={handleClick}
             className={cn(
-                "group/wishlist flex items-center justify-center rounded-full transition-all duration-200",
+                "group/wishlist flex items-center justify-center rounded-full transition-all duration-300",
                 sizeClasses[size],
                 isWishlisted
-                    ? "bg-red-50 hover:bg-red-100"
-                    : "bg-white/90 shadow-sm backdrop-blur-sm hover:bg-white hover:shadow-md",
+                    ? "bg-rose-50 shadow-sm hover:bg-rose-100 hover:shadow-md"
+                    : "bg-white/95 shadow-sm ring-1 ring-gray-100 backdrop-blur-sm hover:bg-white hover:shadow-md hover:ring-gray-200",
                 className,
             )}
             aria-label={
@@ -69,10 +68,10 @@ export function WishlistButton({
                 size={iconSizes[size]}
                 weight={isWishlisted ? "fill" : "regular"}
                 className={cn(
-                    "transition-colors duration-200",
+                    "transition-all duration-300",
                     isWishlisted
-                        ? "text-red-500"
-                        : "text-gray-500 group-hover/wishlist:text-red-500",
+                        ? "scale-110 text-rose-500"
+                        : "text-gray-400 group-hover/wishlist:scale-110 group-hover/wishlist:text-rose-500",
                 )}
             />
         </button>
