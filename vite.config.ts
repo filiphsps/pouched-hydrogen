@@ -118,12 +118,15 @@ export default defineConfig(async ({isSsrBuild, mode}) => {
       noExternal: ['remix-i18next'],
       optimizeDeps: {
         include: [
+          '@fontsource-variable/inter',
+          'caldate',
           'currency-symbol-map/map',
-          'react',
-          'react/compiler-runtime',
+          'date-holidays',
+          'moment-timezone',
           'react-i18next',
           'react-share',
-          '@fontsource-variable/inter',
+          'react',
+          'react/compiler-runtime',
         ],
       },
     },

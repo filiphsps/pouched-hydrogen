@@ -12,6 +12,7 @@ import type {
     ParentEnhancedMenuItem,
 } from "~/types/menu";
 import type { I18nLocale } from "~/types/others";
+import { getCachedShippingZones, type ShippingZone } from "~/utils/shipping";
 import { seoPayload } from "./seo";
 
 /**
@@ -25,12 +26,14 @@ export async function loadCriticalData({
     request: Request;
     context: AppLoadContext;
 }) {
-    const [layout, swatchesConfigs, weaverseTheme] = await Promise.all([
-        getLayoutData(context),
-        getSwatchesConfigs(context),
-        // Add other queries here, so that they are loaded in parallel
-        context.weaverse.loadThemeSettings(),
-    ]);
+    const [layout, swatchesConfigs, weaverseTheme, shippingZones] =
+        await Promise.all([
+            getLayoutData(context),
+            getSwatchesConfigs(context),
+            // Add other queries here, so that they are loaded in parallel
+            context.weaverse.loadThemeSettings(),
+            getShippingZones(context),
+        ]);
 
     const seo = seoPayload.root({ shop: layout.shop, url: request.url });
 
@@ -55,6 +58,7 @@ export async function loadCriticalData({
         googleGtmID: env.PUBLIC_GOOGLE_GTM_ID,
         swatchesConfigs,
         judgemeEnabled: Boolean(env.JUDGEME_PRIVATE_API_TOKEN),
+        shippingZones,
     };
 }
 
@@ -155,6 +159,40 @@ async function getSwatchesConfigs(context: AppLoadContext) {
         }
     }
     return { colors, images };
+}
+
+/**
+ * Fetches shipping zones with caching from the Shopify Admin API (DeliveryZone).
+ *
+ * CACHING STRATEGY:
+ * - Shipping zones are cached for 1 hour to minimize Admin API calls
+ * - The cache is shared across all requests in the same worker instance
+ * - Only one Admin API call is made per cache refresh (concurrent requests share the promise)
+ * - Falls back to DEFAULT_SHIPPING_ZONES if no API token or on error
+ *
+ * FALLBACK BEHAVIOR:
+ * When using DEFAULT_SHIPPING_ZONES (no Admin API token), delivery estimates are
+ * calculated using business days only (weekdays, excluding weekends and German
+ * public holidays). The default zones provide reasonable estimates for common
+ * shipping destinations based on typical European shipping times.
+ *
+ * To enable dynamic zones from Shopify:
+ * 1. Generate an Admin API token in Shopify Admin > Apps > Develop apps
+ * 2. Grant the token `read_shipping` scope
+ * 3. Set SHOPIFY_ADMIN_API_TOKEN environment variable
+ *
+ * @see https://shopify.dev/docs/api/admin-graphql/latest/objects/DeliveryZone
+ */
+async function getShippingZones(
+    context: AppLoadContext,
+): Promise<ShippingZone[]> {
+    const { env } = context;
+
+    // Use cached shipping zones (fetches from Admin API on first call, then caches for 1 hour)
+    return getCachedShippingZones(
+        env.PUBLIC_STORE_DOMAIN,
+        env.SHOPIFY_ADMIN_API_TOKEN,
+    );
 }
 
 /*

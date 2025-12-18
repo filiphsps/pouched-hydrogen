@@ -90,7 +90,9 @@
             "estimatedDelivery": "Estimated delivery",
             "orderByShipsToday": "Order by {{hour}}:00 to ship today",
             "orderSoonShipsToday": "Order in the next {{hours}}h to ship today!",
-            "freeShippingNote": "Free shipping on orders over {{amount}}"
+            "freeShippingNote": "Free shipping on orders over {{amount}}",
+            "shippingTo": "Shipping to {{zone}}",
+            "holidayNotice": "Note: {{holiday}} on {{date}} may affect delivery"
         },
         "returns": "Returns",
         "new": "New",

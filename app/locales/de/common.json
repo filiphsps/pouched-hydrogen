@@ -90,7 +90,9 @@
             "estimatedDelivery": "Voraussichtliche Lieferung",
             "orderByShipsToday": "Bestellen Sie bis {{hour}}:00 Uhr für Versand heute",
             "orderSoonShipsToday": "Bestellen Sie in den nächsten {{hours}} Std. für Versand heute!",
-            "freeShippingNote": "Kostenloser Versand ab {{amount}}"
+            "freeShippingNote": "Kostenloser Versand ab {{amount}}",
+            "shippingTo": "Versand nach {{zone}}",
+            "holidayNotice": "Hinweis: {{holiday}} am {{date}} kann die Lieferung beeinflussen"
         },
         "returns": "Rückgabe",
         "new": "Neu",

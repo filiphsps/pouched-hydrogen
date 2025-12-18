@@ -59,6 +59,12 @@ declare global {
         METAOBJECT_COLOR_NAME_KEY: string;
         METAOBJECT_COLOR_VALUE_KEY: string;
         PUBLIC_DO_NOT_INDEX?: string;
+        /**
+         * Shopify Admin API access token with read_shipping scope.
+         * Required for fetching delivery zones from the Admin API.
+         * Generate at: Shopify Admin > Apps > Develop apps > API credentials
+         */
+        SHOPIFY_ADMIN_API_TOKEN?: string;
     }
 }
 

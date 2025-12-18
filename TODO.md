@@ -361,29 +361,61 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 
 ### 4.1 Dynamic Shipping Estimates
 
-**Status:** ⚠️ PARTIAL
+**Status:** ✅ IMPLEMENTED (2024-12-18, Updated 2024-12-18)
 
-**Required from mission.md:**
+**Implementation:**
 
-- Dynamic delivery dates based on user location/IP
+- Integrated `date-holidays` npm package for German public holiday detection
+- **Admin API Integration:** Fetches shipping zones from Shopify Admin API (DeliveryZone)
+- **Graceful Fallback:** When Admin API token is not configured, falls back to default zones with business day estimates (skipping weekends and German public holidays)
+- Default shipping zones with location-based delivery times:
+  - Domestic (DE): 2-4 days
+  - EU Fast (AT, NL, BE, etc.): 3-6 days
+  - EU Standard (FR, IT, ES, etc.): 4-8 days
+  - UK: 5-10 days
+  - Switzerland: 4-7 days
+  - International: 7-14 days
+- Updated shipping estimate component with dynamic calculations
+- Added holiday notice display for upcoming holidays
+- Added international shipping zone indicator
 
-**Current state:**
+**Files created:**
 
-- `app/sections/main-product/product-shipping-estimate.tsx` exists
-- `app/utils/date.ts` has business day calculations
+- `app/utils/shipping.ts` - Comprehensive shipping utilities with Admin API support
+- `app/utils/shipping.test.ts` (57 tests - including Admin API tests)
 
-**Files to modify:**
+**Files modified:**
 
-- `app/sections/main-product/product-shipping-estimate.tsx`
-- May need geolocation API integration
+- `app/sections/main-product/product-shipping-estimate.tsx` - Enhanced with dynamic estimates, uses shipping zones from root loader
+- `app/.server/root.ts` - Fetches shipping zones from Admin API with fallback
+- `env.d.ts` - Added SHOPIFY_ADMIN_API_TOKEN environment variable
+- `app/locales/en/common.json` - Added shippingTo and holidayNotice translations
+- `app/locales/de/common.json` - Added German translations
+
+**Environment Variables:**
+
+- `SHOPIFY_ADMIN_API_TOKEN` - Admin API access token with `read_shipping` scope (optional - enables dynamic zones from Shopify)
+
+**Features:**
+
+- Location detection via selected locale/country
+- Business day calculations that skip weekends AND German public holidays
+- Same-day shipping cutoff urgency messaging
+- Holiday notices when holidays are within delivery window
+- Zone-based delivery time calculations (from Admin API or defaults)
+- Weaverse theme settings override support for min/max days
+- Admin API integration for dynamic shipping zones from Shopify
+- Graceful fallback to default zones when Admin API is not configured
 
 **Acceptance Criteria:**
 
-- [ ] Detect user location (IP-based or explicit)
-- [ ] Calculate shipping time based on location
-- [ ] Show estimated delivery date range
-- [ ] Account for holidays and weekends
-- [ ] Has tests
+- [x] Detect user location (via selected locale/country)
+- [x] Calculate shipping time based on location (6 default zones or dynamic from Admin API)
+- [x] Show estimated delivery date range
+- [x] Account for holidays and weekends (date-holidays package)
+- [x] Fetch shipping zones from Admin API when configured
+- [x] Graceful fallback to business day estimates when API key not provided
+- [x] Has tests (57 comprehensive tests)
 
 **Priority:** P2 - Builds trust and reduces cart abandonment
 
@@ -602,7 +634,7 @@ Filter swatches are implemented in `app/sections/collection-filters/filter-item.
 
 - [ ] Core Web Vitals monitoring
 - [x] SWR caching implementation
-- [ ] Dynamic shipping estimates
+- [x] Dynamic shipping estimates
 - [ ] Structured data audit
 
 ### Phase 4: Test Coverage (Ongoing)
@@ -688,7 +720,11 @@ DONE: app/components/layout/predictive-search/popular-keywords.tsx
 DONE: app/components/layout/predictive-search/popular-keywords.test.tsx
 DONE: app/hooks/use-recent-searches.ts
 DONE: app/hooks/use-recent-searches.test.ts
-MODIFY: app/sections/main-product/product-shipping-estimate.tsx
+DONE: app/sections/main-product/product-shipping-estimate.tsx
+DONE: app/utils/shipping.ts
+DONE: app/utils/shipping.test.ts
+DONE: app/.server/root.ts (shipping zones from Admin API)
+DONE: env.d.ts (SHOPIFY_ADMIN_API_TOKEN)
 DONE: app/utils/cache.ts
 DONE: app/utils/cache.test.ts
 ```
