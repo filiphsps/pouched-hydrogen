@@ -239,9 +239,12 @@ export function parseShippingZonesResponse(
  * GraphQL query to fetch delivery zones from Shopify Admin API.
  * Requires Admin API access token with read_shipping scope.
  *
+ * NOTE: No #graphql tag - this is an Admin API query and should not be
+ * validated by Hydrogen's Storefront API codegen.
+ *
  * @see https://shopify.dev/docs/api/admin-graphql/latest/objects/DeliveryZone
  */
-export const ADMIN_DELIVERY_ZONES_QUERY = `#graphql
+export const ADMIN_DELIVERY_ZONES_QUERY = `
     query DeliveryZones {
         deliveryProfiles(first: 10) {
             nodes {
