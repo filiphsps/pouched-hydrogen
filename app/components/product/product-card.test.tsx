@@ -44,6 +44,14 @@ vi.mock("@shopify/hydrogen", async (importOriginal) => {
     };
 });
 
+vi.mock("./card-parts", async (importOriginal) => {
+    const actual = await importOriginal<typeof import("./card-parts")>();
+    return {
+        ...actual,
+        CardActions: () => <div data-testid="card-actions">Actions</div>,
+    };
+});
+
 const mockProduct: any = {
     id: "gid://shopify/Product/1",
     title: "Test Product",

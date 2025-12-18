@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Link } from "~/components/link";
 import { ProductImage } from "~/components/product/product-image";
+import { VendorBadge } from "~/components/product/vendor-badge";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
 import type { CartLayoutType } from "~/types/others";
@@ -72,11 +73,11 @@ export function CartLineItem({
     }
 
     const productTitle: ReactNode = product?.title ? (
-        <span className="inline-flex gap-1">
-            <span className="inline-block font-medium text-body-subtle uppercase">
-                {product.vendor}
+        <span className="inline-flex flex-col">
+            <VendorBadge vendor={product.vendor} size="xs" inline />
+            <span className="leading-tight">
+                {removeVendorFromTitle(product.title, product.vendor, true)}
             </span>
-            {removeVendorFromTitle(product.title, product.vendor, true)}
         </span>
     ) : null;
 
@@ -104,7 +105,7 @@ export function CartLineItem({
             <div className="flex grow flex-col gap-3 gap-y-1">
                 <div className="flex justify-between gap-4">
                     <div>
-                        <div>
+                        <div className="mb-1">
                             {product?.handle ? (
                                 <Link
                                     to={url}
@@ -119,6 +120,7 @@ export function CartLineItem({
                                 <p>{productTitle}</p>
                             )}
                         </div>
+
                         <div className="flex flex-wrap items-center gap-x-2 text-gray-500 text-sm">
                             {!isDefaultVariant && <span>{title}</span>}
                             {(line as any).sellingPlanAllocation?.sellingPlan

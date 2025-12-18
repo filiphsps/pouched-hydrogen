@@ -42,12 +42,12 @@ export function AttributePills({ product, className }: AttributePillsProps) {
     return (
         <div className={cn("flex flex-wrap gap-1.5", className)}>
             {attribute1 && (
-                <span className="rounded-md border border-gray-100 bg-gray-50/80 px-2 py-0.5 font-medium text-[11px] text-gray-600">
+                <span className="rounded-full border border-gray-100 bg-gray-50/80 px-2 py-0.5 font-medium text-[11px] text-gray-600">
                     {formatMetafieldValue(t, key1, attribute1)}
                 </span>
             )}
             {attribute2 && (
-                <span className="rounded-md border border-gray-100 bg-gray-50/80 px-2 py-0.5 font-medium text-[11px] text-gray-600">
+                <span className="rounded-full border border-gray-100 bg-gray-50/80 px-2 py-0.5 font-medium text-[11px] text-gray-600">
                     {formatMetafieldValue(t, key2, attribute2)}
                 </span>
             )}

@@ -1,4 +1,8 @@
 import { Link } from "~/components/link";
+import {
+    VendorBadge,
+    type VendorBadgeSize,
+} from "~/components/product/vendor-badge";
 import JudgemeStarsRating from "~/sections/main-product/judgeme-stars-rating";
 import { cn } from "~/utils/cn";
 import { removeVendorFromTitle } from "~/utils/product";
@@ -28,11 +32,12 @@ export interface CardInfoProps {
 }
 
 /**
- * Product card info section with title, vendor, and rating.
- * Premium typography with refined hierarchy and hover effects.
+ * Product card info section with vendor, title, and optional rating.
+ * Clean Scandinavian-inspired typography with refined hierarchy.
+ * Title and vendor always maintain consistent positioning.
  *
  * @param props - Component props
- * @returns Info section with title, vendor, and optional extras
+ * @returns Info section with vendor, title, and optional rating
  */
 export function CardInfo({
     title,
@@ -53,37 +58,34 @@ export function CardInfo({
     );
 
     const titleSizeClasses = {
-        sm: "text-[13px] leading-snug",
-        md: "text-[15px] leading-snug",
-        lg: "text-base leading-snug",
+        sm: "text-[13px] leading-tight",
+        md: "text-sm leading-tight",
+        lg: "text-base leading-tight",
     };
 
-    const vendorSizeClasses = {
-        sm: "text-[10px]",
-        md: "text-[11px]",
-        lg: "text-xs",
+    /** Map CardInfo size to VendorBadge size */
+    const vendorSizeMap: Record<string, VendorBadgeSize> = {
+        sm: "xs",
+        md: "sm",
+        lg: "md",
     };
 
     return (
-        <div className={cn("space-y-1", className)}>
-            {/* Vendor/Brand - refined and elegant */}
+        <div className={cn("space-y-0.5", className)}>
+            {/* Vendor/Brand - subtle, uppercase treatment */}
             {showVendor && vendor && (
-                <span
-                    className={cn(
-                        "block font-semibold text-gray-400 uppercase tracking-widest",
-                        vendorSizeClasses[size],
-                    )}
-                    itemProp="brand"
-                >
-                    {vendor}
-                </span>
+                <VendorBadge
+                    vendor={vendor}
+                    size={vendorSizeMap[size]}
+                    withSchema
+                />
             )}
 
-            {/* Product Title - bold and clear with subtle hover */}
+            {/* Product Title - medium weight, clean lines */}
             <Link to={productUrl} prefetch="intent" className="block">
                 <h3
                     className={cn(
-                        "line-clamp-2 font-semibold text-gray-900 tracking-tight transition-colors duration-200 group-hover:text-gray-600",
+                        "line-clamp-2 font-medium text-gray-800 tracking-tight transition-colors duration-200 group-hover:text-gray-950",
                         titleSizeClasses[size],
                     )}
                     itemProp="name"
@@ -92,7 +94,7 @@ export function CardInfo({
                 </h3>
             </Link>
 
-            {/* Rating - with subtle styling */}
+            {/* Rating - compact inline display */}
             {showRating && (
                 <div className="pt-0.5">
                     <JudgemeStarsRating

@@ -85,19 +85,20 @@ const VARIANT_FEATURES = {
 
 /**
  * CVA variants for the card wrapper.
- * Premium card design with refined shadows and smooth transitions.
+ * Premium card design with subtle depth and refined hover transitions.
+ * Scandinavian-inspired minimalism - clean lines, restrained elegance.
  */
 const cardVariants = cva(
     "group relative flex bg-background transition-all duration-300 ease-out",
     {
         variants: {
             layout: {
-                grid: "flex-col overflow-hidden rounded-2xl border border-gray-100 shadow-sm hover:border-gray-200 hover:shadow-gray-200/50 hover:shadow-lg",
-                list: "h-28 flex-row overflow-hidden rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-md",
+                grid: "flex-col overflow-hidden rounded-xl border border-line hover:border-gray-200/80 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]",
+                list: "h-28 flex-row overflow-hidden rounded-xl border border-line hover:border-gray-200 hover:shadow-md",
                 compact:
-                    "flex-col overflow-hidden rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-md",
+                    "flex-col overflow-hidden rounded-xl border border-line hover:border-gray-200 hover:shadow-md",
                 featured:
-                    "flex-col overflow-hidden rounded-2xl border border-gray-100 shadow-sm hover:border-gray-200 hover:shadow-gray-200/60 hover:shadow-xl",
+                    "flex-col overflow-hidden rounded-xl border border-line hover:border-gray-200/80 hover:shadow-[0_12px_40px_rgb(0,0,0,0.06)]",
             },
         },
         defaultVariants: {
@@ -287,7 +288,6 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
         pcardShowBestSellerBadge,
         pcardShowOutOfStockBadge,
         pcardShowOptionValues,
-        pcardQuickShopPanelType,
     } = settings;
 
     const features = VARIANT_FEATURES[cardVariant];
@@ -367,8 +367,8 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                         )}
                     >
                         <CardActions
-                            productHandle={product.handle}
                             productId={product.id}
+                            variant={currentVariant}
                             showQuickAdd={false}
                             showWishlist={true}
                             layout="overlay"
@@ -379,11 +379,6 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
 
             {/* Content Section */}
             <div className={contentVariants({ layout: cardVariant })}>
-                {/* Attribute Pills - grid only */}
-                {features.showPills && pcardShowAttributePills && (
-                    <AttributePills product={product} />
-                )}
-
                 {/* Product Info */}
                 {isCompactLayout ? (
                     // Compact: minimal info
@@ -422,6 +417,7 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                             />
                         )}
 
+                        {/* Vendor & Title - always at consistent position */}
                         <CardInfo
                             title={product.title}
                             handle={product.handle}
@@ -432,6 +428,11 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                             urlParams={params.toString()}
                             size={features.infoSize as "sm" | "md" | "lg"}
                         />
+
+                        {/* Attribute Pills - placed AFTER title for consistent alignment */}
+                        {features.showPills && pcardShowAttributePills && (
+                            <AttributePills product={product} />
+                        )}
 
                         {/* Variant Options (swatches) */}
                         {features.showOptions && pcardShowOptionValues && (
@@ -449,14 +450,8 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                             />
                         )}
 
-                        {/* Price Row - with button inline for list layout */}
-                        <div
-                            className={cn(
-                                "mt-auto",
-                                isListLayout &&
-                                    "flex items-center justify-between gap-2",
-                            )}
-                        >
+                        {/* Price Row with inline add button - always visible */}
+                        <div className="mt-auto flex items-center justify-between gap-2">
                             {pcardShowLowestPrice ||
                             isCombinedListing(product) ? (
                                 <CardPrice
@@ -481,32 +476,18 @@ export function ProductCard({ product, variant, className }: ProductCardProps) {
                                 />
                             )}
 
-                            {/* Button inline for list layout */}
-                            {isListLayout && features.showActions && (
+                            {/* Subtle icon button - always visible */}
+                            {features.showActions && (
                                 <CardActions
-                                    productHandle={product.handle}
                                     productId={product.id}
+                                    variant={currentVariant}
                                     showQuickAdd={true}
                                     showWishlist={false}
                                     buttonType="icon"
-                                    quickShopPanelType={pcardQuickShopPanelType}
                                     layout="inline"
                                 />
                             )}
                         </div>
-
-                        {/* Full-width button for non-list layouts */}
-                        {!isListLayout && features.showActions && (
-                            <CardActions
-                                productHandle={product.handle}
-                                productId={product.id}
-                                showQuickAdd={true}
-                                showWishlist={false}
-                                buttonType="text"
-                                quickShopPanelType={pcardQuickShopPanelType}
-                                layout="stacked"
-                            />
-                        )}
                     </>
                 )}
             </div>

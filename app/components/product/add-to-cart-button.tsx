@@ -9,7 +9,7 @@ import {
     getClientBrowserParameters,
     sendShopifyAnalytics,
 } from "@shopify/hydrogen";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { FetcherWithComponents } from "react-router";
 import { useMatches } from "react-router";
@@ -115,27 +115,31 @@ function AddToCartButtonContent({
 function usePageAnalytics({ hasUserConsent }: { hasUserConsent: boolean }) {
     const matches = useMatches();
 
-    const data: Record<string, unknown> = {};
-    for (const match of matches) {
-        const eventData = match?.data as Record<string, unknown>;
-        if (eventData) {
-            if (eventData.analytics) {
-                Object.assign(data, eventData.analytics);
+    // Memoize the analytics data to prevent creating new objects on every render.
+    // This prevents the useEffect in AddToCartAnalytics from running on every render.
+    return useMemo(() => {
+        const data: Record<string, unknown> = {};
+        for (const match of matches) {
+            const eventData = match?.data as Record<string, unknown>;
+            if (eventData) {
+                if (eventData.analytics) {
+                    Object.assign(data, eventData.analytics);
+                }
+                const selectedLocale =
+                    (eventData.selectedLocale as typeof DEFAULT_LOCALE) ||
+                    DEFAULT_LOCALE;
+                Object.assign(data, {
+                    currency: selectedLocale.currency,
+                    acceptedLanguage: selectedLocale.language,
+                });
             }
-            const selectedLocale =
-                (eventData.selectedLocale as typeof DEFAULT_LOCALE) ||
-                DEFAULT_LOCALE;
-            Object.assign(data, {
-                currency: selectedLocale.currency,
-                acceptedLanguage: selectedLocale.language,
-            });
         }
-    }
 
-    return {
-        ...data,
-        hasUserConsent,
-    } as unknown as ShopifyPageViewPayload;
+        return {
+            ...data,
+            hasUserConsent,
+        } as unknown as ShopifyPageViewPayload;
+    }, [matches, hasUserConsent]);
 }
 
 function AddToCartAnalytics({

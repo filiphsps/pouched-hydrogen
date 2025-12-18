@@ -2,7 +2,7 @@ import { GiftIcon, TagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
@@ -50,6 +50,16 @@ export function CartSummary({
         isOptimistic ||
         dcRemoveFetcher.state !== "idle" ||
         gcRemoveFetcher.state !== "idle";
+
+    // Memoize applicable discount codes to avoid O(n²) filtering on every render
+    const applicableDiscountCodes = useMemo(
+        () => discountCodes?.filter((d) => d.applicable) ?? [],
+        [discountCodes],
+    );
+    const applicableDiscountCodesSet = useMemo(
+        () => new Set(applicableDiscountCodes.map((d) => d.code)),
+        [applicableDiscountCodes],
+    );
     return (
         <div>
             <Title as="h2" id="summary-heading" className="sr-only">
@@ -121,75 +131,68 @@ export function CartSummary({
             )}
 
             {/* Active Discount Codes*/}
-            {discountCodes?.length > 0 && (
+            {applicableDiscountCodes.length > 0 && (
                 <div className="mb-4 flex flex-wrap justify-end gap-2">
-                    {discountCodes
-                        .filter((discount) => discount.applicable)
-                        .map((discount) => {
-                            const codes = discountCodes
-                                .filter((d) => d.applicable)
-                                .map((d) => d.code);
-                            const updatedCodes = codes.filter(
-                                (c) => c !== discount.code,
-                            );
+                    {applicableDiscountCodes.map((discount) => {
+                        // Get all codes except the current one for removal
+                        const updatedCodes = applicableDiscountCodes
+                            .filter((d) => d.code !== discount.code)
+                            .map((d) => d.code);
 
-                            // Check if this specific discount is being removed
-                            const isDCRemoving =
-                                dcRemoveFetcher.state !== "idle" &&
-                                removingDiscountCode === discount.code;
+                        // Check if this specific discount is being removed
+                        const isDCRemoving =
+                            dcRemoveFetcher.state !== "idle" &&
+                            removingDiscountCode === discount.code;
 
-                            return (
-                                <div
-                                    key={discount.code}
-                                    className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
+                        return (
+                            <div
+                                key={discount.code}
+                                className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
+                            >
+                                <TagIcon
+                                    weight="bold"
+                                    className="size-4.5"
+                                    aria-hidden="true"
+                                />
+                                <span className="leading-normal">
+                                    {discount.code}
+                                </span>
+                                <CartForm
+                                    route="/cart"
+                                    action={
+                                        CartForm.ACTIONS.DiscountCodesUpdate
+                                    }
+                                    inputs={{
+                                        discountCodes: updatedCodes || [],
+                                    }}
+                                    fetcherKey="discount-code-remove"
                                 >
-                                    <TagIcon
-                                        weight="bold"
-                                        className="size-4.5"
-                                        aria-hidden="true"
-                                    />
-                                    <span className="leading-normal">
-                                        {discount.code}
-                                    </span>
-                                    <CartForm
-                                        route="/cart"
-                                        action={
-                                            CartForm.ACTIONS.DiscountCodesUpdate
+                                    <button
+                                        type="submit"
+                                        className="relative ml-1 size-4 transition-colors hover:text-red-600"
+                                        aria-label={t("cart.removeDiscount", {
+                                            code: discount.code,
+                                        })}
+                                        onClick={() =>
+                                            setRemovingDiscountCode(
+                                                discount.code,
+                                            )
                                         }
-                                        inputs={{
-                                            discountCodes: updatedCodes || [],
-                                        }}
-                                        fetcherKey="discount-code-remove"
                                     >
-                                        <button
-                                            type="submit"
-                                            className="relative ml-1 size-4 transition-colors hover:text-red-600"
-                                            aria-label={t(
-                                                "cart.removeDiscount",
-                                                {
-                                                    code: discount.code,
-                                                },
-                                            )}
-                                            onClick={() =>
-                                                setRemovingDiscountCode(
-                                                    discount.code,
-                                                )
-                                            }
-                                        >
-                                            {isDCRemoving ? (
-                                                <Spinner size={16} />
-                                            ) : (
-                                                <XIcon
-                                                    className="size-4"
-                                                    weight="regular"
-                                                    aria-hidden="true"
-                                                />
-                                            )}
-                                        </button>
-                                    </CartForm>
-                                </div>
-                            );
-                        })}
+                                        {isDCRemoving ? (
+                                            <Spinner size={16} />
+                                        ) : (
+                                            <XIcon
+                                                className="size-4"
+                                                weight="regular"
+                                                aria-hidden="true"
+                                            />
+                                        )}
+                                    </button>
+                                </CartForm>
+                            </div>
+                        );
+                    })}
                 </div>
             )}
 

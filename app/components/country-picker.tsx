@@ -171,9 +171,10 @@ export function CountryPicker({
             setSearch("");
             setHighlightedIndex(0);
             // Focus search input after popover opens
-            requestAnimationFrame(() => {
+            const rafId = requestAnimationFrame(() => {
                 searchInputRef.current?.focus();
             });
+            return () => cancelAnimationFrame(rafId);
         }
     }, [open]);
 
@@ -220,7 +221,8 @@ export function CountryPicker({
         [filteredCountries, highlightedIndex, handleSelect],
     );
 
-    // Scroll highlighted item into view
+    // Scroll highlighted item into view when it changes
+    // biome-ignore lint/correctness/useExhaustiveDependencies: highlightedIndex is needed to scroll when keyboard navigating
     useEffect(() => {
         if (open && listRef.current) {
             const highlightedEl = listRef.current.querySelector(
@@ -228,7 +230,7 @@ export function CountryPicker({
             );
             highlightedEl?.scrollIntoView({ block: "nearest" });
         }
-    }, [open]);
+    }, [open, highlightedIndex]);
 
     // Get selected country name for display
     const selectedCountryName =
@@ -292,7 +294,7 @@ export function CountryPicker({
 
                 <Popover.Portal>
                     <Popover.Content
-                        className="z-50 w-[var(--radix-popover-trigger-width)] min-w-[200px] rounded-md border border-border bg-background shadow-lg"
+                        className="z-50 w-(--radix-popover-trigger-width) min-w-[200px] rounded-md border border-border bg-background shadow-lg"
                         sideOffset={4}
                         align="start"
                         onKeyDown={handleKeyDown}

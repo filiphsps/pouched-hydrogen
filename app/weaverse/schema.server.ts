@@ -707,65 +707,6 @@ export const themeSchema: HydrogenThemeSchema = {
                 },
                 {
                     type: "heading",
-                    label: "Quick shop",
-                },
-                {
-                    type: "switch",
-                    label: "Enable quick shop",
-                    name: "pcardEnableQuickShop",
-                    defaultValue: true,
-                },
-                {
-                    type: "switch",
-                    label: "Show when hovering product card",
-                    name: "pcardShowQuickShopOnHover",
-                    defaultValue: true,
-                    condition: (theme: Record<string, any>) =>
-                        theme.pcardEnableQuickShop === true,
-                },
-                {
-                    type: "select",
-                    label: "Quick shop button type",
-                    name: "pcardQuickShopButtonType",
-                    configs: {
-                        options: [
-                            { value: "icon", label: "Icon button" },
-                            { value: "text", label: "Text button" },
-                        ],
-                    },
-                    defaultValue: "icon",
-                    condition: (theme: Record<string, any>) =>
-                        theme.pcardEnableQuickShop === true,
-                },
-                {
-                    type: "text",
-                    label: "Quick shop button text",
-                    name: "pcardQuickShopButtonText",
-                    defaultValue: "Quick shop",
-                    placeholder: "Quick shop",
-                    condition: (theme: Record<string, any>) => {
-                        return (
-                            theme.pcardEnableQuickShop === true &&
-                            theme.pcardQuickShopButtonType === "text"
-                        );
-                    },
-                },
-                {
-                    type: "select",
-                    label: "Quick shop panel type",
-                    name: "pcardQuickShopPanelType",
-                    configs: {
-                        options: [
-                            { value: "modal", label: "Modal" },
-                            { value: "drawer", label: "Drawer" },
-                        ],
-                    },
-                    defaultValue: "modal",
-                    condition: (theme: Record<string, any>) =>
-                        theme.pcardEnableQuickShop === true,
-                },
-                {
-                    type: "heading",
                     label: "Badges",
                 },
                 {
