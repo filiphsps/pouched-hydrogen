@@ -8,7 +8,7 @@ vi.mock("react-i18next", () => ({
 }));
 
 vi.mock("@phosphor-icons/react", () => ({
-    PlusIcon: () => <span data-testid="plus-icon">+</span>,
+    ShoppingBagIcon: () => <span data-testid="shopping-bag-icon">🛒</span>,
 }));
 
 vi.mock("~/components/product/add-to-cart-button", () => ({
@@ -69,12 +69,12 @@ describe("CardActions", () => {
 
         it("renders icon button by default", () => {
             render(<CardActions {...defaultProps} />);
-            expect(screen.getByTestId("plus-icon")).toBeInTheDocument();
+            expect(screen.getByTestId("shopping-bag-icon")).toBeInTheDocument();
         });
 
         it("renders icon button when buttonType is text (both variants use icon)", () => {
             render(<CardActions {...defaultProps} buttonType="text" />);
-            expect(screen.getByTestId("plus-icon")).toBeInTheDocument();
+            expect(screen.getByTestId("shopping-bag-icon")).toBeInTheDocument();
         });
     });
 

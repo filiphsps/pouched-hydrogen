@@ -148,14 +148,13 @@ export function CartMain({
                                 )}
                             >
                                 {(cart?.lines?.nodes ?? []).map((line) => (
-                                    <>
+                                    <li key={line.id}>
                                         <CartLineItem
-                                            key={line.id}
                                             line={line}
                                             layout={layout}
                                         />
-                                        <div className="border-line-subtle border-t" />
-                                    </>
+                                        <div className="mt-5 border-line-subtle border-t" />
+                                    </li>
                                 ))}
                             </ul>
 

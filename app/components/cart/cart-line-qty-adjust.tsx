@@ -4,17 +4,18 @@ import {
     useOptimisticData,
 } from "@shopify/hydrogen";
 import { useTranslation } from "react-i18next";
-import { useSubmit } from "react-router";
+import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Quantity } from "~/components/product/quantity";
 import { cn } from "~/utils/cn";
 import type { CartLineOptimisticData } from "./cart-line-item";
 
 /**
- * Component for adjusting cart line item quantity
- * @param {Object} props - Component props
- * @param {OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0]} props.line - Cart line item
- * @returns {JSX.Element | null} Cart line quantity adjust component
+ * Component for adjusting cart line item quantity.
+ * Uses fetcher with optimistic data for immediate UI feedback.
+ * @param props - Component props
+ * @param props.line - Cart line item from optimistic cart
+ * @returns Cart line quantity adjust component or null if line is invalid
  */
 export function CartLineQuantityAdjust({
     line,
@@ -24,7 +25,7 @@ export function CartLineQuantityAdjust({
     className?: string;
 }) {
     const { t } = useTranslation();
-    const submit = useSubmit();
+    const fetcher = useFetcher({ key: `cart-line-${line?.id}` });
     const optimisticId = line?.id;
     const optimisticData =
         useOptimisticData<CartLineOptimisticData>(optimisticId);
@@ -34,44 +35,53 @@ export function CartLineQuantityAdjust({
     }
 
     const optimisticQuantity = optimisticData?.quantity || line.quantity;
-    const { id: lineId, isOptimistic } = line;
+    const { id: lineId, isOptimistic: lineIsOptimistic } = line;
+    const isSubmitting = fetcher.state !== "idle";
+    const isOptimistic = lineIsOptimistic || isSubmitting;
 
+    /**
+     * Handles quantity change by submitting cart update with optimistic data.
+     * Removes line if quantity is 0, otherwise updates the quantity.
+     */
     const handleQuantityChange = (quantity: number) => {
         if (quantity < 0 || quantity === optimisticQuantity) {
             return;
         }
 
+        const formData = new FormData();
+
         if (quantity === 0) {
-            submit(
-                {
-                    cartFormInput: JSON.stringify({
-                        action: CartForm.ACTIONS.LinesRemove,
-                        inputs: { lineIds: [lineId] },
-                    }),
-                },
-                {
-                    action: "/cart",
-                    method: "POST",
-                    navigate: false,
-                    fetcherKey: `navigate-cart-${lineId}`, // Match what CartForm would typically generate or use a unique key
-                },
+            formData.set(
+                "cartFormInput",
+                JSON.stringify({
+                    action: CartForm.ACTIONS.LinesRemove,
+                    inputs: { lineIds: [lineId] },
+                }),
+            );
+            // Include optimistic data for remove action
+            formData.set(
+                "__hydrogenOptimisticData",
+                JSON.stringify({ id: lineId, data: { action: "remove" } }),
             );
         } else {
-            submit(
-                {
-                    cartFormInput: JSON.stringify({
-                        action: CartForm.ACTIONS.LinesUpdate,
-                        inputs: { lines: [{ id: lineId, quantity }] },
-                    }),
-                },
-                {
-                    action: "/cart",
-                    method: "POST",
-                    navigate: false,
-                    fetcherKey: `navigate-cart-${lineId}`,
-                },
+            formData.set(
+                "cartFormInput",
+                JSON.stringify({
+                    action: CartForm.ACTIONS.LinesUpdate,
+                    inputs: { lines: [{ id: lineId, quantity }] },
+                }),
+            );
+            // Include optimistic data with new quantity
+            formData.set(
+                "__hydrogenOptimisticData",
+                JSON.stringify({ id: lineId, data: { quantity } }),
             );
         }
+
+        fetcher.submit(formData, {
+            action: "/cart",
+            method: "POST",
+        });
     };
 
     return (
@@ -84,7 +94,7 @@ export function CartLineQuantityAdjust({
                     value={optimisticQuantity}
                     onChange={handleQuantityChange}
                     label={false}
-                    disabled={Boolean(isOptimistic)}
+                    disabled={isOptimistic}
                     className="h-8 w-36"
                     min={0}
                 />

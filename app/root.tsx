@@ -25,7 +25,11 @@ import {
     useRouteLoaderData,
 } from "react-router";
 import { useChangeLanguage } from "remix-i18next/react";
-import { loadCriticalData, loadDeferredData } from "./.server/root";
+import {
+    loadCartData,
+    loadCriticalData,
+    loadDeferredData,
+} from "./.server/root";
 import type { Route } from "./+types/root";
 import { AgeVerificationGate } from "./components/compliance/age-verification-gate";
 import { CookieConsentBanner } from "./components/compliance/cookie-consent-banner";
@@ -73,15 +77,21 @@ export async function loader(args: Route.LoaderArgs) {
     // Start fetching non-critical data without blocking time to first byte
     const deferredData = loadDeferredData({ context });
 
-    // Await the critical data required to render initial state of the page
-    const criticalData = await loadCriticalData({
-        request: args.request,
-        context,
-    });
+    // Await critical data and cart in parallel
+    // Cart is fetched with critical data to ensure it's always fresh after mutations
+    // (deferred cart data can get stuck due to React Router Promise handling issues)
+    const [criticalData, cart] = await Promise.all([
+        loadCriticalData({
+            request: args.request,
+            context,
+        }),
+        loadCartData({ context }),
+    ]);
 
     return {
         ...deferredData,
         ...criticalData,
+        cart,
         publicDoNotIndex: Boolean(context.env.PUBLIC_DO_NOT_INDEX),
     };
 }
@@ -94,18 +104,22 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
     formMethod,
     currentUrl,
     nextUrl,
+    defaultShouldRevalidate,
 }) => {
     // Revalidate when a mutation is performed (e.g., add to cart, login, etc.)
+    // This includes form submissions and fetcher mutations
     if (formMethod && formMethod !== "GET") {
         return true;
     }
 
     // Revalidate when manually revalidating via useRevalidator
+    // or when a fetcher submits (URL stays the same)
     if (currentUrl.toString() === nextUrl.toString()) {
         return true;
     }
 
-    return false;
+    // Fall back to React Router's default behavior for other cases
+    return defaultShouldRevalidate;
 };
 
 export const meta = ({ data }: MetaArgs<typeof loader>) => {

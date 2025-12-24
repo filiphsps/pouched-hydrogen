@@ -1,5 +1,9 @@
 import type { HydrogenSession } from "@shopify/hydrogen";
-import { createHydrogenContext } from "@shopify/hydrogen";
+import {
+    cartGetIdDefault,
+    cartSetIdDefault,
+    createHydrogenContext,
+} from "@shopify/hydrogen";
 import { WeaverseClient } from "@weaverse/hydrogen";
 import {
     createCookieSessionStorage,
@@ -11,6 +15,12 @@ import type { I18nLocale } from "~/types/others";
 import { COUNTRIES } from "~/utils/const";
 import { components } from "~/weaverse/components";
 import { themeSchema } from "~/weaverse/schema.server";
+
+/**
+ * Cookie name used by Hydrogen for cart ID storage.
+ * Must match what cart.setCartId() uses internally.
+ */
+const CART_COOKIE_NAME = "cart";
 
 const additionalContext = {
     // Additional context for custom properties, CMS clients, 3P SDKs, etc.
@@ -60,6 +70,46 @@ export async function createHydrogenRouterContext(
     const session = await AppSession.init(request, [env.SESSION_SECRET]);
 
     const i18n = getLocaleFromRequest(request);
+
+    /**
+     * Custom cart ID handling to fix stale cart data during same-request revalidation.
+     *
+     * THE PROBLEM:
+     * When a cart mutation happens (add/remove/update), React Router revalidates
+     * loaders in the SAME request cycle. The default `cartGetIdDefault` reads from
+     * REQUEST cookies, which are unchanged until the browser processes Set-Cookie
+     * headers. This causes `cart.get()` to fetch the OLD cart.
+     *
+     * THE SOLUTION:
+     * 1. Custom `setId`: Writes cart ID to SESSION (in-memory) AND returns Set-Cookie headers
+     * 2. Custom `getId`: Reads from SESSION first (for same-request), falls back to cookies
+     *
+     * This ensures cart.get() always uses the most recent cart ID after mutations.
+     */
+    const cookieCartId = cartGetIdDefault(request.headers);
+    const defaultSetCartId = cartSetIdDefault();
+
+    // Track cart ID in memory for same-request access
+    let inMemoryCartId: string | undefined;
+
+    const getCartId = () => {
+        // In-memory cart ID takes precedence (set by mutations in current request)
+        if (inMemoryCartId) {
+            return inMemoryCartId;
+        }
+        // Fall back to cookie cart ID (for initial page loads)
+        return cookieCartId();
+    };
+
+    const setCartId = (cartId: string) => {
+        // Store in memory for same-request revalidation
+        inMemoryCartId = cartId;
+        // Also update session for persistence
+        session.set(CART_COOKIE_NAME, cartId.split("/").pop() || "");
+        // Return Set-Cookie headers for browser
+        return defaultSetCartId(cartId);
+    };
+
     const hydrogenContext = createHydrogenContext(
         {
             env,
@@ -68,7 +118,11 @@ export async function createHydrogenRouterContext(
             waitUntil,
             session,
             i18n,
-            cart: { queryFragment: CART_QUERY_FRAGMENT },
+            cart: {
+                queryFragment: CART_QUERY_FRAGMENT,
+                getId: getCartId,
+                setId: setCartId,
+            },
         },
         additionalContext,
     );

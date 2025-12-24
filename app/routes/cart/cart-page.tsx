@@ -86,17 +86,14 @@ export async function action({ request, context: ctx }: Route.ActionArgs) {
 
     /**
      * The Cart ID may change after each mutation. We need to update it each time in the session.
+     * CRITICAL: These headers MUST be passed to all responses (including redirects)
+     * to persist the cart session cookie.
      */
-    let headers = {};
-    if (result?.cart?.id) {
-        headers = cart.setCartId(result.cart.id);
-    }
+    const headers = result?.cart?.id ? cart.setCartId(result.cart.id) : {};
 
     const redirectTo = formData.get("redirectTo") ?? null;
     if (typeof redirectTo === "string" && isLocalPath(redirectTo)) {
-        // status = 303;
-        // headers.set("Location", redirectTo);
-        return redirect(redirectTo);
+        return redirect(redirectTo, { headers });
     }
 
     const { cart: cartResult, errors, userErrors } = result || {};

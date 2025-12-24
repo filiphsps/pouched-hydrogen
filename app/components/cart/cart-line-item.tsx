@@ -82,7 +82,7 @@ export function CartLineItem({
     ) : null;
 
     return (
-        <li
+        <div
             className="flex gap-4"
             style={{
                 // Hide the line item if the optimistic data action is remove
@@ -156,7 +156,7 @@ export function CartLineItem({
                     <CartLinePrice line={line} isOptimistic={isOptimistic} />
                 </div>
             </div>
-        </li>
+        </div>
     );
 }
 
