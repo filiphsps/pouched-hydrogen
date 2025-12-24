@@ -72,7 +72,7 @@ export default function SellingPlanSelector() {
                             value="onetime"
                             checked={selectedValue === "onetime"}
                             onChange={() => handleValueChange("onetime")}
-                            className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                            className="aspect-square h-4 w-4 overflow-hidden rounded-full border border-primary text-primary focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         />
                         <span className="cursor-pointer font-medium text-sm leading-none">
                             One-time purchase
@@ -112,7 +112,7 @@ export default function SellingPlanSelector() {
                                         onChange={() =>
                                             handleValueChange(firstPlan.id)
                                         }
-                                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="aspect-square h-4 w-4 overflow-hidden rounded-full border border-primary text-primary focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                     />
                                     <div className="flex flex-col">
                                         <span className="cursor-pointer font-medium text-sm leading-none">
