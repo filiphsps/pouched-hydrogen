@@ -11,7 +11,7 @@ export default {
     presets: [hydrogenPreset()],
     future: {
         unstable_optimizeDeps: true,
-        unstable_viteEnvironmentApi: true,
+        v8_viteEnvironmentApi: true,
     },
     appDirectory: "app",
     buildDirectory: "dist",
