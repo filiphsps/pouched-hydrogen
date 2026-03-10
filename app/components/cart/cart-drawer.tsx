@@ -11,15 +11,15 @@ import { CartContent } from "./cart-content";
 import { useCartDrawerStore } from "./store";
 
 /**
- * Cart drawer component for mobile screens.
- * Displays the cart as a slide-in drawer from the right side.
+ * Cart drawer component — the single overlay cart entry point.
+ * Displays the cart as a slide-in drawer from the right side on all screens.
  *
- * Cart data is now awaited in the root loader (not deferred) to ensure
+ * Cart data is awaited in the root loader (not deferred) to ensure
  * it always reflects the latest state after mutations.
  *
  * @example
  * ```tsx
- * // Used internally by CartContainer
+ * // In header component
  * <CartDrawer />
  * ```
  */
@@ -63,13 +63,7 @@ export function CartDrawer() {
                 {cart && cart.totalQuantity > 0 && (
                     <div
                         className={cn(
-                            "cart-count",
-                            "-right-1.5 absolute top-0",
-                            "flex h-4.5 min-w-4.5 items-center justify-center rounded-full px-1 text-center",
-                            "text-center font-medium text-[13px] leading-none",
-                            "transition-colors duration-300",
-                            "group-hover/header:bg-(--color-header-text)",
-                            "group-hover/header:text-(--color-header-bg)",
+                            "cart-count absolute top-0 -right-1.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full px-1 text-center text-center font-medium text-[13px] leading-none transition-colors duration-300 group-hover/header:bg-(--color-header-text) group-hover/header:text-(--color-header-bg)",
                         )}
                     >
                         <span className="-mr-px">{cart.totalQuantity}</span>
@@ -77,26 +71,16 @@ export function CartDrawer() {
                 )}
             </Dialog.Trigger>
             <Dialog.Portal>
-                <Dialog.Overlay
-                    className={cn(
-                        "fixed inset-0 z-10 bg-black/50",
-                        "data-[state=open]:animate-[fade-in_150ms_ease-out]",
-                        "data-[state=closed]:animate-[fade-out_150ms_ease-in]",
-                    )}
-                />
+                <Dialog.Overlay className="fixed inset-0 z-10 bg-black/50 data-[state=closed]:animate-[fade-out_150ms_ease-in] data-[state=open]:animate-[fade-in_150ms_ease-out]" />
                 <Dialog.Content
                     onCloseAutoFocus={(e) => e.preventDefault()}
-                    className={cn(
-                        "fixed inset-y-0 right-0 z-10 w-screen bg-background pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]",
-                        "data-[state=open]:animate-[enter-from-right_200ms_ease-out]",
-                        "data-[state=closed]:animate-[exit-to-right_200ms_ease-in]",
-                    )}
+                    className="fixed inset-y-0 right-0 z-10 w-screen bg-background pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] data-[state=closed]:animate-[exit-to-right_200ms_ease-in] data-[state=open]:animate-[enter-from-right_200ms_ease-out]"
                     style={{
                         maxWidth: `${cartDrawerWidth}px`,
                     }}
                     aria-describedby={undefined}
                 >
-                    <CartContent cart={cart as CartReturn} layout="drawer" />
+                    <CartContent cart={cart as CartReturn} />
                 </Dialog.Content>
             </Dialog.Portal>
         </Dialog.Root>

@@ -180,7 +180,7 @@ export function Navigation({ children }: { children: ReactNode }) {
                     onValueChange={setMenuId}
                     delayDuration={200}
                     skipDelayDuration={1500}
-                    className="lg:-translate-x-1/2 relative z-50 lg:absolute lg:left-1/2"
+                    className="relative z-50 lg:absolute lg:left-1/2 lg:-translate-x-1/2"
                 >
                     <NavigationMenu.List className="z-50 hidden h-full gap-2 lg:flex">
                         {items.map((menuItem) => {
@@ -250,7 +250,7 @@ export function Navigation({ children }: { children: ReactNode }) {
                         })}
                     </NavigationMenu.List>
 
-                    <div className="perspective-[2500px] -translate-x-1/2 absolute top-full left-1/2 flex w-screen justify-center">
+                    <div className="perspective-[2500px] absolute top-full left-1/2 flex w-screen -translate-x-1/2 justify-center">
                         <NavigationMenu.Viewport
                             className={cn(
                                 "relative mt-2 h-(--radix-navigation-menu-viewport-height) w-full origin-[top_center] overflow-hidden rounded-xl border border-line-subtle bg-white shadow-xl transition-[width,height] duration-300 data-[state=closed]:animate-scale-out data-[state=open]:animate-scale-in sm:w-(--radix-navigation-menu-viewport-width)",

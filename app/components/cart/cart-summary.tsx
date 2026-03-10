@@ -6,10 +6,12 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
+import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
 import { Title } from "~/components/title";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLayoutType } from "~/types/others";
 import { cn } from "~/utils/cn";
 import {
@@ -18,6 +20,19 @@ import {
     NoteDialog,
 } from "./cart-summary-actions";
 
+/** Response shape from the cart action */
+interface CartActionResponse {
+    userErrors?: Array<{ message: string }>;
+}
+
+/**
+ * Cart summary component.
+ * Displays applied gift cards, discount codes, order total,
+ * and action dialogs for notes, discounts, and gift cards.
+ *
+ * @param props.cart - Optimistic cart data
+ * @param props.layout - "drawer" or "page"
+ */
 export function CartSummary({
     cart,
     layout,
@@ -26,6 +41,7 @@ export function CartSummary({
     layout: CartLayoutType;
 }) {
     const { t } = useTranslation();
+    const cartRoute = usePrefixPathWithLocale("/cart");
     const { enableCartNote, enableDiscountCode, enableGiftCard } =
         useThemeSettings();
     const [removingDiscountCode, setRemovingDiscountCode] = useState<
@@ -34,16 +50,13 @@ export function CartSummary({
     const [removingGiftCard, setRemovingGiftCard] = useState<string | null>(
         null,
     );
-    const dcRemoveFetcher = useFetcher({ key: "discount-code-remove" });
-    const gcRemoveFetcher = useFetcher({ key: "gift-card-remove" });
-    const {
-        cost,
-        discountCodes,
-        isOptimistic,
-        checkoutUrl,
-        appliedGiftCards,
-        note,
-    } = cart;
+    const dcRemoveFetcher = useFetcher<CartActionResponse>({
+        key: "discount-code-remove",
+    });
+    const gcRemoveFetcher = useFetcher<CartActionResponse>({
+        key: "gift-card-remove",
+    });
+    const { cost, discountCodes, isOptimistic, appliedGiftCards, note } = cart;
 
     // Show loading state for optimistic line item changes or pending cart actions
     const isCartUpdating =
@@ -51,15 +64,24 @@ export function CartSummary({
         dcRemoveFetcher.state !== "idle" ||
         gcRemoveFetcher.state !== "idle";
 
+    // Check for removal errors from fetcher responses
+    const dcRemoveError =
+        dcRemoveFetcher.state === "idle" &&
+        dcRemoveFetcher.data?.userErrors?.length
+            ? dcRemoveFetcher.data.userErrors[0].message
+            : null;
+    const gcRemoveError =
+        gcRemoveFetcher.state === "idle" &&
+        gcRemoveFetcher.data?.userErrors?.length
+            ? gcRemoveFetcher.data.userErrors[0].message
+            : null;
+
     // Memoize applicable discount codes to avoid O(n²) filtering on every render
     const applicableDiscountCodes = useMemo(
         () => discountCodes?.filter((d) => d.applicable) ?? [],
         [discountCodes],
     );
-    const applicableDiscountCodesSet = useMemo(
-        () => new Set(applicableDiscountCodes.map((d) => d.code)),
-        [applicableDiscountCodes],
-    );
+
     return (
         <div>
             <Title as="h2" id="summary-heading" className="sr-only">
@@ -92,7 +114,7 @@ export function CartSummary({
                                     </span>
                                 </div>
                                 <CartForm
-                                    route="/cart"
+                                    route={cartRoute}
                                     action={
                                         CartForm.ACTIONS.GiftCardCodesRemove
                                     }
@@ -130,6 +152,13 @@ export function CartSummary({
                 </div>
             )}
 
+            {/* Gift card removal error */}
+            {gcRemoveError && (
+                <Banner variant="error" className="mb-4">
+                    {gcRemoveError}
+                </Banner>
+            )}
+
             {/* Active Discount Codes*/}
             {applicableDiscountCodes.length > 0 && (
                 <div className="mb-4 flex flex-wrap justify-end gap-2">
@@ -158,7 +187,7 @@ export function CartSummary({
                                     {discount.code}
                                 </span>
                                 <CartForm
-                                    route="/cart"
+                                    route={cartRoute}
                                     action={
                                         CartForm.ACTIONS.DiscountCodesUpdate
                                     }
@@ -194,6 +223,13 @@ export function CartSummary({
                         );
                     })}
                 </div>
+            )}
+
+            {/* Discount removal error */}
+            {dcRemoveError && (
+                <Banner variant="error" className="mb-4">
+                    {dcRemoveError}
+                </Banner>
             )}
 
             <dl className="mb-4 grid">

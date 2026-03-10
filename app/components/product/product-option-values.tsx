@@ -118,27 +118,25 @@ export function ProductOptionValues({
                 OPTIONS_AS_SWATCH.includes(optionName) && "pt-0.5",
             )}
         >
-            {optionValues.map((optionValue) => {
-                return (
-                    <Tooltip key={optionValue.name}>
-                        <TooltipTrigger>
-                            <div>
-                                <OptionValue
-                                    optionName={optionName}
-                                    value={optionValue}
-                                    onVariantChange={onVariantChange}
-                                    combinedListing={combinedListing}
-                                />
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent sideOffset={6}>
-                            {optionValue.exists
-                                ? optionValue.name
-                                : `${optionValue.name} (Not available)`}
-                        </TooltipContent>
-                    </Tooltip>
-                );
-            })}
+            {optionValues.map((optionValue) => (
+                <Tooltip key={optionValue.name}>
+                    <TooltipTrigger>
+                        <div>
+                            <OptionValue
+                                optionName={optionName}
+                                value={optionValue}
+                                onVariantChange={onVariantChange}
+                                combinedListing={combinedListing}
+                            />
+                        </div>
+                    </TooltipTrigger>
+                    <TooltipContent sideOffset={6}>
+                        {optionValue.exists
+                            ? optionValue.name
+                            : `${optionValue.name} (Not available)`}
+                    </TooltipContent>
+                </Tooltip>
+            ))}
         </div>
     );
 }

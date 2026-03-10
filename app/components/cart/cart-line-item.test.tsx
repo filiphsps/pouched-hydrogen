@@ -1,3 +1,7 @@
+/**
+ * Tests for CartLineItem component.
+ * Tests rendering, optimistic remove, selling plan, and vendor badge.
+ */
 import { render, screen } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { describe, expect, it, vi } from "vitest";
@@ -11,15 +15,19 @@ vi.mock("./cart-line-qty-adjust", () => ({
     CartLineQuantityAdjust: () => <div>Qty</div>,
 }));
 
+let mockOptimisticReturnValue: Record<string, unknown> = {};
+
 vi.mock("@shopify/hydrogen", async (importOriginal) => {
     const actual = await importOriginal<typeof import("@shopify/hydrogen")>();
     return {
         ...actual,
         useMoney: vi.fn(),
         Money: () => <div>Price</div>,
-        useOptimisticData: vi.fn(() => ({})),
+        useOptimisticData: () => mockOptimisticReturnValue,
         CartForm: Object.assign(
-            ({ children }: any) => <form>{children}</form>,
+            ({ children }: { children: React.ReactNode }) => (
+                <form>{children}</form>
+            ),
             { ACTIONS: { LinesRemove: "LinesRemove" } },
         ),
         OptimisticInput: () => null,
@@ -28,6 +36,10 @@ vi.mock("@shopify/hydrogen", async (importOriginal) => {
 
 vi.mock("react-i18next", () => ({
     useTranslation: () => ({ t: (key: string) => key }),
+}));
+
+vi.mock("~/hooks/use-prefix-path-with-locale", () => ({
+    usePrefixPathWithLocale: (path: string) => path,
 }));
 
 vi.mock("./store", () => ({
@@ -96,5 +108,36 @@ describe("CartLineItem", () => {
             </Wrapper>,
         );
         expect(screen.getByText("Variant Title")).toBeInTheDocument();
+    });
+
+    it("returns null when optimistic data action is 'remove'", () => {
+        mockOptimisticReturnValue = { action: "remove" };
+        const { container } = render(
+            <Wrapper>
+                <CartLineItem line={mockLine} layout="drawer" />
+            </Wrapper>,
+        );
+        // The component should return null — empty container
+        expect(container.querySelector(".flex.gap-4")).not.toBeInTheDocument();
+        mockOptimisticReturnValue = {};
+    });
+
+    it("returns null when line has no id", () => {
+        const lineWithoutId = { ...mockLine, id: "" };
+        const { container } = render(
+            <Wrapper>
+                <CartLineItem line={lineWithoutId} layout="drawer" />
+            </Wrapper>,
+        );
+        expect(container.querySelector(".flex.gap-4")).not.toBeInTheDocument();
+    });
+
+    it("shows remove button in drawer layout", () => {
+        render(
+            <Wrapper>
+                <CartLineItem line={mockLine} layout="drawer" />
+            </Wrapper>,
+        );
+        expect(screen.getByText("cart.remove")).toBeInTheDocument();
     });
 });

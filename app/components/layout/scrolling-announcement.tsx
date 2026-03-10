@@ -38,19 +38,17 @@ export function ScrollingAnnouncement() {
                 } as React.CSSProperties
             }
         >
-            {new Array(10).fill("").map((_, idx) => {
-                return (
+            {new Array(10).fill("").map((_, idx) => (
+                <div
+                    className="animate-marquee px-[calc(var(--gap)/2)] [animation-duration:var(--marquee-duration)]"
+                    key={idx}
+                >
                     <div
-                        className="animate-marquee px-[calc(var(--gap)/2)] [animation-duration:var(--marquee-duration)]"
-                        key={idx}
-                    >
-                        <div
-                            className="flex items-center gap-(--gap) whitespace-nowrap [&_p]:flex [&_p]:items-center [&_p]:gap-2"
-                            dangerouslySetInnerHTML={{ __html: topbarText }}
-                        />
-                    </div>
-                );
-            })}
+                        className="flex items-center gap-(--gap) whitespace-nowrap [&_p]:flex [&_p]:items-center [&_p]:gap-2"
+                        dangerouslySetInnerHTML={{ __html: topbarText }}
+                    />
+                </div>
+            ))}
         </div>
     );
 }

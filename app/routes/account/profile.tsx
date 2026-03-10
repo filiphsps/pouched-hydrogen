@@ -48,9 +48,7 @@ export type ActionResponse = {
         | null;
 };
 
-export const meta: MetaFunction = () => {
-    return [{ title: "Profile" }];
-};
+export const meta: MetaFunction = () => [{ title: "Profile" }];
 
 export async function loader({ context }: Route.LoaderArgs) {
     await context.customerAccount.handleAuthStatus();

@@ -1,7 +1,7 @@
 import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { CartForm } from "@shopify/hydrogen";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
@@ -10,23 +10,37 @@ import { Button } from "~/components/button";
 import { IconButton } from "~/components/icon-button";
 import { Input } from "~/components/input";
 import { Textarea } from "~/components/textarea";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { cn } from "~/utils/cn";
 
+/** Response shape from the cart action */
+interface CartActionResponse {
+    cart?: CartApiQueryFragment;
+    userErrors?: Array<{ message: string }>;
+    errors?: Array<{ message: string }>;
+    action?: string;
+}
+
+/**
+ * Note dialog for adding/editing cart notes.
+ * Derives success from fetcher.data (no userErrors = success).
+ */
 export function NoteDialog({
     cartNote: currentNote = "",
 }: {
     cartNote?: string | null;
 }) {
     const { t } = useTranslation();
+    const cartRoute = usePrefixPathWithLocale("/cart");
     const [note, setNote] = useState(currentNote || "");
-    const [submitted, setSubmitted] = useState(false);
-    const fetcher = useFetcher();
+    const fetcher = useFetcher<CartActionResponse>();
 
-    useEffect(() => {
-        if (fetcher.state === "idle" && fetcher.data) {
-            setSubmitted(true);
-        }
-    }, [fetcher]);
+    // Derive success/error from fetcher response
+    const isIdle = fetcher.state === "idle";
+    const hasResponse = isIdle && fetcher.data != null;
+    const userErrors = fetcher.data?.userErrors ?? [];
+    const hasError = hasResponse && userErrors.length > 0;
+    const hasSuccess = hasResponse && userErrors.length === 0;
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -40,7 +54,7 @@ export function NoteDialog({
                         inputs: { cartNote: formCartNote },
                     }),
                 },
-                { method: "POST", action: "/cart" },
+                { method: "POST", action: cartRoute },
             );
             setNote(formCartNote);
         }
@@ -53,7 +67,7 @@ export function NoteDialog({
                 onCloseAutoFocus={(e) => {
                     e.preventDefault();
                     setNote(currentNote || "");
-                    setSubmitted(false);
+                    fetcher.data = null;
                 }}
                 className={cn(
                     "fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xs",
@@ -86,12 +100,17 @@ export function NoteDialog({
                             value={note}
                             onChange={(e) => {
                                 setNote(e.target.value);
-                                setSubmitted(false);
+                                fetcher.data = null;
                             }}
                         />
-                        {submitted && (
+                        {hasSuccess && (
                             <Banner variant="success">
                                 {t("cart.noteSaved")}
+                            </Banner>
+                        )}
+                        {hasError && (
+                            <Banner variant="error">
+                                {userErrors[0].message}
                             </Banner>
                         )}
                         <div className="flex items-center justify-end gap-3">
@@ -119,20 +138,34 @@ export function NoteDialog({
     );
 }
 
+/**
+ * Discount code dialog.
+ * Derives success/error from fetcher.data — checks the response cart's discountCodes
+ * for applicability instead of comparing with stale parent props.
+ */
 export function DiscountDialog({
     discountCodes = [],
 }: {
     discountCodes: CartApiQueryFragment["discountCodes"];
 }) {
     const { t } = useTranslation();
+    const cartRoute = usePrefixPathWithLocale("/cart");
     const [code, setCode] = useState("");
-    const fetcher = useFetcher();
-    const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
-    const success = Boolean(
-        submitted &&
-            discountCodes?.find((d) => d.code === code && d.applicable),
-    );
-    const error = submitted && !success;
+    const fetcher = useFetcher<CartActionResponse>();
+
+    // Derive success/error from the action response, not stale cart props
+    const isIdle = fetcher.state === "idle";
+    const hasResponse = isIdle && fetcher.data != null && code !== "";
+    const userErrors = fetcher.data?.userErrors ?? [];
+
+    // Check the response cart's discount codes for applicability
+    const responseDiscountCodes =
+        fetcher.data?.cart?.discountCodes ?? discountCodes;
+    const codeIsApplicable =
+        hasResponse &&
+        responseDiscountCodes?.some((d) => d.code === code && d.applicable);
+    const success = hasResponse && userErrors.length === 0 && codeIsApplicable;
+    const error = hasResponse && !success;
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -149,7 +182,7 @@ export function DiscountDialog({
                         },
                     }),
                 },
-                { method: "POST", action: "/cart" },
+                { method: "POST", action: cartRoute },
             );
         }
     }
@@ -205,7 +238,9 @@ export function DiscountDialog({
                         )}
                         {error && (
                             <Banner variant="error">
-                                {t("cart.discountInvalid")}
+                                {userErrors.length > 0
+                                    ? userErrors[0].message
+                                    : t("cart.discountInvalid")}
                             </Banner>
                         )}
                         <div className="flex items-center justify-end gap-3">
@@ -233,49 +268,60 @@ export function DiscountDialog({
     );
 }
 
+/**
+ * Gift card dialog.
+ * Derives success/error from fetcher.data.userErrors instead of comparing
+ * with stale appliedGiftCards prop. Removed the appliedGiftCardCodes ref.
+ */
 export function GiftCardDialog({
     appliedGiftCards = [],
 }: {
     appliedGiftCards: CartApiQueryFragment["appliedGiftCards"];
 }) {
     const { t } = useTranslation();
-    const appliedGiftCardCodes = useRef<string[]>([]);
+    const cartRoute = usePrefixPathWithLocale("/cart");
     const [code, setCode] = useState("");
-    const fetcher = useFetcher();
-    const submitted = Boolean(code && fetcher.state === "idle" && fetcher.data);
-    const success = Boolean(
-        submitted &&
-            appliedGiftCards?.find((gc) =>
-                code.toLowerCase().endsWith(gc.lastCharacters),
-            ),
-    );
-    const error = submitted && !success;
+    const [appliedCodes, setAppliedCodes] = useState<string[]>([]);
+    const fetcher = useFetcher<CartActionResponse>();
 
-    function saveAppliedCode(gcCode: string) {
-        const formattedCode = gcCode.replace(/\s/g, ""); // Remove spaces
-        if (!appliedGiftCardCodes.current.includes(formattedCode)) {
-            appliedGiftCardCodes.current.push(formattedCode);
-        }
-    }
+    // Derive success/error from the action response
+    const isIdle = fetcher.state === "idle";
+    const hasResponse = isIdle && fetcher.data != null && code !== "";
+    const userErrors = fetcher.data?.userErrors ?? [];
+    const hasError = hasResponse && userErrors.length > 0;
+
+    // Check if the applied gift card appears in the response
+    const responseGiftCards =
+        fetcher.data?.cart?.appliedGiftCards ?? appliedGiftCards;
+    const codeWasApplied =
+        hasResponse &&
+        responseGiftCards?.some((gc) =>
+            code.toLowerCase().endsWith(gc.lastCharacters),
+        );
+    const success = hasResponse && !hasError && codeWasApplied;
+    const error = hasResponse && !success;
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const giftCardCode = formData.get("giftCardCode") as string;
         if (giftCardCode) {
+            const formattedCode = giftCardCode.replace(/\s/g, "");
             fetcher.submit(
                 {
                     [CartForm.INPUT_NAME]: JSON.stringify({
                         action: CartForm.ACTIONS.GiftCardCodesUpdate,
                         inputs: {
-                            giftCardCode,
-                            giftCardCodes: appliedGiftCardCodes.current,
+                            giftCardCode: formattedCode,
+                            giftCardCodes: appliedCodes,
                         },
                     }),
                 },
-                { method: "POST", action: "/cart" },
+                { method: "POST", action: cartRoute },
             );
-            saveAppliedCode(giftCardCode);
+            setAppliedCodes((prev) =>
+                prev.includes(formattedCode) ? prev : [...prev, formattedCode],
+            );
         }
     }
 
@@ -330,7 +376,9 @@ export function GiftCardDialog({
                         )}
                         {error && (
                             <Banner variant="error">
-                                {t("cart.giftCardInvalid")}
+                                {userErrors.length > 0
+                                    ? userErrors[0].message
+                                    : t("cart.giftCardInvalid")}
                             </Banner>
                         )}
                         <div className="flex items-center justify-end gap-3">

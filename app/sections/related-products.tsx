@@ -58,21 +58,17 @@ export default function RelatedProducts(props: RelatedProductsProps) {
                         errorElement="There was a problem loading related products"
                         resolve={recommended}
                     >
-                        {(products) => {
-                            return (
-                                <Swimlane>
-                                    {products.nodes
-                                        .slice(0, 12)
-                                        .map((product) => (
-                                            <ProductCard
-                                                key={product.id}
-                                                product={product}
-                                                className="w-80 snap-start"
-                                            />
-                                        ))}
-                                </Swimlane>
-                            );
-                        }}
+                        {(products) => (
+                            <Swimlane>
+                                {products.nodes.slice(0, 12).map((product) => (
+                                    <ProductCard
+                                        key={product.id}
+                                        product={product}
+                                        className="w-80 snap-start"
+                                    />
+                                ))}
+                            </Swimlane>
+                        )}
                     </Await>
                 </Suspense>
             </Section>

@@ -17,9 +17,7 @@ if (!globalThis.setImmediate) {
         // biome-ignore lint/nursery/noShadow: need to use args.
         callback: (...args: any[]) => void,
         ...args: any[]
-    ) => {
-        return setTimeout(callback, 0, ...args);
-    };
+    ) => setTimeout(callback, 0, ...args);
 }
 if (!globalThis.clearImmediate) {
     globalThis.clearImmediate = (id: any) => {

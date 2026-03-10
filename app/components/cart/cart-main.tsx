@@ -15,6 +15,10 @@ import { Section } from "~/components/section";
 import type { CartLayoutType } from "~/types/others";
 import { cn } from "~/utils/cn";
 
+/**
+ * Empty cart state component.
+ * Shows a message and CTA to start shopping, plus best sellers on the page layout.
+ */
 function CartEmpty({
     hidden = false,
     layout = "drawer",
@@ -36,9 +40,6 @@ function CartEmpty({
                     "flex h-screen-dynamic flex-col content-start justify-center space-y-12 overflow-y-scroll px-5 pb-5 text-center transition",
                     y > 0 && "border-t",
                 ],
-                layout === "modal" && [
-                    "flex min-h-64 flex-col content-start justify-center space-y-8 overflow-y-auto px-6 py-8 text-center",
-                ],
                 layout === "page" && [
                     "w-full gap-4 pb-12 md:items-start md:gap-8 lg:gap-12",
                 ],
@@ -51,9 +52,7 @@ function CartEmpty({
                     variant="outline"
                     to="/products"
                     className={cn(
-                        layout === "drawer" || layout === "modal"
-                            ? "w-full"
-                            : "min-w-48",
+                        layout === "drawer" ? "w-full" : "min-w-48",
                         "justify-center",
                     )}
                     onClick={onClose}
@@ -76,6 +75,15 @@ function CartEmpty({
     );
 }
 
+/**
+ * Main cart content component.
+ * Renders line items, free shipping progress, upsells, and summary.
+ * Uses useOptimisticCart for immediate UI feedback during mutations.
+ *
+ * @param props.layout - "drawer" or "page"
+ * @param props.onClose - Optional callback to close the cart
+ * @param props.cart - Cart data from Shopify
+ */
 export function CartMain({
     layout,
     onClose,
@@ -100,7 +108,7 @@ export function CartMain({
             <CartEmpty hidden={linesCount} onClose={onClose} layout={layout} />
             <div
                 className={cn(
-                    (layout === "drawer" || layout === "modal") &&
+                    layout === "drawer" &&
                         "grid min-h-0 grow grid-cols-1 grid-rows-[minmax(0,1fr)_auto]",
                     layout === "page" && [
                         "mx-auto w-full max-w-(--page-width) pb-12",
@@ -114,14 +122,13 @@ export function CartMain({
                     className={cn([
                         y > 0 ? "border-line-subtle border-t" : "",
                         layout === "page" && "grow md:translate-y-4",
-                        (layout === "drawer" || layout === "modal") &&
+                        layout === "drawer" &&
                             "flex h-full flex-col transition",
                     ])}
                 >
                     <ScrollArea
                         rootClassName={cn(
-                            (layout === "drawer" || layout === "modal") &&
-                                "flex-1 overflow-hidden",
+                            layout === "drawer" && "flex-1 overflow-hidden",
                         )}
                         size="sm"
                     >
@@ -130,7 +137,6 @@ export function CartMain({
                                 "flex flex-col gap-3 py-3 lg:py-6",
                                 layout === "page" && "px-4",
                                 layout === "drawer" && "px-4",
-                                layout === "modal" && "px-6",
                             )}
                         >
                             {/* Free shipping progress bar */}
@@ -144,7 +150,6 @@ export function CartMain({
                                     "grid",
                                     layout === "page" && "gap-9",
                                     layout === "drawer" && "gap-5",
-                                    layout === "modal" && "gap-5",
                                 )}
                             >
                                 {(cart?.lines?.nodes ?? []).map((line) => (

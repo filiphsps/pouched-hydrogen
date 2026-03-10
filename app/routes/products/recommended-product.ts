@@ -24,9 +24,10 @@ export async function getRecommendedProducts(
 
     const mergedProducts = (products.recommended ?? [])
         .concat(products.additional.nodes)
-        .filter((prod, idx, arr) => {
-            return arr.findIndex(({ id }) => id === prod.id) === idx;
-        });
+        .filter(
+            (prod, idx, arr) =>
+                arr.findIndex(({ id }) => id === prod.id) === idx,
+        );
 
     const originalProduct = mergedProducts.findIndex(
         (item) => item.id === productId,

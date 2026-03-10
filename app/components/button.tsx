@@ -152,7 +152,7 @@ Button.displayName = "Button";
 
 function Spinner() {
     return (
-        <span className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 [&~*]:invisible">
+        <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 [&~*]:invisible">
             <CircleNotchIcon className="h-5 w-5 animate-spin [animation-duration:var(--spinner-duration,500ms)]" />
         </span>
     );

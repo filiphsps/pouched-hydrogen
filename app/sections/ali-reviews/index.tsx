@@ -45,13 +45,11 @@ export const loader = async ({
                 },
             },
         )
-        .catch((_err) => {
-            return {
-                data: { reviews: [], cursor: "" },
-                message: "",
-                status: 0,
-            };
-        });
+        .catch((_err) => ({
+            data: { reviews: [], cursor: "" },
+            message: "",
+            status: 0,
+        }));
     return res?.data?.reviews;
 };
 

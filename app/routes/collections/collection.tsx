@@ -21,11 +21,10 @@ import type { Route } from "./+types/collection";
 import { COLLECTION_QUERY } from "./collection-query";
 import { getSortValuesFromParam, parseAsCurrency } from "./utils";
 
-export const meta = ({ matches }: MetaArgs<typeof loader>) => {
-    return getSeoMeta(
+export const meta = ({ matches }: MetaArgs<typeof loader>) =>
+    getSeoMeta(
         ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
     );
-};
 
 export const headers = routeHeaders;
 
@@ -77,12 +76,13 @@ export async function loader({
                     customBannerKey: bannerKey,
                 },
             })
-            .catch((_e) => {
-                return {
-                    collection: null,
-                    collections: [],
-                } as unknown as CollectionQuery;
-            }),
+            .catch(
+                (_e) =>
+                    ({
+                        collection: null,
+                        collections: [],
+                    }) as unknown as CollectionQuery,
+            ),
         context.weaverse.loadPage({
             type: "COLLECTION",
             handle: collectionHandle,

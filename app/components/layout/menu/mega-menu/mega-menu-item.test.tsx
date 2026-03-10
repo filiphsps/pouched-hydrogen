@@ -45,9 +45,8 @@ vi.mock("~/components/paragraph", () => ({
 }));
 
 // Setup wrapper for router context
-const renderWithRouter = (ui: React.ReactNode) => {
-    return render(<MemoryRouter>{ui}</MemoryRouter>);
-};
+const renderWithRouter = (ui: React.ReactNode) =>
+    render(<MemoryRouter>{ui}</MemoryRouter>);
 
 describe("MegaMenuItem", () => {
     const mockItemBase: MegaMenuLink = {

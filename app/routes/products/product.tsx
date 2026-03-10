@@ -111,11 +111,10 @@ export async function loader({
     );
 }
 
-export const meta = ({ matches }: MetaArgs<typeof loader>) => {
-    return getSeoMeta(
+export const meta = ({ matches }: MetaArgs<typeof loader>) =>
+    getSeoMeta(
         ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
     );
-};
 
 export default function Product() {
     const { product, storeDomain, url } = useLoaderData<typeof loader>();

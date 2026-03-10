@@ -21,9 +21,10 @@ function parseTemplate(
     template: string,
     variables: Record<string, string | number>,
 ): string {
-    return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-        return variables[key]?.toString() || match;
-    });
+    return template.replace(
+        /\{\{(\w+)\}\}/g,
+        (match, key) => variables[key]?.toString() || match,
+    );
 }
 
 export default function JudgemeReviewSummary(props: JudgemeReviewSummaryProps) {

@@ -71,9 +71,7 @@ const CUSTOMER_ORDERS_QUERY = `#graphql
   }
 ` as const;
 
-export const meta: MetaFunction = () => {
-    return [{ title: "Orders" }];
-};
+export const meta: MetaFunction = () => [{ title: "Orders" }];
 
 export async function loader({ request, context }: Route.LoaderArgs) {
     const paginationVariables = getPaginationVariables(request, {

@@ -13,7 +13,7 @@ import { cn } from "~/utils/cn";
 const variants = cva(
     [
         "hidden md:block",
-        "-translate-y-1/2 absolute top-1/2 z-1",
+        "absolute top-1/2 z-1 -translate-y-1/2",
         "cursor-pointer p-2 text-center",
         "border border-transparent",
         "transition-all duration-200",

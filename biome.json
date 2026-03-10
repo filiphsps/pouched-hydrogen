@@ -37,7 +37,6 @@
                 "noArrayIndexKey": "off"
             },
             "nursery": {
-                "useConsistentArrowReturn": "off",
                 "noUnnecessaryConditions": "off",
                 "noIncrementDecrement": "off",
                 "useSortedClasses": {

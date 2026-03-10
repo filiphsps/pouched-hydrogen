@@ -165,7 +165,7 @@ export default function ProductInformation(
                 <div>
                     <div
                         // Full-width on mobile
-                        className="-mx-4 sticky flex w-screen flex-col justify-start gap-3 rounded-none bg-background p-4 shadow-xs lg:mx-0 lg:w-auto lg:rounded-2xl lg:p-8"
+                        className="sticky -mx-4 flex w-screen flex-col justify-start gap-3 rounded-none bg-background p-4 shadow-xs lg:mx-0 lg:w-auto lg:rounded-2xl lg:p-8"
                         style={{ top: "calc(var(--height-nav) + 20px)" }}
                     >
                         {detailsChildren}

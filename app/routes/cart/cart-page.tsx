@@ -20,6 +20,13 @@ import { getContext } from "~/types/context";
 import { getFeaturedProducts } from "~/utils/featured-products";
 import type { Route } from "./+types/cart-page";
 
+/**
+ * Ensures Set-Cookie headers from cart mutations propagate to the browser.
+ * Without this, new cart IDs from first-time adds may not persist.
+ */
+export const headers: Route.HeadersFunction = ({ actionHeaders }) =>
+    actionHeaders;
+
 export async function action({ request, context: ctx }: Route.ActionArgs) {
     const context = getContext(ctx);
     const { cart } = context;
@@ -89,16 +96,27 @@ export async function action({ request, context: ctx }: Route.ActionArgs) {
      * CRITICAL: These headers MUST be passed to all responses (including redirects)
      * to persist the cart session cookie.
      */
-    const headers = result?.cart?.id ? cart.setCartId(result.cart.id) : {};
+    const cartHeaders = result?.cart?.id
+        ? cart.setCartId(result.cart.id)
+        : new Headers();
 
     const redirectTo = formData.get("redirectTo") ?? null;
     if (typeof redirectTo === "string" && isLocalPath(redirectTo)) {
-        return redirect(redirectTo, { headers });
+        return redirect(redirectTo, { headers: cartHeaders });
     }
 
-    const { cart: cartResult, errors, userErrors } = result || {};
+    const { cart: cartResult, errors, userErrors, warnings } = result || {};
 
-    return data({ cart: cartResult, userErrors, errors }, { status, headers });
+    return data(
+        {
+            cart: cartResult,
+            userErrors,
+            errors,
+            warnings,
+            action: cartFormAction,
+        },
+        { status, headers: cartHeaders },
+    );
 }
 
 export async function loader({ context: ctx }: Route.LoaderArgs) {

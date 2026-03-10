@@ -11,6 +11,7 @@ import {
     useRouteLoaderData,
     useSubmit,
 } from "react-router";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { RootLoader } from "~/root";
 import type { I18nLocale, Localizations } from "~/types/others";
 import { cn } from "~/utils/cn";
@@ -19,6 +20,7 @@ import { DEFAULT_LOCALE } from "~/utils/const";
 export function CountrySelector({ className }: { className?: string }) {
     const fetcher = useFetcher();
     const submit = useSubmit();
+    const cartRoute = usePrefixPathWithLocale("/cart");
     const rootData = useRouteLoaderData<RootLoader>("root");
     const selectedLocale = rootData?.selectedLocale ?? DEFAULT_LOCALE;
     const { pathname, search } = useLocation();
@@ -72,7 +74,7 @@ export function CountrySelector({ className }: { className?: string }) {
                     inputs: { buyerIdentity },
                 }),
             },
-            { method: "POST", action: "/cart" },
+            { method: "POST", action: cartRoute },
         );
     }
 

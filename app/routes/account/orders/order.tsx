@@ -13,9 +13,9 @@ import { OrderLineItem } from "./order-line-item";
 import { CUSTOMER_ORDER_QUERY } from "./order-query";
 import { OrderSummary } from "./order-summary";
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-    return [{ title: `Order ${data?.order?.name}` }];
-};
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+    { title: `Order ${data?.order?.name}` },
+];
 
 export async function loader({ request, context, params }: Route.LoaderArgs) {
     if (!params.id) {

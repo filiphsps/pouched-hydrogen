@@ -33,9 +33,7 @@ export type ActionResponse = {
     updatedAddress?: AddressPartialFragment;
 };
 
-export const meta: MetaFunction = () => {
-    return [{ title: "Addresses" }];
-};
+export const meta: MetaFunction = () => [{ title: "Addresses" }];
 
 export async function loader({ context }: Route.LoaderArgs) {
     await context.customerAccount.handleAuthStatus();

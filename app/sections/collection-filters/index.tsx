@@ -185,9 +185,9 @@ export const schema = createSchema({
         {
             group: "Layout",
             inputs: [
-                ...layoutInputs.filter((inp) => {
-                    return inp.name !== "borderRadius" && inp.name !== "gap";
-                }),
+                ...layoutInputs.filter(
+                    (inp) => inp.name !== "borderRadius" && inp.name !== "gap",
+                ),
                 {
                     type: "switch",
                     name: "showBreadcrumb",

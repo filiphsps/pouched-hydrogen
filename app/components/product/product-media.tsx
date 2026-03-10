@@ -92,61 +92,59 @@ export function ProductMedia(props: ProductMediaProps) {
         return (
             <>
                 <div className={variants({ gridSize })}>
-                    {media.map((med, idx) => {
-                        return (
+                    {media.map((med, idx) => (
+                        <div
+                            key={med.id}
+                            className={cn(
+                                "group relative",
+                                gridSize === "1x1" ? "w-full" : "lg:w-full",
+                                gridSize === "mix" &&
+                                    idx % 3 === 0 &&
+                                    "lg:col-span-2",
+                            )}
+                        >
                             <div
-                                key={med.id}
-                                className={cn(
-                                    "group relative",
-                                    gridSize === "1x1" ? "w-full" : "lg:w-full",
-                                    gridSize === "mix" &&
-                                        idx % 3 === 0 &&
-                                        "lg:col-span-2",
-                                )}
+                                onClick={
+                                    canClickImage
+                                        ? () => {
+                                              setZoomMediaId(med.id);
+                                              setZoomModalOpen(true);
+                                          }
+                                        : undefined
+                                }
+                                className={
+                                    canClickImage ? "cursor-zoom-in" : ""
+                                }
                             >
-                                <div
-                                    onClick={
-                                        canClickImage
-                                            ? () => {
-                                                  setZoomMediaId(med.id);
-                                                  setZoomModalOpen(true);
-                                              }
-                                            : undefined
-                                    }
-                                    className={
-                                        canClickImage ? "cursor-zoom-in" : ""
-                                    }
-                                >
-                                    <Media
-                                        media={med}
-                                        imageAspectRatio={imageAspectRatio}
-                                        index={idx}
-                                        className={cn(
-                                            "max-w-none object-cover lg:h-full lg:w-full",
-                                            gridSize === "1x1"
-                                                ? "w-full"
-                                                : "w-[80vw]",
-                                            idx === 0 &&
-                                                "[&_img]:[view-transition-name:image-expand]",
-                                        )}
-                                    />
-                                </div>
-                                {shouldShowButton && (
-                                    <ZoomButton
-                                        className={cn(
-                                            "absolute top-2 right-2 md:top-4 md:right-4",
-                                            zoomButtonVisibility === "hover" &&
-                                                "opacity-0 group-hover:opacity-100",
-                                        )}
-                                        onClick={() => {
-                                            setZoomMediaId(med.id);
-                                            setZoomModalOpen(true);
-                                        }}
-                                    />
-                                )}
+                                <Media
+                                    media={med}
+                                    imageAspectRatio={imageAspectRatio}
+                                    index={idx}
+                                    className={cn(
+                                        "max-w-none object-cover lg:h-full lg:w-full",
+                                        gridSize === "1x1"
+                                            ? "w-full"
+                                            : "w-[80vw]",
+                                        idx === 0 &&
+                                            "[&_img]:[view-transition-name:image-expand]",
+                                    )}
+                                />
                             </div>
-                        );
-                    })}
+                            {shouldShowButton && (
+                                <ZoomButton
+                                    className={cn(
+                                        "absolute top-2 right-2 md:top-4 md:right-4",
+                                        zoomButtonVisibility === "hover" &&
+                                            "opacity-0 group-hover:opacity-100",
+                                    )}
+                                    onClick={() => {
+                                        setZoomMediaId(med.id);
+                                        setZoomModalOpen(true);
+                                    }}
+                                />
+                            )}
+                        </div>
+                    ))}
                 </div>
                 {enableZoom && (
                     <ZoomModal
@@ -197,41 +195,38 @@ export function ProductMedia(props: ProductMediaProps) {
                                     previewImage,
                                     alt,
                                     mediaContentType,
-                                }) => {
-                                    return (
-                                        <SwiperSlide
-                                            key={id}
-                                            className={cn(
-                                                "relative",
-                                                "h-auto! cursor-pointer border border-transparent p-1 transition-colors hover:border-line-subtle",
-                                                "[&.swiper-slide-thumb-active]:border-line",
-                                            )}
-                                        >
-                                            <Image
-                                                data={{
-                                                    ...previewImage,
-                                                    altText:
-                                                        alt || "Product image",
-                                                }}
-                                                loading="lazy"
-                                                width={200}
-                                                aspectRatio="1/1"
-                                                className="h-auto w-full object-cover"
-                                                sizes="auto"
-                                            />
-                                            {mediaContentType === "VIDEO" && (
-                                                <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
-                                                    <VideoCameraIcon className="h-4 w-4" />
-                                                </div>
-                                            )}
-                                        </SwiperSlide>
-                                    );
-                                },
+                                }) => (
+                                    <SwiperSlide
+                                        key={id}
+                                        className={cn(
+                                            "relative",
+                                            "h-auto! cursor-pointer border border-transparent p-1 transition-colors hover:border-line-subtle",
+                                            "[&.swiper-slide-thumb-active]:border-line",
+                                        )}
+                                    >
+                                        <Image
+                                            data={{
+                                                ...previewImage,
+                                                altText: alt || "Product image",
+                                            }}
+                                            loading="lazy"
+                                            width={200}
+                                            aspectRatio="1/1"
+                                            className="h-auto w-full object-cover"
+                                            sizes="auto"
+                                        />
+                                        {mediaContentType === "VIDEO" && (
+                                            <div className="absolute right-2 bottom-2 bg-gray-900 p-0.5 text-white">
+                                                <VideoCameraIcon className="h-4 w-4" />
+                                            </div>
+                                        )}
+                                    </SwiperSlide>
+                                ),
                             )}
                         </Swiper>
                     </div>
                 )}
-                <div className="-my-6 relative w-[calc(100%-var(--thumbs-width,0px))] lg:my-0 lg:p-12">
+                <div className="relative -my-6 w-[calc(100%-var(--thumbs-width,0px))] lg:my-0 lg:p-12">
                     <Swiper
                         onSwiper={setSwiper}
                         thumbs={{ swiper: thumbsSwiper }}
@@ -251,51 +246,46 @@ export function ProductMedia(props: ProductMediaProps) {
                         modules={[Pagination, Navigation, Thumbs]}
                         className="overflow-visible md:overflow-hidden md:pb-0 lg:pb-10 [&_.swiper-pagination]:hidden"
                     >
-                        {media.map((med, idx) => {
-                            return (
-                                <SwiperSlide key={med.id} className="group">
-                                    <div
-                                        onClick={
-                                            canClickImage
-                                                ? () => {
-                                                      setZoomMediaId(med.id);
-                                                      setZoomModalOpen(true);
-                                                  }
-                                                : undefined
-                                        }
-                                        className={
-                                            canClickImage
-                                                ? "cursor-zoom-in"
-                                                : ""
-                                        }
-                                    >
-                                        <Media
-                                            media={med}
-                                            imageAspectRatio={imageAspectRatio}
-                                            index={idx}
-                                            className={cn(
-                                                idx === 0 &&
-                                                    "[&_img]:[view-transition-name:image-expand]",
-                                            )}
-                                        />
-                                    </div>
-                                    {shouldShowButton && (
-                                        <ZoomButton
-                                            className={cn(
-                                                "absolute top-2 right-2 md:top-6 md:right-6",
-                                                zoomButtonVisibility ===
-                                                    "hover" &&
-                                                    "opacity-0 group-hover:opacity-100",
-                                            )}
-                                            onClick={() => {
-                                                setZoomMediaId(med.id);
-                                                setZoomModalOpen(true);
-                                            }}
-                                        />
-                                    )}
-                                </SwiperSlide>
-                            );
-                        })}
+                        {media.map((med, idx) => (
+                            <SwiperSlide key={med.id} className="group">
+                                <div
+                                    onClick={
+                                        canClickImage
+                                            ? () => {
+                                                  setZoomMediaId(med.id);
+                                                  setZoomModalOpen(true);
+                                              }
+                                            : undefined
+                                    }
+                                    className={
+                                        canClickImage ? "cursor-zoom-in" : ""
+                                    }
+                                >
+                                    <Media
+                                        media={med}
+                                        imageAspectRatio={imageAspectRatio}
+                                        index={idx}
+                                        className={cn(
+                                            idx === 0 &&
+                                                "[&_img]:[view-transition-name:image-expand]",
+                                        )}
+                                    />
+                                </div>
+                                {shouldShowButton && (
+                                    <ZoomButton
+                                        className={cn(
+                                            "absolute top-2 right-2 md:top-6 md:right-6",
+                                            zoomButtonVisibility === "hover" &&
+                                                "opacity-0 group-hover:opacity-100",
+                                        )}
+                                        onClick={() => {
+                                            setZoomMediaId(med.id);
+                                            setZoomModalOpen(true);
+                                        }}
+                                    />
+                                )}
+                            </SwiperSlide>
+                        ))}
                     </Swiper>
                     <div className="absolute right-6 bottom-6 z-1 hidden items-center gap-2 md:flex">
                         <button

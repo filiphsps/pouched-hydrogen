@@ -59,9 +59,8 @@ export const loader = async (args: Route.LoaderArgs) => {
     return data({ blog, articles, seo, weaverseData });
 };
 
-export const meta: MetaFunction<typeof loader> = ({ data: loaderData }) => {
-    return getSeoMeta(loaderData?.seo as SeoConfig);
-};
+export const meta: MetaFunction<typeof loader> = ({ data: loaderData }) =>
+    getSeoMeta(loaderData?.seo as SeoConfig);
 
 export default function Blogs() {
     return <WeaverseContent />;

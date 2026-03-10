@@ -148,7 +148,7 @@ export function CookieSettingsPopup({
                         </Dialog.Overlay>
                         <Dialog.Content
                             className={cn(
-                                "-translate-x-1/2 -translate-y-1/2 fixed top-1/2 left-1/2 z-100 w-full max-w-lg p-4",
+                                "fixed top-1/2 left-1/2 z-100 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 p-4",
                                 "focus:outline-none",
                             )}
                             asChild

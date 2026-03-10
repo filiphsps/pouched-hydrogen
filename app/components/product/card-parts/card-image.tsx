@@ -103,7 +103,7 @@ export function CardImage({
                         "opacity-100 group-hover:opacity-0",
                     hoverEffect === "slide" &&
                         hasSecondaryImage &&
-                        "group-hover:-translate-x-full translate-x-0",
+                        "translate-x-0 group-hover:-translate-x-full",
                     // When secondary image exists with zoom effect, just do subtle zoom
                     hoverEffect === "zoom" &&
                         hasSecondaryImage &&

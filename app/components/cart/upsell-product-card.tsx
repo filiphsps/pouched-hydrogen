@@ -144,10 +144,11 @@ interface QuickAddButtonProps {
  */
 function QuickAddButton({ variantId, available }: QuickAddButtonProps) {
     const { t } = useTranslation();
+    const cartRoute = usePrefixPathWithLocale("/cart");
 
     return (
         <CartForm
-            route="/cart"
+            route={cartRoute}
             inputs={{
                 lines: [{ merchandiseId: variantId, quantity: 1 }],
             }}

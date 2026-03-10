@@ -16,6 +16,7 @@ import { useMatches } from "react-router";
 import { Button } from "~/components/button";
 import { useCartDrawerStore } from "~/components/cart/store";
 import { Spinner } from "~/components/spinner";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
@@ -33,16 +34,17 @@ export function AddToCartButton({
     className?: string;
     width?: "auto" | "full";
     disabled?: boolean;
-    analytics?: unknown;
-    [key: string]: any;
+    analytics?: Record<string, unknown>;
+    [key: string]: unknown;
 }) {
+    const cartRoute = usePrefixPathWithLocale("/cart");
     return (
         <CartForm
-            route="/cart"
+            route={cartRoute}
             inputs={{ lines }}
             action={CartForm.ACTIONS.LinesAdd}
         >
-            {(fetcher: FetcherWithComponents<any>) => (
+            {(fetcher: FetcherWithComponents<Record<string, unknown>>) => (
                 <AddToCartButtonContent
                     fetcher={fetcher}
                     disabled={disabled}
@@ -65,12 +67,12 @@ function AddToCartButtonContent({
     analytics,
     ...props
 }: {
-    fetcher: FetcherWithComponents<any>;
+    fetcher: FetcherWithComponents<Record<string, unknown>>;
     children: React.ReactNode;
     disabled?: boolean;
     className?: string;
-    analytics?: unknown;
-    [key: string]: any;
+    analytics?: Record<string, unknown>;
+    [key: string]: unknown;
 }) {
     const { t } = useTranslation();
     const { open: openCartDrawer } = useCartDrawerStore();
@@ -146,7 +148,7 @@ function AddToCartAnalytics({
     fetcher,
     children,
 }: {
-    fetcher: FetcherWithComponents<any>;
+    fetcher: FetcherWithComponents<Record<string, unknown>>;
     children: React.ReactNode;
 }) {
     const fetcherData = fetcher.data;
@@ -169,12 +171,15 @@ function AddToCartAnalytics({
                 // do nothing
             }
 
-            if (Object.keys(cartData).length && fetcherData) {
+            const cartResponse = fetcherData?.cart as
+                | { id: string }
+                | undefined;
+            if (Object.keys(cartData).length && cartResponse?.id) {
                 const addToCartPayload: ShopifyAddToCartPayload = {
                     ...getClientBrowserParameters(),
                     ...pageAnalytics,
                     ...cartData,
-                    cartId: fetcherData.cart.id,
+                    cartId: cartResponse.id,
                 };
 
                 sendShopifyAnalytics({

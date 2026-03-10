@@ -101,13 +101,14 @@ const JudgemeReviewSection = ({
     }, [product?.handle, inView, paging]);
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: Reset store when component unmounts
-    useEffect(() => {
-        return () => {
+    useEffect(
+        () => () => {
             setStatus("idle");
             setData(null);
             setPaging({ currentPage: 1, perPage: 5 });
-        };
-    }, []);
+        },
+        [],
+    );
 
     if (!product) {
         return null;

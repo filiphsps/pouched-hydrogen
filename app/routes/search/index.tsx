@@ -79,11 +79,10 @@ export async function loader({ request, context: ctx }: Route.LoaderArgs) {
     };
 }
 
-export const meta = ({ matches }: MetaArgs<typeof loader>) => {
-    return getSeoMeta(
+export const meta = ({ matches }: MetaArgs<typeof loader>) =>
+    getSeoMeta(
         ...matches.map((match) => (match.data as any)?.seo).filter(Boolean),
     );
-};
 
 export default function Search() {
     const { searchTerm, products, recommendations } =
@@ -130,49 +129,45 @@ export default function Search() {
                         hasPreviousPage,
                         NextLink,
                         PreviousLink,
-                    }) => {
-                        return (
-                            <div className="flex w-full flex-col items-center gap-8 pt-20">
-                                {hasPreviousPage && (
-                                    <PreviousLink
-                                        className={cn(
-                                            "mx-auto",
-                                            variants({ variant: "outline" }),
-                                        )}
-                                    >
-                                        {isLoading
-                                            ? "Loading..."
-                                            : "↑ Load previous"}
-                                    </PreviousLink>
-                                )}
-                                <div
-                                    className={cn([
-                                        "w-full gap-x-4 gap-y-6 lg:gap-y-10",
-                                        "grid grid-cols-1 lg:grid-cols-4",
-                                    ])}
+                    }) => (
+                        <div className="flex w-full flex-col items-center gap-8 pt-20">
+                            {hasPreviousPage && (
+                                <PreviousLink
+                                    className={cn(
+                                        "mx-auto",
+                                        variants({ variant: "outline" }),
+                                    )}
                                 >
-                                    {nodes.map((product) => (
-                                        <ProductCard
-                                            key={product.id}
-                                            product={product}
-                                        />
-                                    ))}
-                                </div>
-                                {hasNextPage && (
-                                    <NextLink
-                                        className={cn(
-                                            "mx-auto",
-                                            variants({ variant: "outline" }),
-                                        )}
-                                    >
-                                        {isLoading
-                                            ? "Loading..."
-                                            : "↓ Load more"}
-                                    </NextLink>
-                                )}
+                                    {isLoading
+                                        ? "Loading..."
+                                        : "↑ Load previous"}
+                                </PreviousLink>
+                            )}
+                            <div
+                                className={cn([
+                                    "w-full gap-x-4 gap-y-6 lg:gap-y-10",
+                                    "grid grid-cols-1 lg:grid-cols-4",
+                                ])}
+                            >
+                                {nodes.map((product) => (
+                                    <ProductCard
+                                        key={product.id}
+                                        product={product}
+                                    />
+                                ))}
                             </div>
-                        );
-                    }}
+                            {hasNextPage && (
+                                <NextLink
+                                    className={cn(
+                                        "mx-auto",
+                                        variants({ variant: "outline" }),
+                                    )}
+                                >
+                                    {isLoading ? "Loading..." : "↓ Load more"}
+                                </NextLink>
+                            )}
+                        </div>
+                    )}
                 </Pagination>
             ) : (
                 <NoResults

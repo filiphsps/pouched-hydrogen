@@ -119,7 +119,7 @@ export function CartUpsells({
         return null;
     }
 
-    const displayCount = layout === "drawer" || layout === "modal" ? 2 : count;
+    const displayCount = layout === "drawer" ? 2 : count;
 
     return (
         <div className={cn(className)} data-upsell-algorithm={data?.algorithm}>
@@ -130,7 +130,7 @@ export function CartUpsells({
             <div
                 className={cn(
                     "grid gap-3",
-                    layout === "drawer" || layout === "modal"
+                    layout === "drawer"
                         ? "grid-cols-1"
                         : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
                 )}

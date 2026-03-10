@@ -14,6 +14,7 @@ import { ProductImage } from "~/components/product/product-image";
 import { VendorBadge } from "~/components/product/vendor-badge";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
+import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import type { CartLayoutType } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { removeVendorFromTitle } from "~/utils/product";
@@ -22,11 +23,26 @@ import { useCartDrawerStore } from "./store";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 
+/** Typed selling plan allocation from the cart line GraphQL fragment. */
+interface SellingPlanAllocation {
+    sellingPlan: {
+        name: string;
+    };
+}
+
 export type CartLineOptimisticData = {
     action?: string;
     quantity?: number;
 };
 
+/**
+ * Individual cart line item component.
+ * Shows product image, title, variant, selling plan, quantity adjuster, and price.
+ * Supports optimistic removal by returning null when action is "remove".
+ *
+ * @param props.line - Cart line item from optimistic cart
+ * @param props.layout - "drawer" or "page"
+ */
 export function CartLineItem({
     line,
     layout,
@@ -41,16 +57,20 @@ export function CartLineItem({
         return null;
     }
 
+    // Return null for optimistic removal — clean DOM removal instead of CSS hack
+    if (optimisticData?.action === "remove") {
+        return null;
+    }
+
     const { id, quantity, merchandise, isOptimistic: lineOptimistic } = line;
+
     /**
      * Determines if the current line item is in an optimistic state.
-     * Note: The isOptimistic field on the line does not update as documented
-     * in https://shopify.dev/docs/api/hydrogen/latest/hooks/useoptimisticcart#useOptimisticCart-returns,
-     * so we manually check it via the optimisticData object when lineOptimistic is undefined.
+     * Uses the presence of optimistic data as a fallback when lineOptimistic is undefined.
      */
     const isOptimistic =
         lineOptimistic === undefined
-            ? JSON.stringify(optimisticData) !== "{}"
+            ? optimisticData != null && Object.keys(optimisticData).length > 0
             : lineOptimistic;
 
     if (typeof quantity === "undefined" || !merchandise?.product) {
@@ -58,6 +78,8 @@ export function CartLineItem({
     }
 
     const { image, title, product, selectedOptions } = merchandise;
+
+    // Build product URL with variant params
     let url = `/products/${product.handle}`;
     if (selectedOptions?.length) {
         const params = new URLSearchParams();
@@ -72,6 +94,11 @@ export function CartLineItem({
         isDefaultVariant = name === "Title" && value === "Default Title";
     }
 
+    // Type-safe access to selling plan allocation
+    const sellingPlanAllocation = (
+        line as CartLine & { sellingPlanAllocation?: SellingPlanAllocation }
+    ).sellingPlanAllocation;
+
     const productTitle: ReactNode = product?.title ? (
         <span className="inline-flex flex-col">
             <VendorBadge vendor={product.vendor} size="xs" inline />
@@ -82,14 +109,7 @@ export function CartLineItem({
     ) : null;
 
     return (
-        <div
-            className="flex gap-4"
-            style={{
-                // Hide the line item if the optimistic data action is remove
-                // Do not remove the form from the DOM
-                display: optimisticData?.action === "remove" ? "none" : "flex",
-            }}
-        >
+        <div className="flex gap-4">
             {image && (
                 <div className="relative flex h-full shrink-0 items-center overflow-hidden rounded-2xl bg-gray-100 p-2">
                     <ProductImage
@@ -123,21 +143,17 @@ export function CartLineItem({
 
                         <div className="flex flex-wrap items-center gap-x-2 text-gray-500 text-sm">
                             {!isDefaultVariant && <span>{title}</span>}
-                            {(line as any).sellingPlanAllocation?.sellingPlan
-                                ?.name && (
+                            {sellingPlanAllocation?.sellingPlan?.name && (
                                 <span className="flex items-center gap-1 text-xs">
                                     <ArrowsClockwise size={14} />
                                     <span>
-                                        {
-                                            (line as any).sellingPlanAllocation
-                                                .sellingPlan.name
-                                        }
+                                        {sellingPlanAllocation.sellingPlan.name}
                                     </span>
                                 </span>
                             )}
                         </div>
                     </div>
-                    {(layout === "drawer" || layout === "modal") && (
+                    {layout === "drawer" && (
                         <ItemRemoveButton
                             lineId={id}
                             className="-mt-1.5 -mr-2"
@@ -147,7 +163,7 @@ export function CartLineItem({
                 <div
                     className={cn(
                         "flex w-full items-center gap-3",
-                        (layout === "drawer" || layout === "modal") &&
+                        layout === "drawer" &&
                             "flex-col items-start justify-start gap-1",
                     )}
                 >
@@ -160,6 +176,10 @@ export function CartLineItem({
     );
 }
 
+/**
+ * Remove button for a cart line item.
+ * Submits a CartForm with LinesRemove action and optimistic data.
+ */
 function ItemRemoveButton({
     lineId,
     className,
@@ -168,9 +188,10 @@ function ItemRemoveButton({
     className?: string;
 }) {
     const { t } = useTranslation();
+    const cartRoute = usePrefixPathWithLocale("/cart");
     return (
         <CartForm
-            route="/cart"
+            route={cartRoute}
             action={CartForm.ACTIONS.LinesRemove}
             inputs={{ lineIds: [lineId] }}
         >
@@ -189,6 +210,9 @@ function ItemRemoveButton({
     );
 }
 
+/**
+ * Displays line item price with skeleton loading during optimistic updates.
+ */
 function CartLinePrice({
     line,
     priceType = "regular",

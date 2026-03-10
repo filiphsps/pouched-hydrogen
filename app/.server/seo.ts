@@ -212,13 +212,11 @@ function collectionJsonLd({
 }): SeoConfig["jsonLd"] {
     const siteUrl = new URL(url);
     const itemListElement: CollectionPage["mainEntity"] =
-        collectionData.products.nodes.map((prod, index) => {
-            return {
-                "@type": "ListItem",
-                position: index + 1,
-                url: `/products/${prod.handle}`,
-            };
-        });
+        collectionData.products.nodes.map((prod, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            url: `/products/${prod.handle}`,
+        }));
 
     return [
         {
@@ -296,13 +294,11 @@ function collectionsJsonLd({
     collections: CollectionListRequiredFields;
 }): SeoConfig["jsonLd"] {
     const itemListElement: CollectionPage["mainEntity"] = collections.nodes.map(
-        (col, index) => {
-            return {
-                "@type": "ListItem",
-                position: index + 1,
-                url: `/collections/${col.handle}`,
-            };
-        },
+        (col, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            url: `/collections/${col.handle}`,
+        }),
     );
 
     return {
@@ -444,14 +440,12 @@ function policies({
     const origin = new URL(url).origin;
     const itemListElement: BreadcrumbList["itemListElement"] = policiesData
         .filter(Boolean)
-        .map((pol, index) => {
-            return {
-                "@type": "ListItem",
-                position: index + 1,
-                name: pol.title,
-                item: `${origin}/policies/${pol.handle}`,
-            };
-        });
+        .map((pol, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: pol.title,
+            item: `${origin}/policies/${pol.handle}`,
+        }));
     return {
         title: "Policies",
         titleTemplate: "%s | Policies",

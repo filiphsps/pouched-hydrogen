@@ -16,12 +16,6 @@ import { COUNTRIES } from "~/utils/const";
 import { components } from "~/weaverse/components";
 import { themeSchema } from "~/weaverse/schema.server";
 
-/**
- * Cookie name used by Hydrogen for cart ID storage.
- * Must match what cart.setCartId() uses internally.
- */
-const CART_COOKIE_NAME = "cart";
-
 const additionalContext = {
     // Additional context for custom properties, CMS clients, 3P SDKs, etc.
 } as const;
@@ -95,17 +89,30 @@ export async function createHydrogenRouterContext(
     const getCartId = () => {
         // In-memory cart ID takes precedence (set by mutations in current request)
         if (inMemoryCartId) {
+            if (import.meta.env.DEV) {
+                console.debug(
+                    "[Cart] Using in-memory cart ID:",
+                    inMemoryCartId,
+                );
+            }
             return inMemoryCartId;
         }
         // Fall back to cookie cart ID (for initial page loads)
-        return cookieCartId();
+        const id = cookieCartId();
+        if (import.meta.env.DEV && id) {
+            console.debug("[Cart] Using cookie cart ID:", id);
+        }
+        return id;
     };
 
     const setCartId = (cartId: string) => {
+        // Defensive: extract the last segment as the short ID
+        const shortId = cartId.split("/").pop() || "";
+        if (!shortId) {
+            console.warn("[Cart] setCartId received malformed ID:", cartId);
+        }
         // Store in memory for same-request revalidation
         inMemoryCartId = cartId;
-        // Also update session for persistence
-        session.set(CART_COOKIE_NAME, cartId.split("/").pop() || "");
         // Return Set-Cookie headers for browser
         return defaultSetCartId(cartId);
     };

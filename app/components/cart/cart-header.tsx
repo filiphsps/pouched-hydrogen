@@ -2,8 +2,6 @@ import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useTranslation } from "react-i18next";
 import { Title } from "~/components/title";
-import type { CartLayoutType } from "~/types/others";
-import { cn } from "~/utils/cn";
 
 /**
  * Props for the CartHeader component.
@@ -11,30 +9,22 @@ import { cn } from "~/utils/cn";
 interface CartHeaderProps {
     /** Total number of items in the cart */
     totalQuantity: number;
-    /** Layout variant affecting styling */
-    layout: Exclude<CartLayoutType, "page">;
 }
 
 /**
- * Shared cart header component with title and close button.
- * Used by both CartDrawer and CartModal for consistent UI.
+ * Cart header component with title and close button.
+ * Used by the CartDrawer for consistent UI.
  *
  * @example
  * ```tsx
- * <CartHeader totalQuantity={3} layout="drawer" />
+ * <CartHeader totalQuantity={3} />
  * ```
  */
-export function CartHeader({ totalQuantity, layout }: CartHeaderProps) {
+export function CartHeader({ totalQuantity }: CartHeaderProps) {
     const { t } = useTranslation();
 
     return (
-        <div
-            className={cn(
-                "flex items-center justify-between gap-2",
-                layout === "drawer" && "px-4",
-                layout === "modal" && "border-line-subtle border-b px-6 py-4",
-            )}
-        >
+        <div className="flex items-center justify-between gap-2 px-4">
             <Dialog.Title asChild className="text-base">
                 <div className="flex items-center justify-start gap-1">
                     <Title as="span" size="2xl">
@@ -48,10 +38,7 @@ export function CartHeader({ totalQuantity, layout }: CartHeaderProps) {
             <Dialog.Close asChild>
                 <button
                     type="button"
-                    className={cn(
-                        "rounded-full p-2 transition-colors hover:bg-gray-100",
-                        layout === "drawer" && "translate-x-2",
-                    )}
+                    className="translate-x-2 rounded-full p-2 transition-colors hover:bg-gray-100"
                     aria-label={t("cart.closeDrawer")}
                 >
                     <XIcon className="h-4 w-4" />

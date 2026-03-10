@@ -62,7 +62,7 @@ export default function HotspotsItem(props: HotspotsItemProps) {
         <div
             ref={ref}
             {...rest}
-            className="-translate-x-1/2 -translate-y-1/2 absolute hover:z-1"
+            className="absolute -translate-x-1/2 -translate-y-1/2 hover:z-1"
             style={
                 {
                     top: `${offsetY}%`,

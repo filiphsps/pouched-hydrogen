@@ -76,13 +76,14 @@ export function useDebouncedCallback<
     }, [callback]);
 
     // Cleanup on unmount
-    useEffect(() => {
-        return () => {
+    useEffect(
+        () => () => {
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
             }
-        };
-    }, []);
+        },
+        [],
+    );
 
     return useCallback(
         (...args: Parameters<T>) => {
@@ -142,13 +143,14 @@ export function useDebouncedCallbackAdvanced<
     }, [callback]);
 
     // Cleanup on unmount
-    useEffect(() => {
-        return () => {
+    useEffect(
+        () => () => {
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
             }
-        };
-    }, []);
+        },
+        [],
+    );
 
     const cancel = useCallback(() => {
         if (timeoutRef.current) {

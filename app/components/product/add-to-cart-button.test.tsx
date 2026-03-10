@@ -68,6 +68,10 @@ vi.mock("react-router", () => ({
     ],
 }));
 
+vi.mock("~/hooks/use-prefix-path-with-locale", () => ({
+    usePrefixPathWithLocale: (path: string) => path,
+}));
+
 // Import after mocking
 import { AddToCartButton } from "./add-to-cart-button";
 

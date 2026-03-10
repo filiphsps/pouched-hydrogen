@@ -189,7 +189,7 @@ export function ReviewImagesModal({
                                     images.length;
                                 setSelectedImageIndex(prevIndex);
                             }}
-                            className="-translate-y-1/2 absolute top-1/2 left-4 p-2"
+                            className="absolute top-1/2 left-4 -translate-y-1/2 p-2"
                             aria-label={t("judgeme.item.prev")}
                         >
                             <ArrowLeftIcon className="h-5 w-5" />
@@ -219,7 +219,7 @@ export function ReviewImagesModal({
                                     (selectedImageIndex + 1) % images.length;
                                 setSelectedImageIndex(nextIndex);
                             }}
-                            className="-translate-y-1/2 absolute top-1/2 right-4 p-2"
+                            className="absolute top-1/2 right-4 -translate-y-1/2 p-2"
                             aria-label={t("judgeme.item.next")}
                         >
                             <ArrowRightIcon className="h-5 w-5" />
@@ -228,7 +228,7 @@ export function ReviewImagesModal({
 
                     {/* Image counter */}
                     {images.length > 1 && (
-                        <div className="-translate-x-1/2 absolute bottom-4 left-1/2 rounded-full bg-black bg-opacity-50 px-3 py-1 text-white">
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black bg-opacity-50 px-3 py-1 text-white">
                             {selectedImageIndex + 1} / {images.length}
                         </div>
                     )}

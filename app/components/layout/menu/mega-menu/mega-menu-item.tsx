@@ -104,7 +104,7 @@ export function MegaMenuItem({
     const linkElement = (
         <Link
             to={to}
-            className="group/mega-menu-item hover:-m-1 flex items-start gap-3 rounded-xl ring-0 ring-line transition-all duration-200 hover:z-5 hover:bg-gray-100 hover:p-1 hover:ring-2 hover:ring-offset-2"
+            className="group/mega-menu-item flex items-start gap-3 rounded-xl ring-0 ring-line transition-all duration-200 hover:z-5 hover:-m-1 hover:bg-gray-100 hover:p-1 hover:ring-2 hover:ring-offset-2"
         >
             {content}
         </Link>
