@@ -237,14 +237,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 }
                 className="bg-background text-body antialiased opacity-100! transition-opacity duration-300"
             >
-                {data ? (
-                    <Analytics.Provider
-                        cart={data.cart}
-                        shop={data.shop}
-                        consent={data.consent}
-                    >
-                        <CartProvider cart={data.cart} />
-                        <TooltipProvider disableHoverableContent>
+                <TooltipProvider disableHoverableContent>
+                    {data ? (
+                        <Analytics.Provider
+                            cart={data.cart}
+                            shop={data.shop}
+                            consent={data.consent}
+                        >
+                            <CartProvider cart={data.cart} />
                             <div
                                 className="flex min-h-screen flex-col"
                                 key={`${locale.language}-${locale.country}`}
@@ -262,18 +262,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
                                 <Footer />
                             </div>
                             {shouldShowNewsletterPopup && <NewsletterPopup />}
-                        </TooltipProvider>
 
-                        <CustomAnalytics />
-                    </Analytics.Provider>
-                ) : (
-                    children
-                )}
-                <GlobalLoading />
-                {/* Age verification gate - blocks all content until verified */}
-                <AgeVerificationGate />
-                {/* Cookie consent banner - GDPR/DSGVO compliant */}
-                <CookieConsentBanner />
+                            <CustomAnalytics />
+                        </Analytics.Provider>
+                    ) : (
+                        children
+                    )}
+                    <GlobalLoading />
+                    {/* Age verification gate - blocks all content until verified */}
+                    <AgeVerificationGate />
+                    {/* Cookie consent banner - GDPR/DSGVO compliant */}
+                    <CookieConsentBanner />
+                </TooltipProvider>
                 <ScrollRestoration nonce={nonce} />
                 <Scripts nonce={nonce} />
             </body>

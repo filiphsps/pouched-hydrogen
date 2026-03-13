@@ -17,6 +17,7 @@ import type { ProductCardFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Spinner } from "~/components/spinner";
+import { toast } from "~/components/toast";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
 import { useAddToCart } from "~/lib/cart";
 import { cn } from "~/utils/cn";
@@ -42,7 +43,6 @@ export function UpsellProductCard({
     showQuickAdd = true,
     className,
 }: UpsellProductCardProps) {
-    const { t } = useTranslation();
     const productUrl = usePrefixPathWithLocale(`/products/${product.handle}`);
 
     const firstVariant = product.selectedOrFirstAvailableVariant;
@@ -146,6 +146,8 @@ function QuickAddButton({ variantId, available }: QuickAddButtonProps) {
     const { t } = useTranslation();
     const { mutate, isLoading, data } = useAddToCart({
         openDrawerOnSuccess: false,
+        onError: (errors) =>
+            toast.error(errors[0]?.message || t("cart.mutationError")),
     });
     const [showSuccess, setShowSuccess] = useState(false);
     const prevLoadingRef = useRef(false);

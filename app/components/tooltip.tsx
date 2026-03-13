@@ -14,8 +14,15 @@ import {
 import { cn } from "~/utils/cn";
 
 export const TooltipProvider = Provider;
+/**
+ * Tooltip wrapper with built-in Provider fallback.
+ * Wraps each instance in its own Provider so tooltips work even if a
+ * global TooltipProvider is missing (e.g. during SSR hydration).
+ */
 export const Tooltip = ({ delayDuration = 100, ...rest }: TooltipProps) => (
-    <Root delayDuration={delayDuration} {...rest} />
+    <Provider>
+        <Root delayDuration={delayDuration} {...rest} />
+    </Provider>
 );
 
 export const TooltipTrigger = ({

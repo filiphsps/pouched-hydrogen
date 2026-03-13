@@ -38,57 +38,78 @@ export async function action({ request, context: ctx }: Route.ActionArgs) {
     const status = 200;
     let result: CartQueryDataReturn;
 
-    switch (cartFormAction) {
-        case CartForm.ACTIONS.LinesAdd:
-            result = await cart.addLines(inputs.lines as CartLineInput[]);
-            break;
-        case CartForm.ACTIONS.LinesUpdate:
-            result = await cart.updateLines(
-                inputs.lines as CartLineUpdateInput[],
-            );
-            break;
-        case CartForm.ACTIONS.LinesRemove:
-            result = await cart.removeLines(inputs.lineIds as string[]);
-            break;
-        case CartForm.ACTIONS.NoteUpdate: {
-            const cartNote = inputs.cartNote as string;
-            result = await cart.updateNote(cartNote || "");
-            break;
+    try {
+        switch (cartFormAction) {
+            case CartForm.ACTIONS.LinesAdd:
+                result = await cart.addLines(inputs.lines as CartLineInput[]);
+                break;
+            case CartForm.ACTIONS.LinesUpdate:
+                result = await cart.updateLines(
+                    inputs.lines as CartLineUpdateInput[],
+                );
+                break;
+            case CartForm.ACTIONS.LinesRemove:
+                result = await cart.removeLines(inputs.lineIds as string[]);
+                break;
+            case CartForm.ACTIONS.NoteUpdate: {
+                const cartNote = inputs.cartNote as string;
+                result = await cart.updateNote(cartNote || "");
+                break;
+            }
+            case CartForm.ACTIONS.DiscountCodesUpdate: {
+                const formDiscountCode = inputs.discountCode;
+                // User inputted discount code
+                const discountCodes = (
+                    formDiscountCode ? [formDiscountCode] : []
+                ) as string[];
+                // Combine discount codes already applied on cart
+                discountCodes.push(...(inputs.discountCodes as string[]));
+                result = await cart.updateDiscountCodes(discountCodes);
+                break;
+            }
+            case CartForm.ACTIONS.GiftCardCodesUpdate: {
+                const formGiftCardCode = inputs.giftCardCode;
+                // User inputted gift card code
+                const giftCardCodes = (
+                    formGiftCardCode ? [formGiftCardCode] : []
+                ) as string[];
+                // Combine gift card codes already applied on cart
+                giftCardCodes.push(...inputs.giftCardCodes);
+                result = await cart.updateGiftCardCodes(giftCardCodes);
+                break;
+            }
+            case CartForm.ACTIONS.GiftCardCodesRemove: {
+                const giftCardIds = inputs.giftCardCodes as string[];
+                result = await cart.removeGiftCardCodes(giftCardIds);
+                break;
+            }
+            case CartForm.ACTIONS.BuyerIdentityUpdate:
+                result = await cart.updateBuyerIdentity({
+                    ...(inputs.buyerIdentity as CartBuyerIdentityInput),
+                });
+                break;
+            default:
+                invariant(
+                    false,
+                    `${cartFormAction} cart action is not defined`,
+                );
         }
-        case CartForm.ACTIONS.DiscountCodesUpdate: {
-            const formDiscountCode = inputs.discountCode;
-            // User inputted discount code
-            const discountCodes = (
-                formDiscountCode ? [formDiscountCode] : []
-            ) as string[];
-            // Combine discount codes already applied on cart
-            discountCodes.push(...(inputs.discountCodes as string[]));
-            result = await cart.updateDiscountCodes(discountCodes);
-            break;
-        }
-        case CartForm.ACTIONS.GiftCardCodesUpdate: {
-            const formGiftCardCode = inputs.giftCardCode;
-            // User inputted gift card code
-            const giftCardCodes = (
-                formGiftCardCode ? [formGiftCardCode] : []
-            ) as string[];
-            // Combine gift card codes already applied on cart
-            giftCardCodes.push(...inputs.giftCardCodes);
-            result = await cart.updateGiftCardCodes(giftCardCodes);
-            break;
-        }
-        case CartForm.ACTIONS.GiftCardCodesRemove: {
-            const giftCardIds = inputs.giftCardCodes as string[];
-            result = await cart.removeGiftCardCodes(giftCardIds);
-            break;
-        }
-        case CartForm.ACTIONS.BuyerIdentityUpdate:
-            result = await cart.updateBuyerIdentity({
-                ...(inputs.buyerIdentity as CartBuyerIdentityInput),
-            });
-            break;
-        default:
-            invariant(false, `${cartFormAction} cart action is not defined`);
+    } catch (error) {
+        console.error(`Cart action ${cartFormAction} failed:`, error);
+        const message =
+            error instanceof Error
+                ? error.message
+                : "An unexpected error occurred";
+        return data(
+            {
+                cart: undefined,
+                userErrors: [{ message }],
+                errors: [],
+                warnings: [],
+                action: cartFormAction,
+            },
+            { status: 200 },
+        );
     }
 
     /**

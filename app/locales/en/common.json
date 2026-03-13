@@ -72,6 +72,7 @@
             "progressLabel": "{{progress}}% toward free shipping"
         },
         "mutationError": "Something went wrong updating your cart. Please try again.",
+        "addToCartError": "Error!",
         "quantityError": "Could not update quantity. Please try again.",
         "discountError": "Could not apply discount code. Please check and try again.",
         "shopPay": "Shop Pay",

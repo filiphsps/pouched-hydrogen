@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useMatches } from "react-router";
 import { Button } from "~/components/button";
 import { Spinner } from "~/components/spinner";
+import { toast } from "~/components/toast";
 import { useAddToCart } from "~/lib/cart";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
@@ -35,7 +36,10 @@ export function AddToCartButton({
     [key: string]: unknown;
 }) {
     const { t } = useTranslation();
-    const { mutate, isLoading, data } = useAddToCart();
+    const { mutate, isLoading, data } = useAddToCart({
+        onError: (errors) =>
+            toast.error(errors[0]?.message || t("cart.mutationError")),
+    });
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();

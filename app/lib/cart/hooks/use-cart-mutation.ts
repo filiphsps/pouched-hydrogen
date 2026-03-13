@@ -12,7 +12,7 @@ import type { CartActionResponse, CartMutationOptions } from "../types";
  * 1. Creates a `useFetcher` with a scoped key
  * 2. Tracks `prevStateRef` for idle-transition detection
  * 3. Auto-syncs `fetcher.data.cart` to Zustand store on completion
- * 4. Extracts `userErrors` from the response
+ * 4. Extracts `userErrors` and `errors` from the response
  * 5. Invokes `onSuccess`/`onError` callbacks
  *
  * @param fetcherKey - Unique key for the fetcher instance
@@ -27,6 +27,10 @@ export function useCartMutation(
     const setCart = useCartStore((s) => s.setCart);
     const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
 
+    // Keep callbacks in a ref so the effect doesn't re-fire on every render
+    const optionsRef = useRef(options);
+    optionsRef.current = options;
+
     // Auto-sync fetcher cart data to Zustand store when mutation completes
     useEffect(() => {
         if (prevStateRef.current !== "idle" && fetcher.state === "idle") {
@@ -36,14 +40,21 @@ export function useCartMutation(
             }
 
             const userErrors = fetcher.data?.userErrors ?? [];
-            if (userErrors.length > 0) {
-                options?.onError?.(userErrors);
+            const errors = fetcher.data?.errors ?? [];
+            const allErrors = [...userErrors, ...errors];
+            if (allErrors.length > 0) {
+                optionsRef.current?.onError?.(allErrors);
             } else if (cart) {
-                options?.onSuccess?.(cart);
+                optionsRef.current?.onSuccess?.(cart);
+            } else if (fetcher.data != null) {
+                // Action returned data but no cart and no errors — treat as unknown failure
+                optionsRef.current?.onError?.([
+                    { message: "An unexpected error occurred" },
+                ]);
             }
         }
         prevStateRef.current = fetcher.state;
-    }, [fetcher.state, fetcher.data, setCart, options]);
+    }, [fetcher.state, fetcher.data, setCart]);
 
     const isLoading = fetcher.state !== "idle";
     const userErrors = isLoading ? [] : (fetcher.data?.userErrors ?? []);

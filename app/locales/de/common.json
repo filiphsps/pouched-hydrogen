@@ -72,6 +72,7 @@
             "progressLabel": "{{progress}}% zum kostenlosen Versand"
         },
         "mutationError": "Beim Aktualisieren Ihres Warenkorbs ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+        "addToCartError": "Fehler!",
         "quantityError": "Menge konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
         "discountError": "Rabattcode konnte nicht angewendet werden. Bitte überprüfen und erneut versuchen.",
         "shopPay": "Shop Pay",
