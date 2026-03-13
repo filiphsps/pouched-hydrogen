@@ -3,12 +3,10 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { type CartReturn, useAnalytics } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useEffect } from "react";
-import { useLocation, useRouteLoaderData } from "react-router";
-import Link from "~/components/link";
-import type { RootLoader } from "~/root";
+import { useLocation } from "react-router";
+import { useCartDrawerStore, useCartStore } from "~/lib/cart";
 import { cn } from "~/utils/cn";
 import { CartContent } from "./cart-content";
-import { useCartDrawerStore } from "./store";
 
 /**
  * Cart drawer component — the single overlay cart entry point.
@@ -24,8 +22,7 @@ import { useCartDrawerStore } from "./store";
  * ```
  */
 export function CartDrawer() {
-    const rootData = useRouteLoaderData<RootLoader>("root");
-    const cart = rootData?.cart as CartReturn | null;
+    const cart = useCartStore((s) => s.cart);
     const { publish } = useAnalytics();
     const {
         isOpen,
@@ -40,18 +37,6 @@ export function CartDrawer() {
     useEffect(() => {
         closeCartDrawer();
     }, [location.key, closeCartDrawer]);
-
-    // Fallback link if no root data (should rarely happen)
-    if (!rootData) {
-        return (
-            <Link
-                to="/cart"
-                className="relative flex h-8 w-8 items-center justify-center focus:ring-border"
-            >
-                <HandbagIcon className="h-5 w-5" />
-            </Link>
-        );
-    }
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={toggleCartDrawer}>

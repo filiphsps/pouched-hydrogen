@@ -10,7 +10,7 @@ import {
     type Session,
     type SessionStorage,
 } from "react-router";
-import { CART_QUERY_FRAGMENT } from "~/graphql/fragments";
+import { CART_MUTATE_FRAGMENT, CART_QUERY_FRAGMENT } from "~/graphql/fragments";
 import type { I18nLocale } from "~/types/others";
 import { COUNTRIES } from "~/utils/const";
 import { components } from "~/weaverse/components";
@@ -83,7 +83,8 @@ export async function createHydrogenRouterContext(
     const cookieCartId = cartGetIdDefault(request.headers);
     const defaultSetCartId = cartSetIdDefault();
 
-    // Track cart ID in memory for same-request access
+    // Track cart ID in memory for same-request access.
+    // This avoids stale cookie reads during same-request revalidation.
     let inMemoryCartId: string | undefined;
 
     const getCartId = () => {
@@ -127,6 +128,7 @@ export async function createHydrogenRouterContext(
             i18n,
             cart: {
                 queryFragment: CART_QUERY_FRAGMENT,
+                mutateFragment: CART_MUTATE_FRAGMENT,
                 getId: getCartId,
                 setId: setCartId,
             },

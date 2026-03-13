@@ -5,37 +5,8 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Mock CartForm from @shopify/hydrogen
-const mockCartForm = vi.fn();
+// Mock @shopify/hydrogen (only analytics now — CartForm no longer used in component)
 vi.mock("@shopify/hydrogen", () => ({
-    CartForm: Object.assign(
-        ({
-            children,
-            route,
-            inputs,
-            action,
-        }: {
-            children: (fetcher: any) => React.ReactNode;
-            route: string;
-            inputs: { lines: any[] };
-            action: string;
-        }) => {
-            mockCartForm({ route, inputs, action });
-            // Simulate fetcher
-            const fetcher = {
-                state: "idle",
-                data: null,
-                formData: null,
-            };
-            return <form data-testid="cart-form">{children(fetcher)}</form>;
-        },
-        {
-            ACTIONS: {
-                LinesAdd: "LinesAdd",
-            },
-            getFormInput: vi.fn(() => ({ inputs: { analytics: "" } })),
-        },
-    ),
     AnalyticsEventName: { ADD_TO_CART: "ADD_TO_CART" },
     getClientBrowserParameters: vi.fn(() => ({})),
     sendShopifyAnalytics: vi.fn(),
@@ -48,11 +19,15 @@ vi.mock("react-i18next", () => ({
     }),
 }));
 
-// Mock cart drawer store
-const mockOpenCartDrawer = vi.fn();
-vi.mock("~/components/cart/store", () => ({
-    useCartDrawerStore: () => ({
-        open: mockOpenCartDrawer,
+// Mock useAddToCart hook
+const mockMutate = vi.fn();
+vi.mock("~/lib/cart", () => ({
+    useAddToCart: () => ({
+        mutate: mockMutate,
+        isLoading: false,
+        data: null,
+        userErrors: [],
+        reset: vi.fn(),
     }),
 }));
 
@@ -164,63 +139,6 @@ describe("AddToCartButton", () => {
         });
     });
 
-    describe("Cart Form Integration", () => {
-        it("should create CartForm with correct route", () => {
-            render(
-                <AddToCartButton
-                    lines={[
-                        {
-                            merchandiseId: "variant-1",
-                            quantity: 1,
-                        },
-                    ]}
-                />,
-            );
-
-            expect(mockCartForm).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    route: "/cart",
-                }),
-            );
-        });
-
-        it("should pass lines to CartForm inputs", () => {
-            const lines = [
-                {
-                    merchandiseId: "variant-1",
-                    quantity: 2,
-                },
-            ];
-
-            render(<AddToCartButton lines={lines} />);
-
-            expect(mockCartForm).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    inputs: { lines },
-                }),
-            );
-        });
-
-        it("should use LinesAdd action", () => {
-            render(
-                <AddToCartButton
-                    lines={[
-                        {
-                            merchandiseId: "variant-1",
-                            quantity: 1,
-                        },
-                    ]}
-                />,
-            );
-
-            expect(mockCartForm).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    action: "LinesAdd",
-                }),
-            );
-        });
-    });
-
     describe("Disabled State", () => {
         it("should be disabled when disabled prop is true", () => {
             render(
@@ -300,33 +218,6 @@ describe("AddToCartButton", () => {
         });
     });
 
-    describe("Multiple Variants", () => {
-        it("should handle multiple lines in the cart", () => {
-            const lines = [
-                { merchandiseId: "variant-1", quantity: 1 },
-                { merchandiseId: "variant-2", quantity: 3 },
-            ];
-
-            render(<AddToCartButton lines={lines} />);
-
-            expect(mockCartForm).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    inputs: { lines },
-                }),
-            );
-        });
-
-        it("should handle empty lines array", () => {
-            render(<AddToCartButton lines={[]} />);
-
-            expect(mockCartForm).toHaveBeenCalledWith(
-                expect.objectContaining({
-                    inputs: { lines: [] },
-                }),
-            );
-        });
-    });
-
     describe("Styling", () => {
         it("should have primary button variant", () => {
             render(
@@ -341,7 +232,6 @@ describe("AddToCartButton", () => {
             );
 
             const button = screen.getByRole("button");
-            // Button should be rendered (verifying it's there)
             expect(button).toBeInTheDocument();
         });
 

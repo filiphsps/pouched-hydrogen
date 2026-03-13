@@ -84,21 +84,15 @@ export function loadDeferredData({ context }: { context: AppLoadContext }) {
 }
 
 /**
- * Load cart data separately to ensure it's always fresh after mutations.
- * Cart is awaited (not deferred) to prevent stale data issues that can occur
- * when cart mutations don't properly invalidate deferred Promise caches.
- *
- * NOTE: Cart uses CacheNone() internally (in Hydrogen's cartGetDefault),
- * so the GraphQL query is never cached. The issue was with React Router's
- * deferred data not always triggering re-renders after loader revalidation.
+ * Load cart data separately.
+ * Queries the Storefront API with CacheNone().
+ * Cart state after mutations is managed client-side via Zustand hooks.
  */
 export async function loadCartData({ context }: { context: AppLoadContext }) {
     const { cart } = context;
-
     try {
         return cart?.get ? await cart.get() : null;
     } catch (error) {
-        // Cart fetch failed - return null to allow page to render
         console.error("[Root] Cart fetch error:", error);
         return null;
     }

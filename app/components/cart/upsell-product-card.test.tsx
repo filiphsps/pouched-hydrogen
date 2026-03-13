@@ -55,28 +55,6 @@ vi.mock("@shopify/hydrogen", () => ({
             {data.currencyCode} {data.amount}
         </span>
     ),
-    CartForm: Object.assign(
-        ({
-            children,
-            inputs,
-        }: {
-            children: (fetcher: any) => React.ReactNode;
-            inputs: any;
-        }) => {
-            const mockFetcher = {
-                state: "idle",
-                Form: ({ children: formChildren, ...props }: any) => (
-                    <form {...props}>{formChildren}</form>
-                ),
-            };
-            return (
-                <form data-inputs={JSON.stringify(inputs)}>
-                    {children(mockFetcher)}
-                </form>
-            );
-        },
-        { ACTIONS: { LinesAdd: "LinesAdd" } },
-    ),
 }));
 
 vi.mock("react-router", async () => {
@@ -87,6 +65,17 @@ vi.mock("react-router", async () => {
         useViewTransitionState: () => false,
     };
 });
+
+// Mock cart hooks
+vi.mock("~/lib/cart", () => ({
+    useAddToCart: () => ({
+        mutate: vi.fn(),
+        isLoading: false,
+        data: null,
+        userErrors: [],
+        reset: vi.fn(),
+    }),
+}));
 
 // Mock Link component to avoid router context issues
 vi.mock("~/components/link", () => ({

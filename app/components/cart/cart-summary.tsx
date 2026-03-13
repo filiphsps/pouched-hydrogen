@@ -1,17 +1,16 @@
 import { GiftIcon, TagIcon, XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { CartForm, Money, type OptimisticCart } from "@shopify/hydrogen";
+import { Money, type OptimisticCart } from "@shopify/hydrogen";
 import { useThemeSettings } from "@weaverse/hydrogen";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import { Skeleton } from "~/components/skeleton";
 import { Spinner } from "~/components/spinner";
 import { Title } from "~/components/title";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import { useApplyDiscount, useApplyGiftCard } from "~/lib/cart";
 import type { CartLayoutType } from "~/types/others";
 import { cn } from "~/utils/cn";
 import {
@@ -19,11 +18,6 @@ import {
     GiftCardDialog,
     NoteDialog,
 } from "./cart-summary-actions";
-
-/** Response shape from the cart action */
-interface CartActionResponse {
-    userErrors?: Array<{ message: string }>;
-}
 
 /**
  * Cart summary component.
@@ -41,7 +35,6 @@ export function CartSummary({
     layout: CartLayoutType;
 }) {
     const { t } = useTranslation();
-    const cartRoute = usePrefixPathWithLocale("/cart");
     const { enableCartNote, enableDiscountCode, enableGiftCard } =
         useThemeSettings();
     const [removingDiscountCode, setRemovingDiscountCode] = useState<
@@ -50,30 +43,24 @@ export function CartSummary({
     const [removingGiftCard, setRemovingGiftCard] = useState<string | null>(
         null,
     );
-    const dcRemoveFetcher = useFetcher<CartActionResponse>({
-        key: "discount-code-remove",
-    });
-    const gcRemoveFetcher = useFetcher<CartActionResponse>({
-        key: "gift-card-remove",
-    });
+
     const { cost, discountCodes, isOptimistic, appliedGiftCards, note } = cart;
+
+    const discountHook = useApplyDiscount(discountCodes);
+    const giftCardHook = useApplyGiftCard();
 
     // Show loading state for optimistic line item changes or pending cart actions
     const isCartUpdating =
-        isOptimistic ||
-        dcRemoveFetcher.state !== "idle" ||
-        gcRemoveFetcher.state !== "idle";
+        isOptimistic || discountHook.isLoading || giftCardHook.isRemoveLoading;
 
-    // Check for removal errors from fetcher responses
+    // Check for removal errors
     const dcRemoveError =
-        dcRemoveFetcher.state === "idle" &&
-        dcRemoveFetcher.data?.userErrors?.length
-            ? dcRemoveFetcher.data.userErrors[0].message
+        !discountHook.isLoading && discountHook.userErrors.length
+            ? discountHook.userErrors[0].message
             : null;
     const gcRemoveError =
-        gcRemoveFetcher.state === "idle" &&
-        gcRemoveFetcher.data?.userErrors?.length
-            ? gcRemoveFetcher.data.userErrors[0].message
+        !giftCardHook.isRemoveLoading && giftCardHook.removeUserErrors.length
+            ? giftCardHook.removeUserErrors[0].message
             : null;
 
     // Memoize applicable discount codes to avoid O(n²) filtering on every render
@@ -92,14 +79,13 @@ export function CartSummary({
             {appliedGiftCards?.length > 0 && (
                 <div className="mb-4 flex flex-wrap justify-end gap-2">
                     {appliedGiftCards.map((giftCard) => {
-                        // Check if this specific gift card is being removed
                         const isGCRemoving =
-                            gcRemoveFetcher.state !== "idle" &&
+                            giftCardHook.isRemoveLoading &&
                             removingGiftCard === giftCard.lastCharacters;
                         return (
                             <div
                                 key={giftCard.id}
-                                className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
+                                className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5"
                             >
                                 <GiftIcon
                                     weight="bold"
@@ -113,39 +99,29 @@ export function CartSummary({
                                         )
                                     </span>
                                 </div>
-                                <CartForm
-                                    route={cartRoute}
-                                    action={
-                                        CartForm.ACTIONS.GiftCardCodesRemove
-                                    }
-                                    inputs={{
-                                        giftCardCodes: [giftCard.id],
+                                <button
+                                    type="button"
+                                    className="relative ml-1 size-4 transition-colors hover:text-red-600"
+                                    aria-label={t("cart.removeGiftCard", {
+                                        code: giftCard.id,
+                                    })}
+                                    onClick={() => {
+                                        setRemovingGiftCard(
+                                            giftCard.lastCharacters,
+                                        );
+                                        giftCardHook.remove([giftCard.id]);
                                     }}
-                                    fetcherKey="gift-card-remove"
                                 >
-                                    <button
-                                        type="submit"
-                                        className="relative ml-1 size-4 transition-colors hover:text-red-600"
-                                        aria-label={t("cart.removeGiftCard", {
-                                            code: giftCard.id,
-                                        })}
-                                        onClick={() =>
-                                            setRemovingGiftCard(
-                                                giftCard.lastCharacters,
-                                            )
-                                        }
-                                    >
-                                        {isGCRemoving ? (
-                                            <Spinner size={16} />
-                                        ) : (
-                                            <XIcon
-                                                className="size-4"
-                                                weight="regular"
-                                                aria-hidden="true"
-                                            />
-                                        )}
-                                    </button>
-                                </CartForm>
+                                    {isGCRemoving ? (
+                                        <Spinner size={16} />
+                                    ) : (
+                                        <XIcon
+                                            className="size-4"
+                                            weight="regular"
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                </button>
                             </div>
                         );
                     })}
@@ -163,20 +139,14 @@ export function CartSummary({
             {applicableDiscountCodes.length > 0 && (
                 <div className="mb-4 flex flex-wrap justify-end gap-2">
                     {applicableDiscountCodes.map((discount) => {
-                        // Get all codes except the current one for removal
-                        const updatedCodes = applicableDiscountCodes
-                            .filter((d) => d.code !== discount.code)
-                            .map((d) => d.code);
-
-                        // Check if this specific discount is being removed
                         const isDCRemoving =
-                            dcRemoveFetcher.state !== "idle" &&
+                            discountHook.isLoading &&
                             removingDiscountCode === discount.code;
 
                         return (
                             <div
                                 key={discount.code}
-                                className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5 [&>form]:flex"
+                                className="flex items-center justify-center gap-2 rounded-md bg-gray-200 px-2 py-1.5"
                             >
                                 <TagIcon
                                     weight="bold"
@@ -186,39 +156,27 @@ export function CartSummary({
                                 <span className="leading-normal">
                                     {discount.code}
                                 </span>
-                                <CartForm
-                                    route={cartRoute}
-                                    action={
-                                        CartForm.ACTIONS.DiscountCodesUpdate
-                                    }
-                                    inputs={{
-                                        discountCodes: updatedCodes || [],
+                                <button
+                                    type="button"
+                                    className="relative ml-1 size-4 transition-colors hover:text-red-600"
+                                    aria-label={t("cart.removeDiscount", {
+                                        code: discount.code,
+                                    })}
+                                    onClick={() => {
+                                        setRemovingDiscountCode(discount.code);
+                                        discountHook.remove(discount.code);
                                     }}
-                                    fetcherKey="discount-code-remove"
                                 >
-                                    <button
-                                        type="submit"
-                                        className="relative ml-1 size-4 transition-colors hover:text-red-600"
-                                        aria-label={t("cart.removeDiscount", {
-                                            code: discount.code,
-                                        })}
-                                        onClick={() =>
-                                            setRemovingDiscountCode(
-                                                discount.code,
-                                            )
-                                        }
-                                    >
-                                        {isDCRemoving ? (
-                                            <Spinner size={16} />
-                                        ) : (
-                                            <XIcon
-                                                className="size-4"
-                                                weight="regular"
-                                                aria-hidden="true"
-                                            />
-                                        )}
-                                    </button>
-                                </CartForm>
+                                    {isDCRemoving ? (
+                                        <Spinner size={16} />
+                                    ) : (
+                                        <XIcon
+                                            className="size-4"
+                                            weight="regular"
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                </button>
                             </div>
                         );
                     })}

@@ -372,3 +372,192 @@ export const CART_QUERY_FRAGMENT = `#graphql
     }
   }
 ` as const;
+
+/**
+ * Cart mutation fragment — identical fields to CART_QUERY_FRAGMENT but uses the
+ * `CartApiMutation` fragment name expected by Hydrogen's mutation templates.
+ *
+ * This ensures mutation responses return full cart data (not just id/totalQuantity),
+ * which is critical for avoiding Shopify Storefront API eventual consistency issues
+ * where cart.get() may return stale data immediately after a mutation.
+ */
+export const CART_MUTATE_FRAGMENT = `#graphql
+  fragment Money on MoneyV2 {
+    currencyCode
+    amount
+  }
+  fragment CartLine on CartLine {
+    id
+    quantity
+    attributes {
+      key
+      value
+    }
+    cost {
+      totalAmount {
+        ...Money
+      }
+      amountPerQuantity {
+        ...Money
+      }
+      compareAtAmountPerQuantity {
+        ...Money
+      }
+    }
+    sellingPlanAllocation {
+      sellingPlan {
+        name
+      }
+    }
+    merchandise {
+      ... on ProductVariant {
+        id
+        availableForSale
+        compareAtPrice {
+          ...Money
+        }
+        price {
+          ...Money
+        }
+        requiresShipping
+        title
+        image {
+          id
+          url
+          altText
+          width
+          height
+        }
+        product {
+          handle
+          title
+          id
+          vendor
+        }
+        selectedOptions {
+          name
+          value
+        }
+      }
+    }
+  }
+  fragment CartLineComponent on ComponentizableCartLine {
+    id
+    quantity
+    attributes {
+      key
+      value
+    }
+    cost {
+      totalAmount {
+        ...Money
+      }
+      amountPerQuantity {
+        ...Money
+      }
+      compareAtAmountPerQuantity {
+        ...Money
+      }
+    }
+    merchandise {
+      ... on ProductVariant {
+        id
+        availableForSale
+        compareAtPrice {
+          ...Money
+        }
+        price {
+          ...Money
+        }
+        requiresShipping
+        title
+        image {
+          id
+          url
+          altText
+          width
+          height
+        }
+        product {
+          handle
+          title
+          id
+          vendor
+        }
+        selectedOptions {
+          name
+          value
+        }
+        requiresComponents
+        components(first: 10) {
+          nodes {
+            productVariant {
+              id
+              title
+              product {
+                handle
+              }
+            }
+            quantity
+          }
+        }
+      }
+    }
+  }
+  fragment CartApiMutation on Cart {
+    updatedAt
+    id
+    appliedGiftCards {
+      id
+      lastCharacters
+      amountUsed {
+        ...Money
+      }
+    }
+    checkoutUrl
+    totalQuantity
+    buyerIdentity {
+      countryCode
+      customer {
+        id
+        email
+        firstName
+        lastName
+        displayName
+      }
+      email
+      phone
+    }
+    lines(first: 100) {
+      nodes {
+        ...CartLine
+      }
+      nodes {
+        ...CartLineComponent
+      }
+    }
+    cost {
+      subtotalAmount {
+        ...Money
+      }
+      totalAmount {
+        ...Money
+      }
+      totalDutyAmount {
+        ...Money
+      }
+      totalTaxAmount {
+        ...Money
+      }
+    }
+    note
+    attributes {
+      key
+      value
+    }
+    discountCodes {
+      code
+      applicable
+    }
+  }
+` as const;

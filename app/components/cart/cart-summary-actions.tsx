@@ -1,29 +1,23 @@
 import { XIcon } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { CartForm } from "@shopify/hydrogen";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useFetcher } from "react-router";
 import type { CartApiQueryFragment } from "storefront-api.generated";
 import { Banner } from "~/components/banner";
 import { Button } from "~/components/button";
 import { IconButton } from "~/components/icon-button";
 import { Input } from "~/components/input";
 import { Textarea } from "~/components/textarea";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import {
+    useApplyDiscount,
+    useApplyGiftCard,
+    useUpdateCartNote,
+} from "~/lib/cart";
 import { cn } from "~/utils/cn";
-
-/** Response shape from the cart action */
-interface CartActionResponse {
-    cart?: CartApiQueryFragment;
-    userErrors?: Array<{ message: string }>;
-    errors?: Array<{ message: string }>;
-    action?: string;
-}
 
 /**
  * Note dialog for adding/editing cart notes.
- * Derives success from fetcher.data (no userErrors = success).
+ * Derives success from hook data (no userErrors = success).
  */
 export function NoteDialog({
     cartNote: currentNote = "",
@@ -31,14 +25,11 @@ export function NoteDialog({
     cartNote?: string | null;
 }) {
     const { t } = useTranslation();
-    const cartRoute = usePrefixPathWithLocale("/cart");
     const [note, setNote] = useState(currentNote || "");
-    const fetcher = useFetcher<CartActionResponse>();
+    const { mutate, isLoading, userErrors, data, reset } = useUpdateCartNote();
 
-    // Derive success/error from fetcher response
-    const isIdle = fetcher.state === "idle";
-    const hasResponse = isIdle && fetcher.data != null;
-    const userErrors = fetcher.data?.userErrors ?? [];
+    // Derive success/error from response
+    const hasResponse = !isLoading && data != null;
     const hasError = hasResponse && userErrors.length > 0;
     const hasSuccess = hasResponse && userErrors.length === 0;
 
@@ -47,15 +38,7 @@ export function NoteDialog({
         const formData = new FormData(event.currentTarget);
         const formCartNote = formData.get("cartNote") as string;
         if (formCartNote) {
-            fetcher.submit(
-                {
-                    [CartForm.INPUT_NAME]: JSON.stringify({
-                        action: CartForm.ACTIONS.NoteUpdate,
-                        inputs: { cartNote: formCartNote },
-                    }),
-                },
-                { method: "POST", action: cartRoute },
-            );
+            mutate(formCartNote);
             setNote(formCartNote);
         }
     }
@@ -67,7 +50,7 @@ export function NoteDialog({
                 onCloseAutoFocus={(e) => {
                     e.preventDefault();
                     setNote(currentNote || "");
-                    fetcher.data = null;
+                    reset();
                 }}
                 className={cn(
                     "fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xs",
@@ -100,7 +83,7 @@ export function NoteDialog({
                             value={note}
                             onChange={(e) => {
                                 setNote(e.target.value);
-                                fetcher.data = null;
+                                reset();
                             }}
                         />
                         {hasSuccess && (
@@ -124,8 +107,8 @@ export function NoteDialog({
                             </Dialog.Close>
                             <Button
                                 type="submit"
-                                loading={fetcher.state !== "idle"}
-                                disabled={fetcher.state !== "idle"}
+                                loading={isLoading}
+                                disabled={isLoading}
                                 className="w-24 leading-tight! [--spinner-duration:400ms]"
                             >
                                 {t("cart.saveNote")}
@@ -140,8 +123,8 @@ export function NoteDialog({
 
 /**
  * Discount code dialog.
- * Derives success/error from fetcher.data — checks the response cart's discountCodes
- * for applicability instead of comparing with stale parent props.
+ * Derives success/error from hook data — checks the response cart's discountCodes
+ * for applicability.
  */
 export function DiscountDialog({
     discountCodes = [],
@@ -149,21 +132,16 @@ export function DiscountDialog({
     discountCodes: CartApiQueryFragment["discountCodes"];
 }) {
     const { t } = useTranslation();
-    const cartRoute = usePrefixPathWithLocale("/cart");
     const [code, setCode] = useState("");
-    const fetcher = useFetcher<CartActionResponse>();
+    const { apply, isLoading, userErrors, data, reset, responseDiscountCodes } =
+        useApplyDiscount(discountCodes);
 
-    // Derive success/error from the action response, not stale cart props
-    const isIdle = fetcher.state === "idle";
-    const hasResponse = isIdle && fetcher.data != null && code !== "";
-    const userErrors = fetcher.data?.userErrors ?? [];
-
-    // Check the response cart's discount codes for applicability
-    const responseDiscountCodes =
-        fetcher.data?.cart?.discountCodes ?? discountCodes;
+    // Derive success/error from the action response
+    const hasResponse = !isLoading && data != null && code !== "";
+    const discountCodesForCheck = responseDiscountCodes ?? discountCodes;
     const codeIsApplicable =
         hasResponse &&
-        responseDiscountCodes?.some((d) => d.code === code && d.applicable);
+        discountCodesForCheck?.some((d) => d.code === code && d.applicable);
     const success = hasResponse && userErrors.length === 0 && codeIsApplicable;
     const error = hasResponse && !success;
 
@@ -172,18 +150,7 @@ export function DiscountDialog({
         const formData = new FormData(event.currentTarget);
         const discountCode = formData.get("discountCode") as string;
         if (discountCode) {
-            fetcher.submit(
-                {
-                    [CartForm.INPUT_NAME]: JSON.stringify({
-                        action: CartForm.ACTIONS.DiscountCodesUpdate,
-                        inputs: {
-                            discountCode,
-                            discountCodes: discountCodes.map((d) => d.code),
-                        },
-                    }),
-                },
-                { method: "POST", action: cartRoute },
-            );
+            apply(discountCode);
         }
     }
 
@@ -194,7 +161,7 @@ export function DiscountDialog({
                 onCloseAutoFocus={(e) => {
                     e.preventDefault();
                     setCode("");
-                    fetcher.data = null;
+                    reset();
                 }}
                 className={cn(
                     "fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xs",
@@ -224,7 +191,7 @@ export function DiscountDialog({
                             value={code}
                             onChange={(e) => {
                                 setCode(e.target.value);
-                                fetcher.data = null;
+                                reset();
                             }}
                             type="text"
                             name="discountCode"
@@ -255,8 +222,8 @@ export function DiscountDialog({
                             <Button
                                 type="submit"
                                 className="w-24 leading-tight! [--spinner-duration:400ms]"
-                                loading={fetcher.state !== "idle"}
-                                disabled={fetcher.state !== "idle"}
+                                loading={isLoading}
+                                disabled={isLoading}
                             >
                                 {t("cart.apply")}
                             </Button>
@@ -270,8 +237,7 @@ export function DiscountDialog({
 
 /**
  * Gift card dialog.
- * Derives success/error from fetcher.data.userErrors instead of comparing
- * with stale appliedGiftCards prop. Removed the appliedGiftCardCodes ref.
+ * Derives success/error from hook data.
  */
 export function GiftCardDialog({
     appliedGiftCards = [],
@@ -279,23 +245,27 @@ export function GiftCardDialog({
     appliedGiftCards: CartApiQueryFragment["appliedGiftCards"];
 }) {
     const { t } = useTranslation();
-    const cartRoute = usePrefixPathWithLocale("/cart");
     const [code, setCode] = useState("");
     const [appliedCodes, setAppliedCodes] = useState<string[]>([]);
-    const fetcher = useFetcher<CartActionResponse>();
+    const {
+        apply,
+        isApplyLoading,
+        applyUserErrors,
+        applyData,
+        resetApply,
+        responseGiftCards,
+    } = useApplyGiftCard();
 
     // Derive success/error from the action response
-    const isIdle = fetcher.state === "idle";
-    const hasResponse = isIdle && fetcher.data != null && code !== "";
-    const userErrors = fetcher.data?.userErrors ?? [];
+    const hasResponse = !isApplyLoading && applyData != null && code !== "";
+    const userErrors = applyUserErrors;
     const hasError = hasResponse && userErrors.length > 0;
 
     // Check if the applied gift card appears in the response
-    const responseGiftCards =
-        fetcher.data?.cart?.appliedGiftCards ?? appliedGiftCards;
+    const giftCardsForCheck = responseGiftCards ?? appliedGiftCards;
     const codeWasApplied =
         hasResponse &&
-        responseGiftCards?.some((gc) =>
+        giftCardsForCheck?.some((gc) =>
             code.toLowerCase().endsWith(gc.lastCharacters),
         );
     const success = hasResponse && !hasError && codeWasApplied;
@@ -307,18 +277,7 @@ export function GiftCardDialog({
         const giftCardCode = formData.get("giftCardCode") as string;
         if (giftCardCode) {
             const formattedCode = giftCardCode.replace(/\s/g, "");
-            fetcher.submit(
-                {
-                    [CartForm.INPUT_NAME]: JSON.stringify({
-                        action: CartForm.ACTIONS.GiftCardCodesUpdate,
-                        inputs: {
-                            giftCardCode: formattedCode,
-                            giftCardCodes: appliedCodes,
-                        },
-                    }),
-                },
-                { method: "POST", action: cartRoute },
-            );
+            apply(formattedCode, appliedCodes);
             setAppliedCodes((prev) =>
                 prev.includes(formattedCode) ? prev : [...prev, formattedCode],
             );
@@ -332,7 +291,7 @@ export function GiftCardDialog({
                 onCloseAutoFocus={(e) => {
                     e.preventDefault();
                     setCode("");
-                    fetcher.data = null;
+                    resetApply();
                 }}
                 className={cn(
                     "fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xs",
@@ -365,7 +324,7 @@ export function GiftCardDialog({
                             value={code}
                             onChange={(e) => {
                                 setCode(e.target.value);
-                                fetcher.data = null;
+                                resetApply();
                             }}
                             required
                         />
@@ -393,8 +352,8 @@ export function GiftCardDialog({
                             <Button
                                 type="submit"
                                 className="w-24 leading-tight! [--spinner-duration:400ms]"
-                                loading={fetcher.state !== "idle"}
-                                disabled={fetcher.state !== "idle"}
+                                loading={isApplyLoading}
+                                disabled={isApplyLoading}
                             >
                                 {t("cart.redeem")}
                             </Button>

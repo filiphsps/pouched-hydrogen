@@ -25,6 +25,7 @@ import {
     useRouteLoaderData,
 } from "react-router";
 import { useChangeLanguage } from "remix-i18next/react";
+import { CartProvider } from "~/lib/cart";
 import {
     loadCartData,
     loadCriticalData,
@@ -98,22 +99,41 @@ export async function loader(args: Route.LoaderArgs) {
 
 /**
  * Controls when the root loader should revalidate.
- * This ensures cart data and other deferred data is refreshed after mutations.
+ *
+ * IMPORTANT: Cart mutations (fetcher POSTs to /cart) do NOT trigger root
+ * revalidation. Cart state after mutations is handled client-side via
+ * `useCartData()` which reads the mutation response directly from the
+ * fetcher — this avoids Shopify Storefront API eventual consistency issues
+ * where `cart.get()` returns stale data from a read replica.
+ *
+ * The root loader's cart data refreshes on the next navigation instead.
  */
 export const shouldRevalidate: ShouldRevalidateFunction = ({
     formMethod,
+    formAction,
     currentUrl,
     nextUrl,
     defaultShouldRevalidate,
 }) => {
-    // Revalidate when a mutation is performed (e.g., add to cart, login, etc.)
-    // This includes form submissions and fetcher mutations
+    // Skip revalidation for cart mutations — cart state is managed client-side
+    // via useCartData which uses the fetcher's mutation response directly.
+    // Revalidating here would call cart.get() which often returns stale data
+    // due to Shopify's eventual consistency, causing UI flicker.
+    if (
+        formMethod &&
+        formMethod !== "GET" &&
+        formAction &&
+        (formAction.endsWith("/cart") || formAction.endsWith("/cart.data"))
+    ) {
+        return false;
+    }
+
+    // Revalidate for non-cart mutations (e.g., login, account updates)
     if (formMethod && formMethod !== "GET") {
         return true;
     }
 
     // Revalidate when manually revalidating via useRevalidator
-    // or when a fetcher submits (URL stays the same)
     if (currentUrl.toString() === nextUrl.toString()) {
         return true;
     }
@@ -223,6 +243,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                         shop={data.shop}
                         consent={data.consent}
                     >
+                        <CartProvider cart={data.cart} />
                         <TooltipProvider disableHoverableContent>
                             <div
                                 className="flex min-h-screen flex-col"

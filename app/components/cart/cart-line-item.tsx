@@ -15,11 +15,11 @@ import { VendorBadge } from "~/components/product/vendor-badge";
 import { RevealUnderline } from "~/components/reveal-underline";
 import { Skeleton } from "~/components/skeleton";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import { useCartDrawerStore } from "~/lib/cart";
 import type { CartLayoutType } from "~/types/others";
 import { cn } from "~/utils/cn";
 import { removeVendorFromTitle } from "~/utils/product";
 import { CartLineQuantityAdjust } from "./cart-line-qty-adjust";
-import { useCartDrawerStore } from "./store";
 
 type CartLine = OptimisticCart<CartApiQueryFragment>["lines"]["nodes"][0];
 

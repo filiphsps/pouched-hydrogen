@@ -6,19 +6,19 @@
  * - Compact list-style layout optimized for cart drawer/modal
  * - One-click quick add to cart (no modal required)
  * - Shows product image, title, vendor, and price
- * - Uses CartForm for seamless cart integration
+ * - Uses useAddToCart hook for seamless cart integration
  */
 
 import { HandbagSimpleIcon } from "@phosphor-icons/react";
-import { CartForm, Image, Money } from "@shopify/hydrogen";
+import { Image, Money } from "@shopify/hydrogen";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { FetcherWithComponents } from "react-router";
 import type { ProductCardFragment } from "storefront-api.generated";
 import { Button } from "~/components/button";
 import { Link } from "~/components/link";
 import { Spinner } from "~/components/spinner";
 import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import { useAddToCart } from "~/lib/cart";
 import { cn } from "~/utils/cn";
 
 /**
@@ -139,66 +139,26 @@ interface QuickAddButtonProps {
 }
 
 /**
- * One-click quick add button using CartForm.
+ * One-click quick add button using useAddToCart hook.
  * Adds the first available variant directly to cart without opening a modal.
  */
 function QuickAddButton({ variantId, available }: QuickAddButtonProps) {
     const { t } = useTranslation();
-    const cartRoute = usePrefixPathWithLocale("/cart");
-
-    return (
-        <CartForm
-            route={cartRoute}
-            inputs={{
-                lines: [{ merchandiseId: variantId, quantity: 1 }],
-            }}
-            action={CartForm.ACTIONS.LinesAdd}
-        >
-            {(fetcher: FetcherWithComponents<unknown>) => (
-                <QuickAddButtonContent
-                    fetcher={fetcher}
-                    available={available}
-                    label={t("product.add")}
-                />
-            )}
-        </CartForm>
-    );
-}
-
-/**
- * Props for the QuickAddButtonContent component.
- */
-interface QuickAddButtonContentProps {
-    /** Fetcher from CartForm */
-    fetcher: FetcherWithComponents<unknown>;
-    /** Whether the variant is available */
-    available: boolean;
-    /** Button label */
-    label: string;
-}
-
-/**
- * Quick add button content with loading state.
- */
-function QuickAddButtonContent({
-    fetcher,
-    available,
-    label,
-}: QuickAddButtonContentProps) {
-    const { t } = useTranslation();
-    const isLoading = fetcher.state !== "idle";
+    const { mutate, isLoading, data } = useAddToCart({
+        openDrawerOnSuccess: false,
+    });
     const [showSuccess, setShowSuccess] = useState(false);
-    const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
+    const prevLoadingRef = useRef(false);
 
-    // Show success feedback briefly after adding to cart
+    // Show success feedback after mutation completes
     useEffect(() => {
-        if (prevStateRef.current !== "idle" && fetcher.state === "idle") {
+        if (prevLoadingRef.current && !isLoading && data?.cart) {
             setShowSuccess(true);
             const timer = setTimeout(() => setShowSuccess(false), 1500);
             return () => clearTimeout(timer);
         }
-        prevStateRef.current = fetcher.state;
-    }, [fetcher.state]);
+        prevLoadingRef.current = isLoading;
+    }, [isLoading, data]);
 
     if (!available) {
         return (
@@ -208,13 +168,16 @@ function QuickAddButtonContent({
         );
     }
 
+    const label = t("product.add");
+
     return (
         <Button
-            type="submit"
+            type="button"
             variant="secondary"
             className="!px-3 !py-1.5 relative h-8 min-w-[60px] shrink-0 rounded-full text-xs"
             disabled={isLoading}
             aria-label={label}
+            onClick={() => mutate([{ merchandiseId: variantId, quantity: 1 }])}
         >
             <span className={cn((isLoading || showSuccess) && "invisible")}>
                 {label}

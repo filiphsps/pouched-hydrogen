@@ -5,18 +5,15 @@ import type {
 } from "@shopify/hydrogen";
 import {
     AnalyticsEventName,
-    CartForm,
     getClientBrowserParameters,
     sendShopifyAnalytics,
 } from "@shopify/hydrogen";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import type { FetcherWithComponents } from "react-router";
 import { useMatches } from "react-router";
 import { Button } from "~/components/button";
-import { useCartDrawerStore } from "~/components/cart/store";
 import { Spinner } from "~/components/spinner";
-import { usePrefixPathWithLocale } from "~/hooks/use-prefix-path-with-locale";
+import { useAddToCart } from "~/lib/cart";
 import { cn } from "~/utils/cn";
 import { DEFAULT_LOCALE } from "~/utils/const";
 
@@ -37,79 +34,44 @@ export function AddToCartButton({
     analytics?: Record<string, unknown>;
     [key: string]: unknown;
 }) {
-    const cartRoute = usePrefixPathWithLocale("/cart");
+    const { t } = useTranslation();
+    const { mutate, isLoading, data } = useAddToCart();
+
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        mutate(lines);
+    }
+
     return (
-        <CartForm
-            route={cartRoute}
-            inputs={{ lines }}
-            action={CartForm.ACTIONS.LinesAdd}
+        <AddToCartAnalytics
+            analytics={analytics}
+            cartData={data}
+            isSubmitting={isLoading}
         >
-            {(fetcher: FetcherWithComponents<Record<string, unknown>>) => (
-                <AddToCartButtonContent
-                    fetcher={fetcher}
-                    disabled={disabled}
-                    className={className}
-                    analytics={analytics}
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="hidden"
+                    name="analytics"
+                    value={JSON.stringify(analytics)}
+                />
+                <Button
+                    variant="primary"
+                    type="submit"
+                    className={cn(
+                        "relative h-12 rounded-full hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
+                        className,
+                    )}
+                    disabled={disabled ?? isLoading}
                     {...props}
                 >
-                    {children}
-                </AddToCartButtonContent>
-            )}
-        </CartForm>
-    );
-}
-
-function AddToCartButtonContent({
-    fetcher,
-    children,
-    disabled,
-    className,
-    analytics,
-    ...props
-}: {
-    fetcher: FetcherWithComponents<Record<string, unknown>>;
-    children: React.ReactNode;
-    disabled?: boolean;
-    className?: string;
-    analytics?: Record<string, unknown>;
-    [key: string]: unknown;
-}) {
-    const { t } = useTranslation();
-    const { open: openCartDrawer } = useCartDrawerStore();
-    const prevStateRef = useRef<"idle" | "submitting" | "loading">("idle");
-    const isLoading = fetcher.state !== "idle";
-
-    useEffect(() => {
-        if (prevStateRef.current !== "idle" && fetcher.state === "idle") {
-            openCartDrawer();
-        }
-        prevStateRef.current = fetcher.state;
-    }, [fetcher.state, openCartDrawer]);
-
-    return (
-        <AddToCartAnalytics fetcher={fetcher}>
-            <input
-                type="hidden"
-                name="analytics"
-                value={JSON.stringify(analytics)}
-            />
-            <Button
-                variant="primary"
-                type="submit"
-                className={cn(
-                    "relative h-12 rounded-full hover:bg-(--btn-primary-bg) hover:text-(--btn-primary-text)",
-                    className,
-                )}
-                disabled={disabled ?? isLoading}
-                {...props}
-            >
-                <span className={cn(isLoading && "invisible")}>
-                    {children || t("cart.addToCart")}
-                </span>
-                {isLoading && (
-                    <Spinner className="z-0" size={20} duration={400} />
-                )}
-            </Button>
+                    <span className={cn(isLoading && "invisible")}>
+                        {children || t("cart.addToCart")}
+                    </span>
+                    {isLoading && (
+                        <Spinner className="z-0" size={20} duration={400} />
+                    )}
+                </Button>
+            </form>
         </AddToCartAnalytics>
     );
 }
@@ -117,8 +79,6 @@ function AddToCartButtonContent({
 function usePageAnalytics({ hasUserConsent }: { hasUserConsent: boolean }) {
     const matches = useMatches();
 
-    // Memoize the analytics data to prevent creating new objects on every render.
-    // This prevents the useEffect in AddToCartAnalytics from running on every render.
     return useMemo(() => {
         const data: Record<string, unknown> = {};
         for (const match of matches) {
@@ -145,50 +105,34 @@ function usePageAnalytics({ hasUserConsent }: { hasUserConsent: boolean }) {
 }
 
 function AddToCartAnalytics({
-    fetcher,
+    analytics,
+    cartData,
+    isSubmitting,
     children,
 }: {
-    fetcher: FetcherWithComponents<Record<string, unknown>>;
+    analytics?: Record<string, unknown>;
+    cartData: { cart?: { id: string } } | null;
+    isSubmitting: boolean;
     children: React.ReactNode;
 }) {
-    const fetcherData = fetcher.data;
-    const formData = fetcher.formData;
     const pageAnalytics = usePageAnalytics({ hasUserConsent: true });
 
     useEffect(() => {
-        if (formData) {
-            const cartData: Record<string, unknown> = {};
-            const cartInputs = CartForm.getFormInput(formData);
+        if (!isSubmitting && cartData?.cart?.id && analytics) {
+            const cartResponse = cartData.cart;
+            const addToCartPayload: ShopifyAddToCartPayload = {
+                ...getClientBrowserParameters(),
+                ...pageAnalytics,
+                ...analytics,
+                cartId: cartResponse.id,
+            };
 
-            try {
-                if (cartInputs.inputs.analytics) {
-                    const dataInForm: unknown = JSON.parse(
-                        String(cartInputs.inputs.analytics),
-                    );
-                    Object.assign(cartData, dataInForm);
-                }
-            } catch {
-                // do nothing
-            }
-
-            const cartResponse = fetcherData?.cart as
-                | { id: string }
-                | undefined;
-            if (Object.keys(cartData).length && cartResponse?.id) {
-                const addToCartPayload: ShopifyAddToCartPayload = {
-                    ...getClientBrowserParameters(),
-                    ...pageAnalytics,
-                    ...cartData,
-                    cartId: cartResponse.id,
-                };
-
-                sendShopifyAnalytics({
-                    eventName: AnalyticsEventName.ADD_TO_CART,
-                    payload: addToCartPayload,
-                });
-            }
+            sendShopifyAnalytics({
+                eventName: AnalyticsEventName.ADD_TO_CART,
+                payload: addToCartPayload,
+            });
         }
-    }, [fetcherData, formData, pageAnalytics]);
+    }, [isSubmitting, cartData, analytics, pageAnalytics]);
 
     return <>{children}</>;
 }
